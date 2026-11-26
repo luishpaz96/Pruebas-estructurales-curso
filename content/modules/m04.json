@@ -1,0 +1,280 @@
+{
+ "id": "m4",
+ "brand": "ky",
+ "machine": "aoi_ky",
+ "title": "Módulo 4. Debuggeo de fallas y falsos llamados (Koh Young)",
+ "summary": "Método para clasificar fallas de máquina, medición o programa; códigos de alarma de WinMCS, secuencias de diagnóstico y tratamiento de falsos llamados y escapes.",
+ "lessons": [
+  {
+   "id": "m4-l1",
+   "title": "Clasificar el problema y método de cinco pasos",
+   "animation": "intro_line",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "Antes de actuar clasificas el problema. Cada familia tiene su propia ruta: falla de máquina (alarma, no se mueve, no captura), falla de medición (suben los llamados de altura en todos los programas a la vez) o programa/proceso (llamados en ciertos componentes de un programa)."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "1. Describe el síntoma con datos: qué alarma o llamado, desde cuándo, en qué programa, en cuántas tarjetas.",
+      "2. Pregunta qué cambió: lote de tarjetas o componentes, versión del programa, mantenimiento, temperatura.",
+      "3. Repite la prueba con la misma tarjeta. Si el llamado cambia de lugar es máquina o medición; si se repite igual, es programa o defecto real.",
+      "4. Aísla con otra tarjeta, con un programa que sepas que está bien o con el patrón de verificación.",
+      "5. Corrige la causa y documenta síntoma, causa, acción y verificación."
+     ]
+    },
+    {
+     "kind": "warning",
+     "text": "Si el problema aparece en todos los programas a la vez, no toques tolerancias. Eso ensucia el programa y oculta la causa real."
+    }
+   ],
+   "keyPoints": [
+    "Clasifica primero: máquina, medición o programa.",
+    "Repetir la prueba con la misma tarjeta separa máquina de programa.",
+    "Falla en todos los programas a la vez apunta a medición, no a tolerancias.",
+    "Documenta cada corrección con síntoma, causa, acción y verificación."
+   ]
+  },
+  {
+   "id": "m4-l2",
+   "title": "Fallas de máquina: códigos y diagnóstico en WinMCS",
+   "animation": "machine_tour",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "Cada alarma de WinMCS trae un número. Busca el número en C:\\Kohyoung\\Language\\EngMsg.ini con Ctrl + F; la línea que termina en _0 dice qué pasó y la que termina en _1 dice qué hacer."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "14 o 1202: presión de aire baja. 1216: presión alta; revisar el regulador.",
+      "21: no encontró los fiduciales; intentar de nuevo en IDLE. 22: tarjeta muy girada. 23: no encontró fiduciales después de cambiar de programa.",
+      "27: interruptor de control apagado.",
+      "906 o 1700: error del PZT o de su amplificador.",
+      "1000 a 1005: la tarjeta no llegó o no pasó un sensor de entrada o de trabajo.",
+      "1022 a 1025: error de señal SMEMA con la máquina anterior o siguiente.",
+      "1201: paro de emergencia oprimido.",
+      "2001 a 2003: un sensor de límite de X, Y o Z detectó movimiento."
+     ]
+    },
+    {
+     "kind": "tip",
+     "text": "Herramientas de WinMCS: I/O Dialog para ver sensores y encender salidas, Axis Check para servos y límites, POSCHECK (POS A a POS H) para el movimiento de X, Y y Z, y Manual-Motion o Conveyor Test para correr bandas sin tarjeta."
+    }
+   ],
+   "keyPoints": [
+    "Los códigos están en EngMsg.ini: _0 dice qué pasó, _1 qué hacer.",
+    "I/O Dialog revisa sensores y SMEMA; POSCHECK revisa el movimiento de los ejes.",
+    "Si el movimiento no es bueno en POSCHECK, se ajustan las ganancias del servo."
+   ]
+  },
+  {
+   "id": "m4-l3",
+   "title": "Secuencias de diagnóstico y fallas de medición",
+   "animation": "moire_fringes",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "Koh Young recomienda seguir siempre el mismo orden, de lo más simple a lo más caro. Para errores de PZT: calibración de pasos del PZT, cambio del juego PZT (amplificador y motor), tarjeta iVPC, cables y otras causas. En el amplificador, luz verde es normal; naranja fija o parpadeando indica falla del amplificador o del cable."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Cámara: imagen en vivo, cables y tarjeta de captura, voltaje (12 V CD, fuente PS7), cambio de cables, cambio de cámara.",
+      "Luces: encender cada canal CH1 a CH8 en KYCal, intercambiar cables de LED, cambiar módulo, revisar iVPC, cambiar iVPC.",
+      "Servo: cables, código del display del amplificador, DA Offset (Auto DA Offset por eje), cambio de GNET-M y luego de motor y amplificador.",
+      "Transportador: tensión de banda, carga y descarga, drivers y motores a pasos, GNET-M.",
+      "Energía: conexiones de la fuente, su LED verde, voltajes con multímetro, cambio de fuente."
+     ]
+    },
+    {
+     "kind": "text",
+     "text": "Si suben de golpe los llamados de altura, pin levantado o volumen en muchos modelos: corre LTS y las verificaciones (Bright Check, 3D Check, Jig 10 Time), revisa la cubierta de humos y la visibilidad del PZT, y haz solo la calibración que corresponde, con respaldo previo. Si sigue, servicio del fabricante."
+    },
+    {
+     "kind": "warning",
+     "text": "Vibración de montacargas y cambios de temperatura también desvían la medición 3D. Si el problema aparece a ciertas horas, sospecha de ellos."
+    }
+   ],
+   "keyPoints": [
+    "Sigue el orden del fabricante: lo simple antes que lo caro.",
+    "Luz naranja en el amplificador del PZT indica falla del amplificador o cable.",
+    "Falla de medición general: LTS, verificaciones, óptica y calibración; no tolerancias.",
+    "Revisa vibración y temperatura cuando la falla depende de la hora."
+   ]
+  },
+  {
+   "id": "m4-l4",
+   "title": "Falsos llamados: causa y solución correcta",
+   "animation": "defect_gallery",
+   "blocks": [
+    {
+     "kind": "bullets",
+     "items": [
+      "Desplazamiento en muchos componentes de una zona: fiducial mal leído o tarjeta pandeada. Solución: fiduciales locales y revisar soportes.",
+      "Polaridad en un componente de proveedor nuevo: agregar una parte alternativa (Alternative Part) para ese proveedor; no apagar la inspección.",
+      "Dimensión o desplazamiento en el mismo paquete: el contorno del cuerpo no se extrae bien o falta el espesor de terminal. Aplicar los 5 pasos de tolerancias.",
+      "Altura junto a componentes altos: sombra; revisar ventana y direcciones de proyección.",
+      "Filete insuficiente en chips brillantes: reflejo; ajustar la condición de luz del paquete.",
+      "Puente en conectores de paso fino: la ventana incluye letras o cobre expuesto; limitarla a la zona entre pines.",
+      "Muchos llamados con un lote nuevo de tarjetas: cambió el color de máscara o el acabado del pad; revalidar con el lote nuevo."
+     ]
+    },
+    {
+     "kind": "tip",
+     "text": "Para analizar un falso llamado con el fabricante, pide los archivos CBI (Component Base Image) y úsalos para afinar fuera de línea."
+    }
+   ],
+   "keyPoints": [
+    "Cada falso llamado tiene una causa típica distinta: ventana, fiducial, espesor, reflejo o lote.",
+    "Un proveedor nuevo con polaridad distinta se resuelve con una parte alternativa.",
+    "Un lote nuevo de tarjetas obliga a revalidar el programa.",
+    "Los archivos CBI permiten analizar falsos llamados sin detener la línea."
+   ]
+  },
+  {
+   "id": "m4-l5",
+   "title": "Escapes, reportes y métricas semanales",
+   "animation": "process_flow",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "Un escape es un defecto que llegó a prueba o al cliente y se investiga siempre. Busca la tarjeta por número de serie, recupera su imagen y sus mediciones y decide cuál de cuatro cosas pasó: se midió y pasó (tolerancia muy abierta); no se podía ver (oculto, se requiere AXI o prueba eléctrica); no se inspeccionó (sin ventana, deshabilitado o programa viejo); o el operador lo aceptó (reentrenar y revisar tiempo de revisión)."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Registros a enviar: C:\\KYLOG\\AOIGUI para AOIGUI, C:\\Kohyoung\\AOI\\MCSLOG para WinMCS, C:\\KohYoung\\KSMART-Interface\\Log para SECS/GEM.",
+      "Métricas semanales: PPM de falsos llamados por programa y paquete, Pareto de los 10 componentes con más falsos, escapes en estaciones posteriores y segundos de revisión por tarjeta."
+     ]
+    },
+    {
+     "kind": "warning",
+     "text": "Corrige la causa y pasa una tarjeta con ese defecto para confirmar que ahora sí se detecta. Cierra con el formato de acción correctiva de tu planta, por ejemplo 8D."
+    }
+   ],
+   "keyPoints": [
+    "Un escape se clasifica en una de cuatro causas: medido y pasó, oculto, no inspeccionado u operador lo aceptó.",
+    "Toma siempre capturas de pantalla y la hora exacta del evento al reportar.",
+    "Confirma la corrección con una tarjeta que tenga el defecto.",
+    "Vigila PPM de falsos llamados, Pareto de componentes y escapes cada semana."
+   ]
+  }
+ ],
+ "order": 4,
+ "exam": [
+  {
+   "type": "mc",
+   "q": "¿Cuál es el primer paso del método de cinco pasos?",
+   "options": [
+    "Describir el síntoma con datos.",
+    "Cambiar la tolerancia.",
+    "Llamar al fabricante.",
+    "Reiniciar la PC."
+   ],
+   "correct": 0,
+   "explain": "Qué llamado, desde cuándo, en qué programa, en qué componentes y en cuántas tarjetas.",
+   "section": "4.2"
+  },
+  {
+   "type": "mc",
+   "q": "Pasas la misma tarjeta otra vez y el llamado cambia de lugar. ¿Qué indica?",
+   "options": [
+    "Que es la máquina o la medición.",
+    "Que es un defecto real.",
+    "Que es el programa.",
+    "Que es el operador."
+   ],
+   "correct": 0,
+   "explain": "Si se repite igual, es el programa o un defecto real.",
+   "section": "4.2"
+  },
+  {
+   "type": "mc",
+   "q": "¿Dónde buscas qué significa un código de alarma de WinMCS?",
+   "options": [
+    "En C:\\Kohyoung\\Language\\EngMsg.ini: la línea _0 dice qué pasó y la _1 qué hacer.",
+    "En el archivo .kyjob.",
+    "En KSMART.",
+    "En el Gerber."
+   ],
+   "correct": 0,
+   "explain": "Se abre con el Bloc de notas y se busca el número con Ctrl + F.",
+   "section": "4.3"
+  },
+  {
+   "type": "mc",
+   "q": "En el Koh Young, ¿qué significa la alarma 1201?",
+   "options": [
+    "Paro de emergencia oprimido.",
+    "Presión de aire baja.",
+    "No encontró los fiduciales.",
+    "Error del PZT."
+   ],
+   "correct": 0,
+   "explain": "Se libera jalando el botón.",
+   "section": "4.3"
+  },
+  {
+   "type": "mc",
+   "q": "Para reportar a Koh Young un falso llamado de inspección, ¿qué archivos envías?",
+   "options": [
+    "Archivos CBI (Component Base Image).",
+    "Registros de MCSLOG.",
+    "El respaldo de Acronis.",
+    "El archivo EngMsg.ini."
+   ],
+   "correct": 0,
+   "explain": "Los CBI también sirven para afinar el programa fuera de línea.",
+   "section": "4.3 (Cómo reportar)"
+  },
+  {
+   "type": "mc",
+   "q": "Un diodo de un proveedor nuevo sale con falla de polaridad aunque está bien. ¿Cuál es la solución correcta?",
+   "options": [
+    "Agregar una parte alternativa (Alternative Part) para ese proveedor.",
+    "Apagar la inspección de polaridad.",
+    "Abrir la tolerancia de todo el programa.",
+    "Ignorar los llamados de ese diodo."
+   ],
+   "correct": 0,
+   "explain": "El proveedor marca distinto; apagar la inspección abre la puerta a escapes.",
+   "section": "4.5"
+  },
+  {
+   "type": "tf",
+   "q": "Si de pronto fallan muchos programas a la vez, lo primero es ajustar tolerancias.",
+   "answer": false,
+   "explain": "Falla en todos los programas a la vez apunta a la máquina o a la medición, no al programa.",
+   "section": "4.4"
+  },
+  {
+   "type": "tf",
+   "q": "En el amplificador del PZT, la luz verde es normal; naranja fija o parpadeando indica falla del amplificador o del cable.",
+   "answer": true,
+   "explain": "Es parte de la secuencia de diagnóstico del PZT.",
+   "section": "4.3"
+  },
+  {
+   "type": "tf",
+   "q": "Un escape puede deberse a que el operador aceptó un llamado que la máquina sí marcó.",
+   "answer": true,
+   "explain": "Es una de las cuatro explicaciones posibles de un escape.",
+   "section": "4.6"
+  },
+  {
+   "type": "case",
+   "q": "Desde ayer suben los llamados de altura y de pin levantado en varios modelos al mismo tiempo. ¿Qué haces primero?",
+   "options": [
+    "Corro LTS y las verificaciones en KYCal para ver si la medición salió de sus límites.",
+    "Abro tolerancias en todos los programas.",
+    "Reprogramo todos los modelos.",
+    "Mando todas las tarjetas a retrabajo."
+   ],
+   "correct": 0,
+   "explain": "Varios modelos a la vez es falla de medición, no de programa.",
+   "section": "4.4"
+  }
+ ]
+}

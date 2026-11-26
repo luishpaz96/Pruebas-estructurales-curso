@@ -1,0 +1,123 @@
+{
+ "id": "m19",
+ "order": 19,
+ "brand": "gen",
+ "machine": null,
+ "title": "Módulo 19. Estrategia, SPC e integración de línea",
+ "summary": "",
+ "lessons": [],
+ "exam": [
+  {
+   "type": "mc",
+   "q": "¿Qué es una matriz de cobertura?",
+   "options": [
+    "Una tabla que dice qué estación detecta cada defecto, para ver los huecos.",
+    "Un plan de mantenimiento.",
+    "Una lista de contraseñas.",
+    "El orden de las pruebas del ICT."
+   ],
+   "correct": 0,
+   "explain": "Se arma con SPI, AOI, AXI e ICT.",
+   "section": "19.1"
+  },
+  {
+   "type": "mc",
+   "q": "En la matriz, un renglón donde ninguna estación dice \"Sí\", ¿qué es?",
+   "options": [
+    "Un riesgo: se acepta por escrito o se cubre con otra inspección o prueba.",
+    "Un defecto que no existe.",
+    "Un error de la tabla.",
+    "Algo que siempre detecta el ICT."
+   ],
+   "correct": 0,
+   "explain": "Hay que verlo antes de que lo encuentre el cliente.",
+   "section": "19.1"
+  },
+  {
+   "type": "mc",
+   "q": "Todos los componentes de una boquilla salen corridos hacia el mismo lado en el AOI. ¿Qué se corrige?",
+   "options": [
+    "La colocadora, no el AOI.",
+    "Las tolerancias del AOI.",
+    "El horno.",
+    "El ICT."
+   ],
+   "correct": 0,
+   "explain": "La inspección retroalimenta a la máquina que causa el defecto.",
+   "section": "19.2"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué valor de Cpk es la meta usual?",
+   "options": [
+    "1.33 o más",
+    "0.5",
+    "Menos de 1.0",
+    "Exactamente 1"
+   ],
+   "correct": 0,
+   "explain": "Menos de 1.0 significa que ya se están produciendo defectos.",
+   "section": "19.3"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué es un Pareto?",
+   "options": [
+    "Una gráfica de barras ordenada de mayor a menor que dice en qué problema trabajar primero.",
+    "Una carta de control.",
+    "Un tipo de defecto.",
+    "Un estándar de comunicación."
+   ],
+   "correct": 0,
+   "explain": "Por ejemplo, los 10 componentes con más falsos llamados.",
+   "section": "19.3"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué estándar pasa, además de las señales básicas, datos de la tarjeta como su identificador y dimensiones?",
+   "options": [
+    "IPC-HERMES-9852",
+    "SMEMA",
+    "IPC-A-610",
+    "IPC-7095"
+   ],
+   "correct": 0,
+   "explain": "SMEMA solo dice \"tengo tarjeta\" y \"estoy lista\".",
+   "section": "19.4"
+  },
+  {
+   "type": "tf",
+   "q": "KSMART y KPO son de Koh Young; V-ONE es una plataforma de ViTrox.",
+   "answer": true,
+   "explain": "Cada software lleva su etiqueta de marca.",
+   "section": "19 (franja de marca) y 19.2"
+  },
+  {
+   "type": "tf",
+   "q": "El ICT y el AXI se complementan: el AXI ve la forma de la soldadura oculta y el ICT mide el valor eléctrico.",
+   "answer": true,
+   "explain": "Ninguno de los dos lo ve todo.",
+   "section": "19.1"
+  },
+  {
+   "type": "tf",
+   "q": "Un Cpk menor a 1.0 significa que el proceso está muy holgado.",
+   "answer": false,
+   "explain": "Significa que ya se están produciendo defectos.",
+   "section": "19.3"
+  },
+  {
+   "type": "case",
+   "q": "Un open de BGA en el AXI coincide, en la misma tarjeta, con poca pasta en el SPI. ¿Dónde está el problema?",
+   "options": [
+    "En la impresora de pasta.",
+    "En el AXI.",
+    "En el ICT.",
+    "En el operador de revisión."
+   ],
+   "correct": 0,
+   "explain": "Seguir la tarjeta por número de serie muestra la causa.",
+   "section": "19.2"
+  }
+ ]
+}

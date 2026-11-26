@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Academia de Inspección AOI AXI ICT</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 40 40%22%3E%3Crect x=%224%22 y=%229%22 width=%2232%22 height=%2222%22 rx=%223%22 fill=%22none%22 stroke=%22%233d8bff%22 stroke-width=%223%22/%3E%3Ccircle cx=%2220%22 cy=%2220%22 r=%226%22 fill=%22%23ffb020%22/%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&family=Barlow:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/app.css">
+<script type="importmap">
+{ "imports": { "three": "./vendor/three.module.min.js", "three/addons/": "./vendor/addons/" } }
+</script>
+</head>
+<body>
+<header class="top">
+  <a class="brand" href="#inicio" aria-label="Inicio">
+    <svg viewBox="0 0 40 40" width="34" height="34" aria-hidden="true"><rect x="4" y="9" width="32" height="22" rx="3" fill="none" stroke="currentColor" stroke-width="2.5"/><circle cx="20" cy="20" r="6" fill="none" stroke="var(--acc)" stroke-width="2.5"/><path d="M20 3v6M20 31v6M3 20h6M31 20h6" stroke="var(--acc)" stroke-width="2.5"/></svg>
+    <span>Academia de Inspección</span>
+  </a>
+  <nav class="nav" id="nav">
+    <a href="#inicio">Inicio</a><a href="#mapa">Mapa</a><a href="#taller">Taller</a><a href="#simulador">Simulador</a><a href="#examenes">Exámenes</a><a href="#perfil">Perfil</a><a href="#ajustes">Ajustes</a>
+  </nav>
+  <div class="hud" id="hud" aria-live="polite"></div>
+</header>
+<main id="view" tabindex="-1"></main>
+<div id="toasts" aria-live="polite"></div>
+<div id="modal" class="modal" hidden></div>
+<canvas id="confetti" aria-hidden="true"></canvas>
+<noscript><p class="band">Esta app necesita JavaScript.</p></noscript>
+<script src="js/data/content.js"></script>
+<script type="module" src="js/main.js"></script>
+</body>
+</html>

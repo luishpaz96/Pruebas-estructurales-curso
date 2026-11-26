@@ -1,0 +1,123 @@
+{
+ "id": "m14",
+ "order": 14,
+ "brand": "ks",
+ "machine": null,
+ "title": "Módulo 14. Debug, fallas y mantenimiento del ICT",
+ "summary": "",
+ "lessons": [],
+ "exam": [
+  {
+   "type": "mc",
+   "q": "¿Dónde quedan los cambios que haces en la ventana de debug?",
+   "options": [
+    "En memoria: hay que guardar y compilar, o se pierden al recargar.",
+    "Se guardan solos en el archivo fuente.",
+    "En el testplan.",
+    "En el fixture."
+   ],
+   "correct": 0,
+   "explain": "Cuando la prueba ya es estable, guarda y compila.",
+   "section": "14.1"
+  },
+  {
+   "type": "mc",
+   "q": "Una prueba analógica falla. ¿Cuál es el primer paso del método?",
+   "options": [
+    "Repetirla: ¿falla siempre o a veces?",
+    "Abrir la tolerancia.",
+    "Cambiar el componente.",
+    "Comentar la prueba."
+   ],
+   "correct": 0,
+   "explain": "Después se compara con la KGB.",
+   "section": "14.2"
+  },
+  {
+   "type": "mc",
+   "q": "Muchos nodos fallan la prueba de contacto. ¿Qué revisas?",
+   "options": [
+    "El vacío y la colocación de la tarjeta, y puntas sucias o gastadas.",
+    "El código de barras.",
+    "La BOM.",
+    "La licencia del software."
+   ],
+   "correct": 0,
+   "explain": "Verifica con find pins o con la punta guiada.",
+   "section": "14.3"
+  },
+  {
+   "type": "mc",
+   "q": "La lectura brinca en resistencias grandes. ¿Qué agregas?",
+   "options": [
+    "wa (espera) o fi (promedio).",
+    "pc",
+    "Una tolerancia de 50%.",
+    "Quito la guarda."
+   ],
+   "correct": 0,
+   "explain": "Las capacitancias del circuito necesitan tiempo para estabilizarse.",
+   "section": "14.3"
+  },
+  {
+   "type": "mc",
+   "q": "¿Cuándo se corre el autoajuste?",
+   "options": [
+    "Cada vez que la temperatura cambia ±5 °C.",
+    "Una vez al año.",
+    "Solo al instalar el equipo.",
+    "Cuando falla una prueba digital."
+   ],
+   "correct": 0,
+   "explain": "Debe pasar antes del diagnóstico para que la ASRU mida bien.",
+   "section": "14.5"
+  },
+  {
+   "type": "mc",
+   "q": "El equipo se apaga solo sin motivo aparente. ¿Causa típica según el entrenamiento?",
+   "options": [
+    "Polvo en las MPU: no tienen ventilación suficiente.",
+    "Falta de licencia.",
+    "Un corto en la tarjeta bajo prueba.",
+    "El usuario operator."
+   ],
+   "correct": 0,
+   "explain": "Se limpian filtros, ventiladores y MPU.",
+   "section": "14.3 y 14.5"
+  },
+  {
+   "type": "tf",
+   "q": "Si muchas tarjetas fallan igual y todas están bien, el problema es la prueba o el fixture.",
+   "answer": true,
+   "explain": "Va a debug, no a reparación.",
+   "section": "14.4"
+  },
+  {
+   "type": "tf",
+   "q": "Se puede energizar una tarjeta que falló cortos si el corto parece pequeño.",
+   "answer": false,
+   "explain": "Nunca se energiza una tarjeta que falló cortos o Polarity Check.",
+   "section": "14.3 (Reglas)"
+  },
+  {
+   "type": "tf",
+   "q": "El diagnóstico completo del sistema se corre con el usuario service1 y el fixture de diagnóstico, y dura cerca de una hora.",
+   "answer": true,
+   "explain": "System Diagnostics, Full Diagnostics.",
+   "section": "14.5"
+  },
+  {
+   "type": "case",
+   "q": "El mismo corto aparece en muchas tarjetas. ¿Cómo decides si es la tarjeta o el fixture?",
+   "options": [
+    "Mido la tarjeta fuera del fixture con multímetro: si está bien, reviso el fixture; si está mal, aviso a proceso.",
+    "Subo el umbral de corto.",
+    "Comento la prueba.",
+    "Cambio el fixture completo sin revisar."
+   ],
+   "correct": 0,
+   "explain": "Se busca al culpable con evidencia.",
+   "section": "14.3"
+  }
+ ]
+}

@@ -1,0 +1,141 @@
+[
+ {
+  "id": "pr-v5-create",
+  "machine": "aoi_v510",
+  "kind": "create",
+  "title": "Programar en Smart GUI con algoritmos C, R, B, S y U",
+  "scenario": "Vas a crear la receta del V510 para PRACTICA-01. Debes elegir el algoritmo correcto para cada tipo de componente.",
+  "steps": [
+   {
+    "prompt": "Para los resistores y capacitores 0603, ¿qué algoritmo usas?",
+    "options": [
+     "C (chip)",
+     "B (BGA)",
+     "S",
+     "U (definido por usuario)"
+    ],
+    "correct": 0,
+    "feedback": "Los chips rectangulares usan el algoritmo de chip."
+   },
+   {
+    "prompt": "Para el QFP-32 y el SOIC-8, ¿qué revisas además del cuerpo?",
+    "options": [
+     "Cada terminal tipo gullwing: talón, punta y puentes entre pines",
+     "Sólo la presencia del cuerpo",
+     "Sólo el color de la serigrafía",
+     "La altura del conector"
+    ],
+    "correct": 0,
+    "feedback": "Los defectos de gullwing están en las terminales: levantadas, puentes, poca soldadura."
+   },
+   {
+    "prompt": "El BGA tiene sus bolas ocultas. ¿Qué puede inspeccionar el AOI?",
+    "options": [
+     "Presencia, posición, rotación y altura del cuerpo; las juntas van al AXI",
+     "Los voids de cada bola",
+     "El puente entre bolas internas",
+     "Nada, se desactiva"
+    ],
+    "correct": 0,
+    "feedback": "El AOI ve lo visible; las juntas ocultas son trabajo del AXI."
+   },
+   {
+    "prompt": "Antes de calibrar o crear recetas nuevas, ¿qué verificas de la máquina?",
+    "options": [
+     "Que la verificación de iluminación esté a ±5 del Target Mean y el 3D calibrado",
+     "Que el monitor esté limpio",
+     "Que la PC tenga internet",
+     "Nada"
+    ],
+    "correct": 0,
+    "feedback": "Una receta hecha con la máquina descalibrada fallará cuando se calibre."
+   }
+  ]
+ },
+ {
+  "id": "pr-v5-debug-light",
+  "machine": "aoi_v510",
+  "kind": "debug",
+  "title": "Falsos llamados en todas las recetas después del mantenimiento",
+  "scenario": "Después del mantenimiento mensual, todas las recetas del V510 marcan polaridad y presencia en componentes que están bien.",
+  "steps": [
+   {
+    "prompt": "Falla en todas las recetas a la vez. ¿Qué haces?",
+    "options": [
+     "Verifico iluminación sobre la greycard y, si falla, la calibro",
+     "Ajusto los umbrales de cada receta",
+     "Reinstalo Smart GUI",
+     "Bajo la velocidad del transportador"
+    ],
+    "correct": 0,
+    "feedback": "Si falla todo a la vez es la máquina, no los programas."
+   },
+   {
+    "prompt": "Las franjas del proyector se ven borrosas. ¿Calibras 3D?",
+    "options": [
+     "No: primero reviso el enfoque del proyector",
+     "Sí, la calibración lo corrige",
+     "Sí, y subo la tolerancia",
+     "Cambio la cámara"
+    ],
+    "correct": 0,
+    "feedback": "Con franjas borrosas no se calibra; se corrige el enfoque primero."
+   }
+  ],
+  "params": [
+   {
+    "name": "Valor medido rojo 90° (objetivo 80)",
+    "unit": "",
+    "min": 40,
+    "max": 120,
+    "start": 62,
+    "targetMin": 75,
+    "targetMax": 85,
+    "hint": "Debe quedar a ±5 del Target Mean.",
+    "lowEffect": "false"
+   }
+  ]
+ },
+ {
+  "id": "pr-v5-debug-smema",
+  "machine": "aoi_v510",
+  "kind": "debug",
+  "title": "La tarjeta no entra: torre en ámbar fijo",
+  "scenario": "La torre está en ámbar fijo y la tarjeta se queda en la máquina anterior.",
+  "steps": [
+   {
+    "prompt": "¿Qué significa ámbar fijo?",
+    "options": [
+     "Esperando tarjeta",
+     "Error de PLC",
+     "Paro de emergencia",
+     "Inspeccionando"
+    ],
+    "correct": 0,
+    "feedback": "Ámbar fijo: la máquina está lista esperando tarjeta."
+   },
+   {
+    "prompt": "¿Qué revisas primero?",
+    "options": [
+     "La señal SMEMA de la máquina anterior, sensores de entrada y ancho del AWA",
+     "El enfoque de la cámara",
+     "La calibración 3D",
+     "El disco de la PC"
+    ],
+    "correct": 0,
+    "feedback": "Es un problema de comunicación o transporte, no de visión."
+   },
+   {
+    "prompt": "Con multímetro, puenteas pines 3 y 4 de entrada SMEMA y el transportador corre. ¿Conclusión?",
+    "options": [
+     "El V510 está bien; la máquina anterior no está mandando la señal",
+     "El transportador está dañado",
+     "El AWA está descalibrado",
+     "Hay que cambiar el PLC"
+    ],
+    "correct": 0,
+    "feedback": "Si con el puente corre, el problema está aguas arriba."
+   }
+  ]
+ }
+]

@@ -1,0 +1,244 @@
+{
+ "id": "m3",
+ "brand": "ky",
+ "machine": "aoi_ky",
+ "title": "Módulo 3. Mantenimiento y calibración (Koh Young)",
+ "summary": "Rutinas de mantenimiento del AOI Koh Young por turno, mes, semestre y año, calibraciones de KYCal, respaldos, GR&R y refacciones.",
+ "lessons": [
+  {
+   "id": "m3-l1",
+   "title": "Seguridad y plan de mantenimiento",
+   "animation": "safety_radiation",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "Casi todo el mantenimiento se reduce a tres cosas: óptica limpia, luz estable y mecánica ajustada. Antes de abrir cubiertas corta energía y aire, oprime el paro de emergencia y aplica LOTO con etiqueta de «En inspección»."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Cada turno (operador): paro de emergencia, interlock de la puerta superior, torre de luces, presión de aire, fugas, transportador y ejes.",
+      "Mensual (técnico): filtro de aire y filtros de ventiladores de 120 x 120 mm.",
+      "Cada 3 meses: tensión de las bandas del transportador con el tensor.",
+      "Cada 6 meses: engrase de guías LM y husillos de X y Y con grasa NSK PS2; limpieza de la cubierta de humos; cambio de puntas de tope gastadas; calibración de altura.",
+      "Anual: acoplamientos, escuadra de X-Y, conexiones, limpieza de caja eléctrica, cámara, iluminación 3D y 2D y medición del patrón."
+     ]
+    },
+    {
+     "kind": "warning",
+     "text": "No abras el panel inferior con la máquina encendida. La máquina debe estar aterrizada a menos de 100 Ω. Despresuriza el filtro regulador con la válvula de alivio antes de reparar algo neumático. No dirijas el aire a la piel ni a los ojos."
+    }
+   ],
+   "keyPoints": [
+    "Mantenimiento por turno lo hace el operador; mensual, trimestral y semestral el técnico.",
+    "Lubricar guías LM y husillos con grasa NSK PS2, unos 30 cc, limpiando la grasa vieja primero.",
+    "La tierra física debe ser menor a 100 Ω.",
+    "Los rodamientos de los motores se calientan; no los toques al terminar."
+   ]
+  },
+  {
+   "id": "m3-l2",
+   "title": "Cubierta de humos y óptica",
+   "animation": "machine_tour",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "El flux que se evapora de las tarjetas calientes se pega a los espejos, al lente principal y a la cubierta de humos de vidrio que está debajo del cabezal. La cubierta se limpia por ambos lados cada 6 meses, con guantes, paño y líquido para lentes."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Síntomas: imagen en vivo oscura en KYCal, visibilidad PZT baja al calibrar y, en casos graves, imagen 3D que ya no se forma.",
+      "Los espejos se dañan al lavarlos, por eso se reemplazan. Para cambiar un espejo basta quitar su soporte; el espejo 4 o el lente principal requieren desmontar el cabezal.",
+      "Aprieta los tornillos del espejo en cruz y solo media vuelta después de que asienten; se rompen si se pasan."
+     ]
+    },
+    {
+     "kind": "tip",
+     "text": "Después de cambiar o limpiar espejos o el lente principal, la calibración que corresponde es iluminación y altura, o cámara y altura, según el caso."
+    }
+   ],
+   "keyPoints": [
+    "La cubierta de humos protege el cabezal; se limpia cada 6 meses.",
+    "El flux evaporado opaca espejos y lente y degrada la imagen 3D poco a poco.",
+    "Los espejos se reemplazan, no se lavan.",
+    "Los tornillos de espejo se aprietan en cruz."
+   ]
+  },
+  {
+   "id": "m3-l3",
+   "title": "Calibraciones en KYCal",
+   "animation": "calibration_target",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "Dos máquinas iguales no miden igual: cada LED, lente y PZT es un poco distinto. La calibración mide un patrón con alturas conocidas y ajusta la máquina para que diga el número correcto. Se hace en KYCal, con AOIGUI cerrado y la máquina en IDLE."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Cámara: Focus, Z-Origin, Distortion (menor a 0.085%) y Rotation (±0.02°).",
+      "Iluminación: Bright 3D (45 ± 2), Bright 2D (90 ± 6) y 3D Projection del PZT por canal CH1 a CH4 (visibilidad mayor a 0.7; PZT-Check cerca de 100).",
+      "Altura: ZScale crea el plano base en una zona plana; ZScaleNM corrige la escala con el segundo pilar (pilar de 500 µm).",
+      "Verificación: Bright Check, 3D Check y Jig 10 Time (10 mediciones en 9 posiciones del FOV, reporte a 3 sigma; pilares de 120, 500, 4000 y 5000 µm).",
+      "LTS: prueba de estabilidad de altura, brillo y PZT contra límites de control."
+     ]
+    },
+    {
+     "kind": "warning",
+     "text": "Respalda antes de calibrar (menú Backup en KYCal). Y al terminar, convierte los datos de calibración; si cierras KYCal sin convertirlos, AOIGUI sigue usando los datos anteriores."
+    }
+   ],
+   "keyPoints": [
+    "La calibración de altura se hace cada 6 meses o si las alturas se ven raras.",
+    "Cambio de LED 3D, LED 2D o iVPC: calibrar iluminación.",
+    "Cambio de PZT o su amplificador: calibrar proyección 3D.",
+    "En máquinas de dos carriles repite o duplica la calibración para el carril 2."
+   ]
+  },
+  {
+   "id": "m3-l4",
+   "title": "Respaldos, IP y GR&R",
+   "animation": "calibration_target",
+   "blocks": [
+    {
+     "kind": "bullets",
+     "items": [
+      "Disco completo de la PC con Acronis (Entire PC, Acronis Secure Zone). Para recuperar se usa F11 al arrancar.",
+      "Configuración con KYConfig: entrar con nivel SV y oprimir BackUp; se guarda en C:\\BackUp.",
+      "Calibración: Backup en KYCal antes de calibrar, Recovery o Roll Back para regresar.",
+      "Programas: los .kyjob en el servidor KSMART o en otro respaldo con control de versiones."
+     ]
+    },
+    {
+     "kind": "text",
+     "text": "AOIGUI, OLP, la estación de revisión y el servidor LM deben estar en la misma subred: los tres primeros números de la IP iguales y el cuarto distinto. Si cambias una IP, actualízala en el servidor LM, en KSMART Agent, en AOIConfig (Result Database) y en la estación de revisión."
+    },
+    {
+     "kind": "text",
+     "text": "GR&R: mide una tarjeta 10 a 30 veces sin cambiar nada y compara la variación con la tolerancia. Como guía del manual MSA de AIAG: menos de 10% es aceptable, entre 10% y 30% es condicional y más de 30% no es aceptable. Hazlo después de un servicio mayor o de mover la máquina."
+    }
+   ],
+   "keyPoints": [
+    "Un respaldo completo de PC, configuración de KYConfig y calibración de KYCal son los tres que debes tener.",
+    "GR&R: menos de 10% aceptable, 10% a 30% condicional, más de 30% no aceptable.",
+    "Después de cambiar una IP hay que actualizarla en varios programas a la vez."
+   ]
+  }
+ ],
+ "order": 3,
+ "exam": [
+  {
+   "type": "mc",
+   "q": "En el Koh Young, ¿con qué grasa y cada cuánto se engrasan las guías LM y los husillos de X y Y?",
+   "options": [
+    "Con grasa NSK PS2, cada 6 meses.",
+    "Con grasa de litio, cada trimestre.",
+    "Con aceite ligero, cada semana.",
+    "No se engrasan nunca."
+   ],
+   "correct": 0,
+   "explain": "La grasa de litio cada trimestre es del ViTrox V510, no del Koh Young.",
+   "section": "3.1"
+  },
+  {
+   "type": "mc",
+   "q": "¿En qué software se calibra el Koh Young?",
+   "options": [
+    "KYCal, con AOIGUI cerrado y la máquina en IDLE.",
+    "AOIGUI, en plena producción.",
+    "Smart GUI.",
+    "ePM-AOI."
+   ],
+   "correct": 0,
+   "explain": "Smart GUI es el software del ViTrox V510.",
+   "section": "3.2"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué corrige la calibración de altura (ZScale y ZScaleNM)?",
+   "options": [
+    "El plano base de referencia y la escala de altura, midiendo el pilar del patrón.",
+    "El brillo de los LEDs 2D.",
+    "La tensión de las bandas.",
+    "La dirección IP de la PC."
+   ],
+   "correct": 0,
+   "explain": "El pilar de calibración del AOI mide 500 µm.",
+   "section": "3.2"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué pasa si cierras KYCal sin convertir los datos de calibración?",
+   "options": [
+    "AOIGUI sigue usando los datos anteriores.",
+    "Se borra el programa.",
+    "La máquina ya no enciende.",
+    "Nada, se convierten solos."
+   ],
+   "correct": 0,
+   "explain": "Es uno de los dos pasos que más se olvidan; el otro es respaldar antes.",
+   "section": "3.2"
+  },
+  {
+   "type": "mc",
+   "q": "Cambiaste el lente principal del cabezal. ¿Qué calibraciones tocan?",
+   "options": [
+    "Cámara y altura.",
+    "Solo iluminación.",
+    "Ninguna.",
+    "Solo la prueba LTS."
+   ],
+   "correct": 0,
+   "explain": "Cada cambio de pieza tiene su calibración en la tabla del módulo 3.",
+   "section": "3.2 (Cuándo calibrar)"
+  },
+  {
+   "type": "mc",
+   "q": "Según el manual MSA de AIAG, ¿qué resultado de GR&R es aceptable?",
+   "options": [
+    "Variación menor a 10% de la tolerancia.",
+    "Variación menor a 50% de la tolerancia.",
+    "Variación entre 30% y 50%.",
+    "Cualquiera, si la máquina está calibrada."
+   ],
+   "correct": 0,
+   "explain": "Entre 10% y 30% es condicional; más de 30% no es aceptable.",
+   "section": "3.3"
+  },
+  {
+   "type": "tf",
+   "q": "Antes de calibrar se hace un respaldo en KYCal para poder regresar con Recovery si algo sale mal.",
+   "answer": true,
+   "explain": "Menú Backup, con tu nombre y un comentario.",
+   "section": "3.2"
+  },
+  {
+   "type": "tf",
+   "q": "Los espejos del cabezal sucios de flux se lavan con agua y jabón y se vuelven a usar.",
+   "answer": false,
+   "explain": "Los espejos se dañan al lavarlos; se reemplazan.",
+   "section": "3.2"
+  },
+  {
+   "type": "tf",
+   "q": "La configuración del Koh Young se respalda con KYConfig y se guarda en C:\\BackUp.",
+   "answer": true,
+   "explain": "Se entra con nivel SV y se oprime BackUp.",
+   "section": "3.2 (Respaldos)"
+  },
+  {
+   "type": "case",
+   "q": "Cambiaste la tarjeta iVPC del Koh Young. ¿Qué calibración debes hacer?",
+   "options": [
+    "Iluminación: brillo y proyección.",
+    "Solo altura.",
+    "Cámara completa.",
+    "Ninguna, la iVPC no influye en la medición."
+   ],
+   "correct": 0,
+   "explain": "La iVPC controla luces 2D, 3D y PZT.",
+   "section": "3.2 (Cuándo calibrar)"
+  }
+ ]
+}

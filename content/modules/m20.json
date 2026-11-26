@@ -1,0 +1,123 @@
+{
+ "id": "m20",
+ "order": 20,
+ "brand": "gen",
+ "machine": null,
+ "title": "Módulo 20. Proceso SMT: de dónde vienen los defectos",
+ "summary": "",
+ "lessons": [],
+ "exam": [
+  {
+   "type": "mc",
+   "q": "Una abertura de 12 × 12 mil en un stencil de 5 mil tiene area ratio de 0.60. ¿Qué significa?",
+   "options": [
+    "No llega a 0.66: la pasta se queda pegada.",
+    "Está bien, porque su aspect ratio es 2.4.",
+    "Hay que subir el stencil a 6 mil.",
+    "La abertura es grande y hará puentes."
+   ],
+   "correct": 0,
+   "explain": "El mínimo para stencil láser es 0.66. Con un stencil de 4 mil el area ratio sube a 0.75 y pasa.",
+   "section": "20.2"
+  },
+  {
+   "type": "mc",
+   "q": "En paste-in-hole, ¿por qué se imprime el doble del volumen que necesita la unión?",
+   "options": [
+    "Al fundirse, la pasta baja a la mitad.",
+    "La mitad siempre se queda en el stencil.",
+    "Porque se imprime en las dos caras.",
+    "Por norma, sin razón física."
+   ],
+   "correct": 0,
+   "explain": "En volumen, la pasta es más o menos mitad metal y mitad flux.",
+   "section": "20.1 y 20.6"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué es el TAL en un perfil de reflujo?",
+   "options": [
+    "El tiempo que la soldadura pasa líquida.",
+    "La temperatura máxima del horno.",
+    "El tiempo total dentro del horno.",
+    "La rampa de enfriamiento."
+   ],
+   "correct": 0,
+   "explain": "Es el tiempo arriba del punto de fusión; la guía recomienda de 45 a 90 s.",
+   "section": "20.4"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué forma de pegar un termopar es la más repetible?",
+   "options": [
+    "Con soldadura de alta temperatura.",
+    "Con cinta Kapton.",
+    "Torciendo los cables sobre la terminal.",
+    "Dejándolo suelto cerca del componente."
+   ],
+   "correct": 0,
+   "explain": "La cinta de aluminio es buena alternativa; la Kapton se puede levantar y medir el aire.",
+   "section": "20.4"
+  },
+  {
+   "type": "mc",
+   "q": "¿Cómo se valida un programa nuevo de la impresora de pasta?",
+   "options": [
+    "Imprimiendo la dummy y midiendo en el SPI.",
+    "Con View Alignment.",
+    "Con el score de los fiduciales.",
+    "Corriendo 100 tarjetas sin revisarlas."
+   ],
+   "correct": 0,
+   "explain": "Se mide el porcentaje de volumen en el SPI. View Alignment es solo una revisión visual.",
+   "section": "20.3"
+  },
+  {
+   "type": "mc",
+   "q": "Un BGA de 4 g tiene 107.5 mm² de área soldable. ¿Puede ir en la cara de abajo sin riesgo de caerse en el segundo reflujo?",
+   "options": [
+    "Sí: 0.037 g/mm² es menor que 0.050.",
+    "No: todo BGA de más de 1 g se cae.",
+    "No: el límite para BGA es 0.010 g/mm².",
+    "Solo si se le pone pegamento."
+   ],
+   "correct": 0,
+   "explain": "Se divide el peso entre el área soldable y se compara con el límite de su tipo de componente (0.050 g/mm² para BGA).",
+   "section": "20.5"
+  },
+  {
+   "type": "tf",
+   "q": "En paso fino conviene sobreimprimir (abertura más grande que el pad) para asegurar suficiente pasta.",
+   "answer": false,
+   "explain": "En paso fino se reduce la abertura; la sobreimpresión embarra pasta bajo el stencil y hace puentes.",
+   "section": "20.2"
+  },
+  {
+   "type": "tf",
+   "q": "Los cables de un termopar no se tuercen, porque el termopar mide donde los dos metales se tocan por primera vez.",
+   "answer": true,
+   "explain": "Si se tuercen, mide en la torcedura y no en la unión.",
+   "section": "20.4"
+  },
+  {
+   "type": "tf",
+   "q": "Pasar la tarjeta dos veces por la ola es una buena forma de llenar los barriles que quedaron vacíos.",
+   "answer": false,
+   "explain": "Puede pasar la prueba funcional, pero falla más en campo.",
+   "section": "20.7"
+  },
+  {
+   "type": "case",
+   "q": "El AXI reporta barriles sin llenar solo en los pines de un conector que va conectado a planos de tierra internos; los demás PTH salen bien. ¿Qué revisas primero?",
+   "options": [
+    "Punto frío y precalentamiento de arriba.",
+    "Las tolerancias del AXI.",
+    "La presión de la impresora SMT.",
+    "Pasar la tarjeta dos veces por la ola."
+   ],
+   "correct": 0,
+   "explain": "Los planos internos se llevan el calor y la soldadura deja de subir. Mide con un termopar arriba de ese conector y no tapes el calor con sujetadores del pallet.",
+   "section": "20.7"
+  }
+ ]
+}

@@ -1,0 +1,119 @@
+[
+ {
+  "id": "pr-v8-create-bga",
+  "machine": "axi_v810",
+  "kind": "create",
+  "title": "Receta del BGA-64 en el V810",
+  "scenario": "Debes agregar el BGA-64 (U2) de PRACTICA-01 a la receta del V810 y dejarlo sin falsos llamados.",
+  "steps": [
+   {
+    "prompt": "¿Qué tipo de junta (subtipo) asignas a U2?",
+    "options": [
+     "Grid array (BGA), con corte en el plano de las bolas",
+     "Gullwing",
+     "Chip",
+     "PTH"
+    ],
+    "correct": 0,
+    "feedback": "El BGA se analiza en el corte de las bolas."
+   },
+   {
+    "prompt": "Las bolas sobre vías salen con voids falsos. ¿Qué haces?",
+    "options": [
+     "Creo un subtipo aparte para esas bolas",
+     "Desactivo la medición de voids",
+     "Subo el límite de void de todo el BGA al 60%",
+     "Cambio el tubo"
+    ],
+    "correct": 0,
+    "feedback": "Un subtipo separado evita afectar al resto de las bolas."
+   },
+   {
+    "prompt": "Cómo confirmas un HiP dudoso?",
+    "options": [
+     "2DX con vista inclinada y, si hace falta, corte transversal o dye and pry",
+     "Abriendo el límite hasta que pase",
+     "Con el AOI",
+     "Preguntando al operador"
+    ],
+    "correct": 0,
+    "feedback": "Las pruebas destructivas dan la verdad con la que se ajustan los límites."
+   }
+  ],
+  "params": [
+   {
+    "name": "Percent of Diameter to Test",
+    "unit": "%",
+    "min": 60,
+    "max": 100,
+    "start": 95,
+    "targetMin": 82,
+    "targetMax": 90,
+    "hint": "Bajar de 90% a 85% elimina falsos por vacíos en media luna; no bajes de 80%.",
+    "lowEffect": "escape"
+   }
+  ]
+ },
+ {
+  "id": "pr-v8-debug-open",
+  "machine": "axi_v810",
+  "kind": "debug",
+  "title": "Muchos open en una misma zona",
+  "scenario": "El V810 marca open en 30 juntas de la misma esquina, en varias tarjetas. Eléctricamente pasan.",
+  "steps": [
+   {
+    "prompt": "¿Qué sospechas primero?",
+    "options": [
+     "Pandeo o enfoque (sensor de superficie)",
+     "30 defectos reales",
+     "Tubo de rayos X al final de su vida",
+     "Error del operador"
+    ],
+    "correct": 0,
+    "feedback": "Muchos open en una zona casi siempre son pandeo o enfoque."
+   },
+   {
+    "prompt": "El PSP falla en esa esquina. ¿Qué corriges?",
+    "options": [
+     "Muevo los puntos de medición del Surface Map fuera de agujeros o zonas brillantes",
+     "Subo el límite de open",
+     "Calibro el detector",
+     "Cambio la receta completa"
+    ],
+    "correct": 0,
+    "feedback": "Un punto de PSP sobre un agujero da una altura falsa de la tarjeta."
+   }
+  ]
+ },
+ {
+  "id": "pr-v8-debug-image",
+  "machine": "axi_v810",
+  "kind": "debug",
+  "title": "Rayas fijas en todas las imágenes",
+  "scenario": "Todas las imágenes del V810, en todos los programas, muestran rayas y manchas en la misma posición.",
+  "steps": [
+   {
+    "prompt": "¿A qué familia pertenece la falla?",
+    "options": [
+     "Falla de imagen",
+     "Falla de programa",
+     "Falla de proceso",
+     "Seguridad"
+    ],
+    "correct": 0,
+    "feedback": "Afecta todas las tarjetas y programas: es imagen."
+   },
+   {
+    "prompt": "¿Qué calibración corresponde?",
+    "options": [
+     "Ganancia y campo plano del detector",
+     "Geométrica",
+     "Sensor de superficie",
+     "Ancho del transportador"
+    ],
+    "correct": 0,
+    "feedback": "Rayas y manchas fijas son respuesta desigual de píxeles del detector."
+   }
+  ]
+ }
+]

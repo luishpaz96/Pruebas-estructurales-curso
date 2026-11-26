@@ -1,0 +1,123 @@
+{
+ "id": "m21",
+ "order": 21,
+ "brand": "gen",
+ "machine": null,
+ "title": "Módulo 21. Defectos según IPC-A-610",
+ "summary": "",
+ "lessons": [],
+ "exam": [
+  {
+   "type": "mc",
+   "q": "¿Qué clase de IPC corresponde a automotriz de seguridad, médico y aeroespacial?",
+   "options": [
+    "Clase 3",
+    "Clase 1",
+    "Clase 2",
+    "Clase 0"
+   ],
+   "correct": 0,
+   "explain": "Clase 2 es servicio dedicado y es la más común.",
+   "section": "21.1"
+  },
+  {
+   "type": "mc",
+   "q": "¿Cuál es el desplazamiento lateral máximo de un chip en clase 3?",
+   "options": [
+    "25% de W o de P, lo que sea menor.",
+    "50% de W o de P.",
+    "75% de W o de P.",
+    "No se permite ninguno."
+   ],
+   "correct": 0,
+   "explain": "En clase 1 y 2 es 50%.",
+   "section": "21.4"
+  },
+  {
+   "type": "mc",
+   "q": "Un chip 0603 tiene una terminal de 0.8 mm de ancho. ¿Cuál es su límite de desplazamiento lateral en clase 3?",
+   "options": [
+    "200 µm",
+    "400 µm",
+    "800 µm",
+    "80 µm"
+   ],
+   "correct": 0,
+   "explain": "0.25 × 0.8 mm = 0.2 mm = 200 µm. En clase 2 serían 400 µm.",
+   "section": "21.2"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué porcentaje de vacíos en una esfera de BGA usan las ediciones recientes de IPC-A-610 e IPC-7095 como límite?",
+   "options": [
+    "30% del área de la esfera en la imagen.",
+    "5%",
+    "50%",
+    "75%"
+   ],
+   "correct": 0,
+   "explain": "Ediciones anteriores y muchos clientes usan 25%.",
+   "section": "21.6"
+  },
+  {
+   "type": "mc",
+   "q": "¿Cuál es el llenado vertical mínimo del barril de un pin pasante en clase 2 y 3?",
+   "options": [
+    "75%",
+    "25%",
+    "50% siempre",
+    "100%"
+   ],
+   "correct": 0,
+   "explain": "En clase 2 se permite 50% solo en casos específicos con planos térmicos.",
+   "section": "21.8"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué es un \"indicador de proceso\"?",
+   "options": [
+    "No es defecto, pero avisa que el proceso se desvía: se registra y se corrige el proceso.",
+    "Un defecto que siempre se retrabaja.",
+    "Una tarjeta aceptable sin comentarios.",
+    "Una alarma de la máquina."
+   ],
+   "correct": 0,
+   "explain": "La tarjeta se usa, pero el proceso se corrige.",
+   "section": "21.1"
+  },
+  {
+   "type": "tf",
+   "q": "Un programa copiado de un producto clase 2 a uno clase 3 sin revisar límites puede dejar pasar defectos.",
+   "answer": true,
+   "explain": "Los límites de clase 3 son más cerrados.",
+   "section": "21.2"
+  },
+  {
+   "type": "tf",
+   "q": "El AOI puede detectar head-in-pillow en un BGA.",
+   "answer": false,
+   "explain": "El AOI no ve debajo del BGA; el AXI lo detecta solo en parte.",
+   "section": "21.6"
+  },
+  {
+   "type": "tf",
+   "q": "Residuos de flux, grietas finas y soldadura fría son cosas que ni el AOI ni el AXI ven bien.",
+   "answer": true,
+   "explain": "Se cubren con inspección visual, muestreo y control del proceso.",
+   "section": "21.9"
+  },
+  {
+   "type": "case",
+   "q": "Un operador duda si un filete de chip es aceptable en un producto clase 2. ¿Dónde está la respuesta?",
+   "options": [
+    "En la norma IPC-A-610 de la planta y en el requisito del cliente.",
+    "En la opinión del supervisor.",
+    "En lo que diga la máquina.",
+    "En el tiempo de ciclo."
+   ],
+   "correct": 0,
+   "explain": "La respuesta está en la norma, no en la opinión de nadie.",
+   "section": "16 (Cómo usar este módulo)"
+  }
+ ]
+}

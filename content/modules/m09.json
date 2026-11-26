@@ -1,0 +1,273 @@
+{
+ "id": "m9",
+ "brand": "v8",
+ "machine": "axi_v810",
+ "title": "Módulo 9. Creación de programas en el V810",
+ "summary": "Flujo de receta del V810 desde el NDF hasta el Zip Recipe, alineación, tipos de unión, métodos de enfoque, límites de BGA, vacíos y head-in-pillow.",
+ "lessons": [
+  {
+   "id": "m9-l1",
+   "title": "Flujo de creación de la receta",
+   "animation": "process_flow",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "En el V810 no programas componente por componente: le dices a la máquina el tipo de unión de cada pieza (esfera, patita, pad plano, pin pasante) y ella aplica la receta de ese tipo. Las uniones iguales se agrupan en subtipos."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Traducir el CAD a NDF (de ViTrox V810 o de Agilent 5DX) y ponerlo en la carpeta ndf.",
+      "Import: NDF File; un clic previsualiza y doble clic carga la receta.",
+      "Recipe Summary, Panel Setup (espesor de tarjeta con vernier y tamaño de panel o carrier), Alignment Setup (tres grupos de hasta 6 uniones).",
+      "Adjust CAD: revisar un ejemplo de cada paquete.",
+      "Modify Subtypes, Initial Tuning (Learn), Fine Tuning, aprender cortos y finalmente Zip Recipe con imágenes de verificación."
+     ]
+    },
+    {
+     "kind": "text",
+     "text": "Sobre qué inspeccionar: BGA, CSP, LGA, QFN, pads térmicos, conectores con uniones ocultas, press-fit y pines pasantes críticos siempre; componentes bajo blindajes o de potencia según el riesgo; y normalmente no los componentes con filete visible que el AOI ya cubre, salvo que el cliente pida 100%."
+    }
+   ],
+   "keyPoints": [
+    "Seis etapas: preparar, crear la receta, inicializarla, asignar paquetes, afinar y mantener.",
+    "El flujo termina en Zip Recipe.",
+    "El AXI es más lento que el AOI: define la cobertura junto con calidad."
+   ]
+  },
+  {
+   "id": "m9-l2",
+   "title": "Espesor, alineación y tipos de unión",
+   "animation": "solder_joint",
+   "blocks": [
+    {
+     "kind": "bullets",
+     "items": [
+      "Espesor de tarjeta: mídelo con vernier. Si está mal, las rebanadas caen a la altura equivocada.",
+      "Alineación: usa uniones cerca de las esquinas, que cubran la tarjeta; las de cada grupo deben formar 90° y no estar encimadas con componentes de la otra cara.",
+      "No hay aviso de alineación correcta; una mala selección puede pasar y dejar el CAD corrido.",
+      "Tipo de unión: un QFN asignado como patitas nunca medirá bien. Revísalo en Adjust CAD o en Modify Subtypes.",
+      "Dos caras: la cara que pasó dos veces por el horno se ve distinta; usa Separate Subtype."
+     ]
+    },
+    {
+     "kind": "text",
+     "text": "Tipos de unión: Resistor y Capacitor (Clear Chip Pad, con filete superior e inferior), Polarized Capacitor (slug oscuro hacia el pin 2), Gullwing (talón, centro y punta), Grid Array (cortes pad, midball y package), QFN, SMT Connector, Single Pad (vacíos) y PTH y Pressfit (llenado de barril)."
+    },
+    {
+     "kind": "tip",
+     "text": "Si una imagen sale oscura, sube la ganancia de cámara; con artefactos, cambia el nivel de integración; con componentes pequeños, usa mayor magnificación; con componentes muy sombreados, sube el nivel DRO; y si hay un componente encimado en la otra cara, activa la compensación de interferencia."
+    }
+   ],
+   "keyPoints": [
+    "El espesor de tarjeta incorrecto manda las rebanadas a la altura equivocada.",
+    "Una unión mal asignada nunca se mide bien.",
+    "Separar subtipos por cara evita mezclar uniones con historia térmica distinta.",
+    "Nunca aprendas con una tarjeta defectuosa: la máquina aceptará ese defecto."
+   ]
+  },
+  {
+   "id": "m9-l3",
+   "title": "Métodos de enfoque: a qué altura cae cada rebanada",
+   "animation": "xray_tomo",
+   "blocks": [
+    {
+     "kind": "bullets",
+     "items": [
+      "Auto Focus (AF): reconstruye varias alturas y elige la más nítida. Por defecto en montaje superficial; se fija por componente.",
+      "Predictive Slice Height (PSH): modelo local con uniones vecinas buenas a menos de 4 pulgadas. Por defecto en PTH y press-fit; hace el ciclo más lento.",
+      "Global Surface Model (GSM): como PSH pero con uniones de toda la tarjeta.",
+      "Reference From Plane (RFP): altura fija respecto al cupón fiducial, encontrada con Virtual Live; para componentes donde el enfoque automático se confunde.",
+      "PSP: mapa de superficie medido por hardware; para tarjetas 100% de pines pasantes o press-fit."
+     ]
+    },
+    {
+     "kind": "tip",
+     "text": "Para que un componente use AF, GSM o RFP, PSH debe estar apagado en su subtipo y el componente no debe estar en la lista de PSP."
+    }
+   ],
+   "keyPoints": [
+    "Auto Focus es el método por defecto en montaje superficial.",
+    "PSH y PSP se usan en pines pasantes y press-fit.",
+    "Un mapa de superficie sigue la curva de la tarjeta; uno plano deja uniones de orilla fuera del corte.",
+    "RFP fija la altura con Virtual Live."
+   ]
+  },
+  {
+   "id": "m9-l4",
+   "title": "Ajustar límites de BGA: open, orillas y vacíos",
+   "animation": "defect_gallery",
+   "blocks": [
+    {
+     "kind": "bullets",
+     "items": [
+      "Orillas de la esfera: porcentaje de detección de orilla por defecto 70%; con 35% el diámetro sale grande y con 99% chico.",
+      "Open por vecinas (Neighbor Outlier): compara cada diámetro con sus vecinas por rango intercuartil y marca como open lo que se aleja más de 3.5 IQR.",
+      "Vacíos en 4 pasos, basados en IPC-7095: 1) ajustar el umbral de espesor del vacío; 2) porcentaje del diámetro que se prueba (90% por defecto, 80% como mínimo típico); 3) límite de área de vacío por corte; 4) vacíos marginales, que fallan si muchas esferas tienen vacíos medianos.",
+      "Void Area Limit for Neighbor Outlier (10% por defecto): ignora el open por vecinas cuando la esfera tiene ese vacío o más; ViTrox recomienda no bajarlo de 5%.",
+      "Desalineado: offset contra las esferas de la región y contra el CAD."
+     ]
+    },
+    {
+     "kind": "text",
+     "text": "Ajusta el open con el procedimiento de siempre: mira la distribución completa, pon el límite entre las buenas y los defectos reales y, si algunas esferas están sobre una vía o junto a un disipador, dales su propio subtipo."
+    },
+    {
+     "kind": "warning",
+     "text": "Para aprender cortos: en Initial Tuning elige el tipo de unión, Subtype All, marca Short Background Regions y desmarca Algorithm Settings. Si Algorithm Settings queda marcado, el software sobrescribe todas tus mediciones y nominales."
+    }
+   ],
+   "keyPoints": [
+    "Detección de orilla por defecto: 70%.",
+    "Neighbor Outlier marca open cuando se aleja más de 3.5 IQR de sus vecinas.",
+    "Vacíos: umbral de espesor, 90% del diámetro, límite de área y vacíos marginales.",
+    "Desmarca Algorithm Settings al aprender cortos para no borrar el ajuste."
+   ]
+  },
+  {
+   "id": "m9-l5",
+   "title": "Head-in-Pillow y tiempo de ciclo",
+   "animation": "solder_joint",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "En un head-in-pillow (HiP) la esfera queda apoyada sobre la pasta como una cabeza sobre una almohada: se tocan, pero no se fundieron. Comparada con sus vecinas, se ve con el pad más chico y la bola (midball) más grande. A veces conduce y pasa la prueba eléctrica, y falla después con calor o vibración."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Maximum HIP Outlier - Pad (pestaña Open del BGA): viene en 100, que deja pasar todo; con 3.0 la esfera que se aparta de sus vecinas falla.",
+      "Un estudio con un BGA de 1 mm de paso y 1,017 esferas encontró que el AXI escapó entre 10.6% y 27.7% de los HiP reales, con 3,441 a 5,900 PPM de falsos llamados.",
+      "Con pads de dos tamaños, dos subtipos dieron 17.8% de escapes con 4,916 PPM, contra 28.9% con 6,883 PPM con un solo ajuste apretado.",
+      "Para bajar el tiempo de ciclo sin perder detección: usa la resolución que el componente necesita, PSH solo donde haga falta, muestreo acordado con calidad y quita del programa lo que el AOI ya cubre bien."
+     ]
+    },
+    {
+     "kind": "tip",
+     "text": "Cálculos del estudio: % de escapes = defectos que escaparon ÷ defectos reales × 100; PPM de falsos = falsos ÷ pines probados × 1,000,000. Como referencia, no corras un programa con más de 3,000 PPM de falsos."
+    }
+   ],
+   "keyPoints": [
+    "HiP: esfera apoyada sobre la pasta sin fundirse; es el defecto más difícil del AXI.",
+    "Ajusta el umbral Maximum HIP Outlier - Pad con datos de medición.",
+    "Separa subtipos cuando el BGA tiene pads de dos tamaños.",
+    "HiP también se ataca en el proceso: pandeo, perfil del horno, pasta y humedad."
+   ]
+  }
+ ],
+ "order": 9,
+ "exam": [
+  {
+   "type": "mc",
+   "q": "¿Con qué archivo empieza una receta del V810?",
+   "options": [
+    "Un NDF traducido del CAD (formato ViTrox V810 o Agilent 5DX).",
+    "Un .kyjob.",
+    "Un .plx de VAYO.",
+    "Un testplan."
+   ],
+   "correct": 0,
+   "explain": "El .kyjob es del Koh Young, el .plx del V510 y el testplan del ICT.",
+   "section": "9.2"
+  },
+  {
+   "type": "mc",
+   "q": "¿Cómo se captura el espesor de la tarjeta en Panel Setup?",
+   "options": [
+    "Midiéndolo con vernier; si está mal, las rebanadas caen a la altura equivocada.",
+    "Se deja el valor por defecto.",
+    "Siempre lo calcula el PSP.",
+    "No importa para la receta."
+   ],
+   "correct": 0,
+   "explain": "Es uno de los pasos que más fallan.",
+   "section": "9.2"
+  },
+  {
+   "type": "mc",
+   "q": "¿Dónde conviene elegir los grupos de alineación?",
+   "options": [
+    "Cerca de esquinas y orillas, formando un triángulo grande.",
+    "Todos en el centro de la tarjeta.",
+    "Sobre componentes encimados con la otra cara.",
+    "En un solo componente."
+   ],
+   "correct": 0,
+   "explain": "Ojo: no hay aviso de alineación correcta, solo de falla.",
+   "section": "9.2"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué método de enfoque usa el V810 por defecto en pines pasantes y press-fit?",
+   "options": [
+    "PSH (Predictive Slice Height)",
+    "Auto Focus",
+    "RFP",
+    "Ninguno"
+   ],
+   "correct": 0,
+   "explain": "En montaje superficial el defecto es Auto Focus.",
+   "section": "9.4"
+  },
+  {
+   "type": "mc",
+   "q": "Al aprender cortos en Initial Tuning, ¿qué casilla debe quedar desmarcada?",
+   "options": [
+    "Algorithm Settings",
+    "Short Background Regions",
+    "Subtype All",
+    "Ninguna"
+   ],
+   "correct": 0,
+   "explain": "Con Algorithm Settings marcado se sobrescribe todo lo ya afinado.",
+   "section": "9.2"
+  },
+  {
+   "type": "mc",
+   "q": "En BGA, ¿cómo encuentra el software un open por vecinas (Neighbor Outlier)?",
+   "options": [
+    "Compara el diámetro de cada esfera con sus vecinas y marca lo que se aleja más de 3.5 IQR.",
+    "Mide la altura con el PSP.",
+    "Lee el código de barras del componente.",
+    "Usa el espesor de la tarjeta."
+   ],
+   "correct": 0,
+   "explain": "Una esfera abierta suele verse más ancha en el corte de bola.",
+   "section": "9.5"
+  },
+  {
+   "type": "tf",
+   "q": "Si aprendes un subtipo con una tarjeta defectuosa, la máquina aceptará ese defecto como normal.",
+   "answer": true,
+   "explain": "Siempre se aprende con tarjetas verificadas como buenas.",
+   "section": "9.2"
+  },
+  {
+   "type": "tf",
+   "q": "Si unas esferas sobre una vía dan falsos llamados, lo correcto es abrir el límite de todas las esferas del BGA.",
+   "answer": false,
+   "explain": "Se separan en su propio subtipo.",
+   "section": "9.5"
+  },
+  {
+   "type": "tf",
+   "q": "En una unión gullwing, el talón es lo que define una buena unión.",
+   "answer": true,
+   "explain": "Por eso primero se ajusta dónde cae el talón.",
+   "section": "9.5"
+  },
+  {
+   "type": "case",
+   "q": "Un QFN quedó asignado como componente de patitas (gullwing) en Adjust CAD. ¿Qué pasa?",
+   "options": [
+    "Nunca medirá bien: hay que corregir su tipo de unión en Adjust CAD o en Modify Subtypes.",
+    "Nada, el software lo corrige solo.",
+    "Solo cambia el tiempo de ciclo.",
+    "Se arregla subiendo la ganancia de cámara."
+   ],
+   "correct": 0,
+   "explain": "Cada tipo de unión tiene su propio algoritmo.",
+   "section": "9.2"
+  }
+ ]
+}

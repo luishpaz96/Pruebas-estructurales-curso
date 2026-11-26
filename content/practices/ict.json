@@ -1,0 +1,142 @@
+[
+ {
+  "id": "pr-ict-create",
+  "machine": "ict",
+  "kind": "create",
+  "title": "Del netlist IPC-D-356 al testplan",
+  "scenario": "Con el netlist PRACTICA01.ipc y la BOM debes planear las pruebas del HP3070.",
+  "steps": [
+   {
+    "prompt": "¿Para qué sirve el netlist IPC-D-356?",
+    "options": [
+     "Para saber qué nodo toca cada punto de prueba y dónde poner las agujas del fixture",
+     "Para programar la impresora de pasta",
+     "Para el AOI",
+     "Sólo para la BOM"
+    ],
+    "correct": 0,
+    "feedback": "El netlist define redes y coordenadas de acceso para el fixture."
+   },
+   {
+    "prompt": "¿Qué prueba corre primero en el testplan?",
+    "options": [
+     "Cortos, sin energizar la tarjeta",
+     "Pruebas digitales energizadas",
+     "Boundary scan",
+     "Funcional"
+    ],
+    "correct": 0,
+    "feedback": "Nunca se energiza una tarjeta con cortos."
+   },
+   {
+    "prompt": "El BGA U2 no tiene acceso de agujas a sus pines. ¿Cómo lo pruebas?",
+    "options": [
+     "Boundary scan (JTAG)",
+     "Con una aguja por bola",
+     "TestJet en las bolas internas",
+     "No se puede probar"
+    ],
+    "correct": 0,
+    "feedback": "Boundary scan prueba pines sin acceso físico."
+   },
+   {
+    "prompt": "El capacitor de 1 nF mide de más. ¿Qué revisas?",
+    "options": [
+     "La compensación aprendida (learn capacitance / comp)",
+     "Que el capacitor está mal y se cambia",
+     "Abrir la tolerancia a 50%",
+     "El vacío"
+    ],
+    "correct": 0,
+    "feedback": "Los capacitores pequeños necesitan restar la capacitancia del fixture."
+   }
+  ],
+  "params": [
+   {
+    "name": "Tolerancia de R1 (10k)",
+    "unit": "%",
+    "min": 0,
+    "max": 30,
+    "start": 1,
+    "targetMin": 4,
+    "targetMax": 6,
+    "hint": "Muy cerrada falla por ruido; muy abierta deja pasar valores equivocados."
+   }
+  ]
+ },
+ {
+  "id": "pr-ict-debug-contact",
+  "machine": "ict",
+  "kind": "debug",
+  "title": "Muchos nodos fallan contacto",
+  "scenario": "De repente 40 nodos fallan contacto en varias tarjetas seguidas.",
+  "steps": [
+   {
+    "prompt": "¿Cuál es la causa más probable?",
+    "options": [
+     "La tarjeta no bajó (vacío), está mal colocada o las puntas están sucias o gastadas",
+     "40 componentes dañados",
+     "El testplan se corrompió",
+     "Falla de la red eléctrica"
+    ],
+    "correct": 0,
+    "feedback": "Fallas masivas de contacto son mecánicas."
+   },
+   {
+    "prompt": "¿Cómo lo confirmas?",
+    "options": [
+     "Corro la KGB y verifico puntas con find pins o la punta guiada",
+     "Cambio la tolerancia",
+     "Reinstalo el software",
+     "Reviso el AOI"
+    ],
+    "correct": 0,
+    "feedback": "Si la KGB también falla, el problema no es la tarjeta."
+   }
+  ]
+ },
+ {
+  "id": "pr-ict-debug-short",
+  "machine": "ict",
+  "kind": "debug",
+  "title": "El mismo corto en muchas tarjetas",
+  "scenario": "El ICT reporta corto entre 3V3 y GND en 8 de 10 tarjetas.",
+  "steps": [
+   {
+    "prompt": "¿Qué haces primero?",
+    "options": [
+     "Mido la tarjeta fuera del fixture con multímetro",
+     "La mando a reparar",
+     "Subo el umbral de cortos",
+     "Energizo para ver si funciona"
+    ],
+    "correct": 0,
+    "feedback": "Separas tarjeta de fixture con una medición independiente."
+   },
+   {
+    "prompt": "Fuera del fixture no hay corto. ¿Conclusión?",
+    "options": [
+     "Revisar el cableado del fixture",
+     "Proceso de impresión",
+     "Componente dañado",
+     "Fue suerte"
+    ],
+    "correct": 0,
+    "feedback": "Si la tarjeta está bien, el corto está en el fixture."
+   }
+  ],
+  "params": [
+   {
+    "name": "Umbral de cortos",
+    "unit": "Ω",
+    "min": 1,
+    "max": 60,
+    "start": 45,
+    "targetMin": 8,
+    "targetMax": 15,
+    "hint": "Muy alto detecta cortos fantasma por resistencias bajas en paralelo; muy bajo puede dejar pasar cortos.",
+    "lowEffect": "escape"
+   }
+  ]
+ }
+]

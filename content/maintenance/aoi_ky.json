@@ -1,0 +1,24 @@
+[
+ {"id":"mt-ky-mensual","machine":"aoi_ky","title":"Mantenimiento mensual del AOI Koh Young: filtros y revisión de seguridad","frequency":"mensual",
+  "safety":["Avisa a producción y deja la máquina en IDLE sin tarjeta.","Oprime el paro de emergencia y aplica LOTO con la etiqueta «En inspección».","Corta aire y despresuriza el filtro regulador con la válvula de alivio.","Usa pulsera antiestática; no dirijas el aire a la piel ni a los ojos."],
+  "steps":[
+   {"part":"emergency_stop","action":"toggle","text":"Oprime el paro de emergencia y confirma que la torre de luces cambia a rojo."},
+   {"part":"interlock","action":"inspect","text":"Abre la puerta superior y verifica que el interlock detenga el cabezal."},
+   {"part":"pneumatic","action":"measure","text":"Revisa la presión del regulador de aire y que no haya fugas."},
+   {"part":"filter","action":"replace","text":"Cambia el filtro de aire y limpia los filtros de los ventiladores de 120 x 120 mm."},
+   {"part":"fan","action":"inspect","text":"Comprueba que los ventiladores giren sin ruido ni vibración."},
+   {"part":"belt","action":"inspect","text":"Revisa el desgaste de las bandas del transportador."},
+   {"part":"door","action":"toggle","text":"Cierra la puerta, libera el paro y retira el LOTO antes de entregar."}
+  ]},
+ {"id":"mt-ky-semestral","machine":"aoi_ky","title":"Semestral Koh Young: cubierta de humos, engrase y calibración de altura","frequency":"semestral",
+  "safety":["Máquina apagada, paro de emergencia oprimido y LOTO aplicado.","Guantes limpios para tocar ópticas; nunca laves los espejos.","Respalda la calibración en KYCal antes de calibrar."],
+  "steps":[
+   {"part":"emergency_stop","action":"toggle","text":"Oprime el paro de emergencia y aplica LOTO."},
+   {"part":"door","action":"toggle","text":"Abre la cubierta para tener acceso al cabezal."},
+   {"part":"camera","action":"clean","text":"Limpia por ambos lados la cubierta de humos de vidrio bajo el cabezal con paño y líquido para lentes."},
+   {"part":"gantry","action":"lubricate","text":"Engrasa las guías LM y los husillos de X y Y con grasa NSK PS2."},
+   {"part":"belt","action":"measure","text":"Revisa la tensión de las bandas con el tensor."},
+   {"part":"calibration_target","action":"calibrate","text":"Con AOIGUI cerrado, corre en KYCal ZScale y ZScaleNM con el pilar de 500 µm y convierte los datos al terminar."},
+   {"part":"projector","action":"measure","text":"Verifica 3D Projection por canal CH1 a CH4: visibilidad mayor a 0.7."}
+  ]}
+]

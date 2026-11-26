@@ -1,0 +1,141 @@
+[
+ {
+  "id": "pr-ky-debug-tomb",
+  "machine": "aoi_ky",
+  "kind": "debug",
+  "title": "Falsos llamados de tombstone en capacitores 0603",
+  "scenario": "Después de cambiar de lote de capacitores 0603, el AOI marca tombstone en C1 y C2 en 1 de cada 4 tarjetas. En revisión el operador ve que las piezas están bien soldadas.",
+  "steps": [
+   {
+    "prompt": "¿Qué haces primero?",
+    "options": [
+     "Reviso las imágenes 3D de los NG y comparo la altura medida contra la del paquete",
+     "Subo el umbral de altura al máximo para que deje de marcar",
+     "Desactivo la inspección de C1 y C2",
+     "Pido recalibrar la máquina de inmediato"
+    ],
+    "correct": 0,
+    "feedback": "Primero hay que confirmar con datos si es falso llamado y por qué; no se toca un umbral sin evidencia."
+   },
+   {
+    "prompt": "La pieza nueva mide 0.55 mm de alto y el paquete dice 0.45 mm. ¿Qué corriges?",
+    "options": [
+     "La altura del cuerpo en el paquete, para que coincida con el nuevo proveedor",
+     "El umbral de offset en X",
+     "La rotación del componente en el CAD",
+     "Nada, es un defecto real"
+    ],
+    "correct": 0,
+    "feedback": "El cambio de proveedor cambió la geometría real; el paquete debe reflejarla."
+   }
+  ],
+  "params": [
+   {
+    "name": "Tolerancia de altura",
+    "unit": "%",
+    "min": 0,
+    "max": 100,
+    "start": 10,
+    "targetMin": 30,
+    "targetMax": 45,
+    "hint": "Muy cerrada = falsos llamados; muy abierta = escapes de tombstone."
+   }
+  ]
+ },
+ {
+  "id": "pr-ky-create-prog",
+  "machine": "aoi_ky",
+  "kind": "create",
+  "title": "Crear un programa nuevo en AOIGUI desde CAD",
+  "scenario": "Llega la tarjeta PRACTICA-01 a producción. Tienes el archivo de centroides, los Gerber y la BOM. Debes dejar listo el programa del Zenith antes de la primera corrida.",
+  "steps": [
+   {
+    "prompt": "¿Con qué empiezas?",
+    "options": [
+     "Importar el CAD (centroides) y el Gerber, y revisar que el origen y la rotación coincidan con la tarjeta real",
+     "Ajustar umbrales de altura",
+     "Correr 50 tarjetas para ver qué sale",
+     "Copiar el programa de otra tarjeta parecida sin revisar"
+    ],
+    "correct": 0,
+    "feedback": "Sin un CAD bien alineado, todo lo demás se construye sobre posiciones equivocadas."
+   },
+   {
+    "prompt": "¿Qué marcas eliges como fiduciales globales?",
+    "options": [
+     "Dos o tres fiduciales en esquinas opuestas (diagonal)",
+     "Dos resistencias cercanas entre sí",
+     "El centro del QFP",
+     "Cualquier pad grande"
+    ],
+    "correct": 0,
+    "feedback": "En diagonal corrigen posición, rotación y escala; un componente se puede mover y no es referencia."
+   },
+   {
+    "prompt": "El paquete del 0603 no existe en la librería. ¿Qué haces?",
+    "options": [
+     "Lo creo con las dimensiones reales del componente del proveedor (cuerpo, terminal y altura)",
+     "Uso el paquete de un 0805",
+     "Desactivo la inspección de esos componentes",
+     "Dejo que la máquina lo adivine"
+    ],
+    "correct": 0,
+    "feedback": "Un paquete con medidas reales evita falsos llamados de dimensión y altura."
+   },
+   {
+    "prompt": "Ya tienes paquetes. ¿Cómo validas antes de liberar?",
+    "options": [
+     "Corro tarjetas buenas y con defectos conocidos, ajusto y documento",
+     "Libero y espero quejas de producción",
+     "Abro todas las tolerancias al máximo",
+     "Sólo reviso que no haya alarmas"
+    ],
+    "correct": 0,
+    "feedback": "La validación con defectos conocidos prueba que el programa detecta lo que debe."
+   }
+  ]
+ },
+ {
+  "id": "pr-ky-debug-offset",
+  "machine": "aoi_ky",
+  "kind": "debug",
+  "title": "Desplazamiento en toda una zona de la tarjeta",
+  "scenario": "Desde el cambio de lote de PCB, el AOI marca desplazamiento en 12 componentes de la esquina derecha. En revisión los componentes están bien colocados.",
+  "steps": [
+   {
+    "prompt": "¿Qué sospechas primero?",
+    "options": [
+     "Fiducial mal leído o tarjeta pandeada en esa zona",
+     "Que los 12 componentes están mal colocados",
+     "Falla del PZT",
+     "El operador revisa mal"
+    ],
+    "correct": 0,
+    "feedback": "Muchos desplazamientos en una zona apuntan a alineación o pandeo, no a defectos reales."
+   },
+   {
+    "prompt": "Confirmas pandeo de 0.8 mm. ¿Solución correcta?",
+    "options": [
+     "Agregar fiduciales locales y revisar los soportes de la tarjeta",
+     "Abrir la tolerancia de offset de todo el programa",
+     "Desactivar esos 12 componentes",
+     "Recalibrar la cámara"
+    ],
+    "correct": 0,
+    "feedback": "Corriges la causa; abrir tolerancias en todo el programa crea escapes."
+   }
+  ],
+  "params": [
+   {
+    "name": "Tolerancia de offset (zona derecha)",
+    "unit": "%",
+    "min": 0,
+    "max": 100,
+    "start": 15,
+    "targetMin": 30,
+    "targetMax": 40,
+    "hint": "Muy cerrada genera falsos llamados; muy abierta deja pasar desplazamientos reales."
+   }
+  ]
+ }
+]

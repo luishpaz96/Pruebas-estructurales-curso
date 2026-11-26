@@ -1,0 +1,275 @@
+{
+ "id": "m13",
+ "brand": "ks",
+ "machine": "ict",
+ "title": "Módulo 13. Las pruebas del ICT y cómo se programan",
+ "summary": "Orden de las pruebas del HP3070, flujo de creación de un programa con Board Consultant e IPG, pruebas de contacto, cortos y abiertos, medición analógica con el MOA, Testjet y Polarity, y pruebas digitales y funcionales.",
+ "lessons": [
+  {
+   "id": "m13-l1",
+   "title": "El orden de las pruebas y cómo nace un programa",
+   "animation": "ict_bed_of_nails",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "El orden de las pruebas es: contacto, cortos y abiertos, analógico sin energía (R, C, L, diodos, transistores, fusibles y jumpers), Testjet y Polarity, encender fuentes, digital en circuito, digital funcional (clusters) y analógico con energía y mixto. Contacto y cortos van siempre primero para no dañar la tarjeta ni la máquina; si hay un corto, la prueba se detiene."
+    },
+    {
+     "kind": "text",
+     "text": "Flujo de un programa: los datos de la tarjeta (CAD, BOM, tolerancias) se capturan en HP Board Consultant, donde se marcan los nodos sin acceso (NO_PROBE). El IPG (Integrated Program Generator) genera el archivo de cortos, un bloque por componente en analog, las pruebas digitales, el testplan y los datos para el fixture. Luego se construye el fixture según el wirelist, se hace debug con una tarjeta buena conocida (KGB) y se valida con tarjetas con defectos conocidos y varias corridas de la KGB."
+    }
+   ],
+   "keyPoints": [
+    "Contacto y cortos siempre van primero.",
+    "Board Consultant captura datos; IPG genera el programa automáticamente.",
+    "La KGB enseña la compensación de capacitancia y los CRC digitales.",
+    "Un programa se libera a producción con control de cambios."
+   ]
+  },
+  {
+   "id": "m13-l2",
+   "title": "Prueba de contacto, cortos y abiertos",
+   "animation": "ict_bed_of_nails",
+   "blocks": [
+    {
+     "kind": "bullets",
+     "items": [
+      "Contacto: se aplican 2.5 V al nodo bajo prueba a través de 10 kΩ; si la punta toca, aparece voltaje en la resistencia. Si no toca, el voltaje es 0 V. Los nodos con solo capacitores no se pueden revisar así.",
+      "Corto: impedancia entre dos nodos menor o igual que el umbral. Abierto: impedancia mayor que el umbral.",
+      "Se aplican 0.1 V a través de 100 Ω para no encender las uniones PN de diodos y transistores.",
+      "El umbral es de 8 Ω si no se especifica; puede ser de 2 a 1000 Ω.",
+      "El settling delay espera a que se carguen capacitores y bobinas; va de 0 a 3.27 s y el IPG lo calcula."
+     ]
+    },
+    {
+     "kind": "text",
+     "text": "Búsqueda del corto: la detección pone un nodo en la fuente contra todos los siguientes en el detector; si detecta algo, el aislamiento parte el grupo a la mitad (bisección) hasta encontrar al culpable. Un corto fantasma aparece cuando dos resistencias de 10 Ω en paralelo suman 5 Ω, menos que el umbral de 8 Ω, pero al separarlas cada una mide 10 Ω. El IPG pone al final los nodos con resistencias bajas para evitarlos."
+    },
+    {
+     "kind": "tip",
+     "text": "La prueba de abiertos revisa conexiones que sí deben existir (fusibles, jumpers, bobinas, resistencias muy bajas, interruptores cerrados). Para compilar el archivo de cortos se necesitan wirelist y config.o; se corre con test shorts en el testplan."
+    }
+   ],
+   "keyPoints": [
+    "Contacto: 2.5 V a través de 10 kΩ; 0 V significa que la punta no toca.",
+    "Corto: menor o igual al umbral; abierto: mayor al umbral.",
+    "Umbral por defecto 8 Ω.",
+    "Corto fantasma: la detección en paralelo engaña y el aislamiento no lo confirma."
+   ]
+  },
+  {
+   "id": "m13-l3",
+   "title": "Medición analógica: el MOA y el bloque de prueba",
+   "animation": "ict_bed_of_nails",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "La medición analógica ocurre en la tarjeta ASRU: la control card cierra relevadores para conectar el componente al MOA, un amplificador operacional de medición. La fuente empuja corriente por el bus S, a través de Rx, hacia el bus I. Como el MOA deja pasar muy poca corriente, toda la corriente pasa por la resistencia de referencia Rref y produce voltaje. Con Vs, Rref y Vmoa se calcula Rx = Rref × Vs ÷ Vmoa."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Bus S (source): lleva la fuente a un lado del componente.",
+      "Bus I (input): lleva el otro lado a la entrada del MOA.",
+      "Bus G (guarda): lleva a tierra el punto medio de los caminos en paralelo para que no le roben corriente a la medición.",
+      "Seis resistencias de referencia re1 a re6 (por ejemplo, re1 es 10 Ω y re4 es 10 kΩ) para cubrir valores grandes y pequeños sin saturar el MOA.",
+      "Detección síncrona de fase: con fuente de AC separa la parte resistiva de la reactiva; así se miden capacitores e inductores."
+     ]
+    },
+    {
+     "kind": "text",
+     "text": "Un bloque de prueba: clear connect s to \"R1-1\"; i to \"R1-2\"; g to \"R3-1\" conecta los buses; luego resistor 10k, 10, 10, re5, wb espera 10 kΩ con tolerancia de +10% y −10%, con referencia re5 y banda ancha. El IPG escribe un bloque por componente en el directorio analog."
+    },
+    {
+     "kind": "tip",
+     "text": "Sensing (6 hilos, opciones sa, sb, sl) elimina la resistencia de cables, relevadores y efectos térmicos; el fixture debe tener esos cables. Enhancement (en) es más completa pero más lenta: úsala solo cuando haga falta."
+    }
+   ],
+   "keyPoints": [
+    "Rx = Rref × Vs ÷ Vmoa.",
+    "El bus G (guarda) evita que caminos paralelos alteren la medición.",
+    "Sensing elimina la resistencia de cables y contactos.",
+    "Enhancement compensa efectos no ideales a cambio de más tiempo de prueba."
+   ]
+  },
+  {
+   "id": "m13-l4",
+   "title": "Prueba de componentes: R, C, L, diodos y transistores",
+   "animation": "calibration_target",
+   "blocks": [
+    {
+     "kind": "bullets",
+     "items": [
+      "Resistor: 0.1 Ω a 10 MΩ, con fuente DC de 0.1 V y referencia re4 (10 kΩ).",
+      "Capacitor: 10 pF a 10 000 µF, con fuente AC; modelo paralelo (pm) abajo de 100 µF y serie (sm) desde 100 µF. Los de unos 100 pF necesitan compensación (comp).",
+      "Inductor: 25 µH a 100 H, fuente de 1024 Hz y 0.1 Vrms; modelo serie por defecto.",
+      "Diodo: mide el voltaje directo con idc fijando la corriente (10 µA a 100 mA).",
+      "Zener: mide el voltaje inverso hasta 18 V; arriba de 18 V se prueba como diodo.",
+      "Transistor: sus uniones como diodos y la ganancia midiendo la base a dos corrientes de emisor (idelta de 5 a 50%, 20% por defecto).",
+      "FET: resistencia de encendido (Ron) con 0.1 V; la guarda va a la compuerta.",
+      "Fusible y jumper: comparan contra un umbral; el jumper con op pasa cuando no está."
+     ]
+    },
+    {
+     "kind": "text",
+     "text": "Para capacitores, fr y ed (integra un ciclo completo de línea) y las referencias re se eligen por rango: por ejemplo, de 0.159 µF a 1 µF se usa fr128, ed y re3. La compensación se aprende con learn capacitance on y learn capacitance off: la primera corrida mide el fixture sin tocar la tarjeta y ese valor se resta después."
+    },
+    {
+     "kind": "warning",
+     "text": "La opción pc pone 100 pF en paralelo y es solo para debug; nunca se usa en producción."
+    }
+   ],
+   "keyPoints": [
+    "Los capacitores de menos de 100 µF usan modelo paralelo; desde 100 µF, serie.",
+    "Un capacitor de 100 pF necesita compensación porque el sistema y el fixture suman 20 a 50 pF.",
+    "Los zener por encima de 18 V se revisan como diodo.",
+    "Fr128 siempre va con ed."
+   ]
+  },
+  {
+   "id": "m13-l5",
+   "title": "Testjet, Polarity, Connect Check y pruebas con energía",
+   "animation": "solder_joint",
+   "blocks": [
+    {
+     "kind": "bullets",
+     "items": [
+      "Testjet: una placa sensora mide la capacitancia de cada pin; un pin abierto da una capacitancia pequeña. Sirve para ICs y conectores; no necesita energía.",
+      "Polarity Check: detecta la orientación de capacitores de tantalio y aluminio con cuatro puntas; necesita tarjeta mux revisión B.",
+      "Connect Check: usa los diodos de protección internos del IC; no sirve en encapsulados con plano de tierra interno, BGA cerámicos, flip chip o chip-on-board.",
+      "Un reporte de Testjet como «Failed Open» indica el pin y su BRC; uno de Polarity pide cambiar la pieza antes de energizar."
+     ]
+    },
+    {
+     "kind": "text",
+     "text": "Pruebas con energía: cada módulo maneja hasta 6 fuentes. La digital manda bits con los drivers y compara las respuestas con los receivers. Un vector es un renglón de bits. Receive delay y vector cycle se programan. Si un IC es muy complejo, se corren los vectores en una KGB y se guarda un CRC (learn on). Las pruebas digitales se escriben en VCL en cuatro secciones: declaración, timing, definición de vectores y ejecución."
+    },
+    {
+     "kind": "warning",
+     "text": "Safeguard pone un tiempo máximo a cada prueba digital para que el sobremanejo de las salidas no caliente los ICs. Niveles: none, cool, digital y all."
+    }
+   ],
+   "keyPoints": [
+    "Testjet y Polarity son pruebas sin energía para pines abiertos y capacitores invertidos.",
+    "Connect Check no sirve en BGA cerámicos ni en flip chip.",
+    "Un vector compara lo enviado con lo esperado.",
+    "CRC permite validar ICs complejos contra una KGB."
+   ]
+  }
+ ],
+ "order": 13,
+ "exam": [
+  {
+   "type": "mc",
+   "q": "En el HP3070, ¿qué pruebas van siempre primero?",
+   "options": [
+    "Contacto y cortos.",
+    "Digital y funcional.",
+    "Analógico con energía.",
+    "Boundary Scan."
+   ],
+   "correct": 0,
+   "explain": "Para no dañar la tarjeta ni la máquina al energizar.",
+   "section": "13.1"
+  },
+  {
+   "type": "mc",
+   "q": "¿Por qué la prueba de cortos usa solo 0.1 V?",
+   "options": [
+    "Para no encender las uniones PN de diodos y transistores.",
+    "Para ahorrar energía.",
+    "Porque la tarjeta ya está encendida.",
+    "Para calentar la tarjeta."
+   ],
+   "correct": 0,
+   "explain": "Se aplica a través de 100 Ω.",
+   "section": "13.4"
+  },
+  {
+   "type": "mc",
+   "q": "¿Cuál es el umbral de corto si no se especifica?",
+   "options": [
+    "8 Ω",
+    "100 Ω",
+    "1 kΩ",
+    "0 Ω"
+   ],
+   "correct": 0,
+   "explain": "Se puede poner entre 2 y 1000 Ω.",
+   "section": "13.4"
+  },
+  {
+   "type": "mc",
+   "q": "¿Para qué sirve la guarda (bus G)?",
+   "options": [
+    "Lleva a tierra el punto medio de un camino en paralelo para que no le robe corriente a la medición.",
+    "Protege al operador de descargas.",
+    "Enciende las fuentes de la tarjeta.",
+    "Mide el voltaje de la fuente."
+   ],
+   "correct": 0,
+   "explain": "Sin guarda, los caminos en paralelo hacen ver el valor más bajo.",
+   "section": "13.5"
+  },
+  {
+   "type": "mc",
+   "q": "En \"resistor 10k, 10, 10, re5, wb\", ¿qué significan los dos 10 después de 10k?",
+   "options": [
+    "Tolerancia de +10% y −10%.",
+    "10 mediciones y 10 segundos.",
+    "Fuente de 10 V y 10 mA.",
+    "Referencia 10 y banda 10."
+   ],
+   "correct": 0,
+   "explain": "re5 es la resistencia de referencia 5 y wb es banda ancha.",
+   "section": "13.5"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué prueba usa una placa sensora encima del componente para encontrar pines abiertos sin energía?",
+   "options": [
+    "Testjet",
+    "Connect Check",
+    "Polarity Check",
+    "Prueba de contacto"
+   ],
+   "correct": 0,
+   "explain": "Un pin abierto da una capacitancia pequeña contra el sensor.",
+   "section": "13.6"
+  },
+  {
+   "type": "tf",
+   "q": "Un corto fantasma es el que la detección ve pero el aislamiento no encuentra, por ejemplo por resistencias bajas en paralelo.",
+   "answer": true,
+   "explain": "Dos de 10 Ω en paralelo suman 5 Ω, menos que el umbral de 8 Ω.",
+   "section": "13.4"
+  },
+  {
+   "type": "tf",
+   "q": "La opción pc (100 pF en paralelo) se puede dejar en producción para estabilizar la prueba.",
+   "answer": false,
+   "explain": "pc es solo para debug.",
+   "section": "13.5"
+  },
+  {
+   "type": "tf",
+   "q": "Polarity Check necesita tarjetas mux revisión B.",
+   "answer": true,
+   "explain": "Las de revisión A no funcionan con ella.",
+   "section": "13.6"
+  },
+  {
+   "type": "case",
+   "q": "Un capacitor de 100 pF mide unos 40 pF de más en todas las tarjetas. ¿Qué es lo más probable?",
+   "options": [
+    "Falta la compensación: no se aprendió (learn capacitance) o falta comp; el sistema y el fixture suman de 20 a 50 pF.",
+    "El capacitor está mal en todas las tarjetas.",
+    "Hay un corto en la tarjeta.",
+    "Falta energizar la tarjeta."
+   ],
+   "correct": 0,
+   "explain": "Se valida con pc en debug y se revisa learn capacitance on y off.",
+   "section": "13.5 y 14.3"
+  }
+ ]
+}

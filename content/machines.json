@@ -1,0 +1,11 @@
+{
+ "_info": "Registro de máquinas. Para agregar una máquina nueva añade una entrada; 'model' elige la plantilla 3D: aoi | axi | ict | spi | generic.",
+ "machines": [
+  {"id":"general","name":"Fundamentos y proceso","brand":"General","model":"generic","color":"#9aa7b8","icon":"core","description":"Bases de inspección, proceso SMT, SPC y defectos IPC-A-610."},
+  {"id":"aoi_ky","name":"AOI 3D Koh Young Zenith","brand":"Koh Young","model":"aoi","color":"#3d8bff","icon":"aoi","description":"Medición 3D por moiré, AOIGUI, paquetes y debug de falsos llamados."},
+  {"id":"aoi_v510","name":"AOI 3D ViTrox V510","brand":"ViTrox","model":"aoi","color":"#19c3a6","icon":"aoi","description":"PSP con 4 proyectores, Smart GUI, algoritmos C/R/B/S/U."},
+  {"id":"axi_v810","name":"AXI ViTrox V810","brand":"ViTrox","model":"axi","color":"#ffb020","icon":"axi","description":"Rayos X 3D por laminografía, BGA, juntas ocultas y seguridad radiológica."},
+  {"id":"ict","name":"ICT Keysight HP3070","brand":"Keysight","model":"ict","color":"#ff5a5f","icon":"ict","description":"Cama de agujas, pruebas analógicas, testplan, BT-Basic y boundary scan."},
+  {"id":"spi","name":"SPI 3D Koh Young","brand":"Koh Young","model":"spi","color":"#a77bff","icon":"spi","description":"Volumen, área y altura de pasta; del Gerber a la inspección."}
+ ]
+}

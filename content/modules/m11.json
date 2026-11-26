@@ -1,0 +1,238 @@
+{
+ "id": "m11",
+ "brand": "v8",
+ "machine": "axi_v810",
+ "title": "Módulo 11. Debuggeo de fallas en el V810",
+ "summary": "Clasificación de fallas del V810 en máquina, imagen, programa y seguridad; falsos llamados comunes de BGA y gullwing con sus ajustes, y cómo confirmar un defecto dudoso con rayos X fuera de línea o CT.",
+ "lessons": [
+  {
+   "id": "m11-l1",
+   "title": "Clasificar la falla en cuatro familias",
+   "animation": "intro_line",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "El método es el mismo que en el AOI: primero clasificar. La pregunta clave es si falla en todas las tarjetas o solo en ciertos componentes. El AXI suma una cuarta familia, la de seguridad, que siempre detiene la máquina."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Falla de máquina: alarma, los rayos X no encienden, algo no se mueve.",
+      "Falla de imagen: todas las tarjetas y todos los programas se ven mal.",
+      "Programa o proceso: llamados solo en ciertos subtipos o componentes.",
+      "Seguridad: interlock, lámpara, blindaje o medición de fuga; detener y avisar."
+     ]
+    },
+    {
+     "kind": "warning",
+     "text": "Muchos open en una misma zona casi siempre son pandeo o enfoque, no defectos reales. Revisa eso antes de tocar límites."
+    }
+   ],
+   "keyPoints": [
+    "Cuatro familias: máquina, imagen, programa y seguridad.",
+    "La seguridad siempre detiene la máquina.",
+    "Un grupo de opens en una zona suele ser pandeo o enfoque."
+   ]
+  },
+  {
+   "id": "m11-l2",
+   "title": "Fallas de máquina e imagen",
+   "animation": "machine_tour",
+   "blocks": [
+    {
+     "kind": "bullets",
+     "items": [
+      "Los rayos X no encienden: puerta o cubierta mal cerradas, llave, paro de emergencia o falta de calentamiento. Revisa el estado de interlocks en pantalla.",
+      "Alarma de alto voltaje o de arco: horas del tubo, calentamiento completo, humedad y temperatura; escalar a ViTrox.",
+      "Error de reconstrucción: estado de servidores, red interna, espacio en disco y ventiladores.",
+      "Falla del PSP: sensor sucio o punto de medición sobre un agujero o zona brillante; mueve los puntos en Surface Map.",
+      "El panel sale sin probarse al fallar la alineación: revisa los grupos de alineación y las opciones de expulsión.",
+      "Se carga la receta equivocada: revisa los patrones de Serial Number Matching en Options."
+     ]
+    },
+    {
+     "kind": "text",
+     "text": "Fallas de imagen: más grano que antes indica que el tubo entrega menos o cambiaron los ajustes (compara con la imagen de referencia). Rayas o manchas fijas: calibrar el detector. Rebanadas borrosas o dobles: calibración geométrica y vibración. Rebanadas a altura equivocada en toda la tarjeta: sensor de superficie o grosor mal capturado."
+    }
+   ],
+   "keyPoints": [
+    "Revisa interlocks en pantalla antes de cualquier otra cosa si los rayos X no encienden.",
+    "Rebanadas en altura equivocada apuntan al sensor de superficie o al grosor de la tarjeta.",
+    "Rayas fijas en todas las imágenes indican calibración del detector."
+   ]
+  },
+  {
+   "id": "m11-l3",
+   "title": "Falsos llamados comunes del AXI y sus ajustes",
+   "animation": "defect_gallery",
+   "blocks": [
+    {
+     "kind": "bullets",
+     "items": [
+      "Open por vecinas en esferas con vacíos: el vacío hace ver la esfera más ancha; Void Area Limit for Neighbor Outlier (10% por defecto, no menos de 5%).",
+      "Vacíos en media luna en la orilla: bajar Percent of Diameter to Test de 90% a 85%, sin bajar de 80%.",
+      "Vacíos falsos en esferas sobre vías: subtipo aparte para esas esferas.",
+      "Capacitores cerámicos faltantes en un subtipo mezclado con tantalio: ajustar Body Thickness Required for Opaque Test.",
+      "Open en SOT que sí están bien: el SOT flota; bajar Heel Edge Search Thickness y la distancia de búsqueda del talón (de 20% a 10%).",
+      "Puentes falsos en todo un tipo: no se aprendió el fondo para cortos; usa Initial Tuning con Short Background Regions.",
+      "Pin pasante sin llenado que está bien: alturas de corte que no coinciden con el barril o tamaño de barril mal en Edit Land Patterns.",
+      "Muchos llamados de golpe: la línea se desajustó o el programa ya no corresponde; configura False Call Triggering en Options."
+     ]
+    },
+    {
+     "kind": "tip",
+     "text": "Llamados con un lote nuevo de tarjetas: el grosor o la cantidad de cobre cambió. Revalida y reaprende con tarjetas buenas del lote nuevo."
+    }
+   ],
+   "keyPoints": [
+    "Vacío en orilla: bajar el porcentaje del diámetro a probar sin pasar de 80%.",
+    "SOT flotando: ajusta la búsqueda del talón.",
+    "Puentes falsos: aprendizaje de cortos con Algorithm Settings desmarcado.",
+    "Un lote nuevo obliga a reaprender con tarjetas buenas."
+   ]
+  },
+  {
+   "id": "m11-l4",
+   "title": "Confirmar un defecto dudoso: 2DX y CT",
+   "animation": "xray_tomo",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "Para confirmar un defecto dudoso: revisa los tres cortes comparando con vecinas, mira la vista 2D o usa rayos X fuera de línea con vista inclinada, haz prueba eléctrica si aplica y, como última palabra, corte transversal (microsección) o prueba de tinte y desprendimiento (dye and pry). Estas dos últimas destruyen la tarjeta, pero dan la verdad con la que se ajustan los límites."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "2DX (rayos X 2D fuera de línea): confirma llamados dudosos de BGA, como open o HiP; sirve para revisar BGA retrabajados y verificar umbrales.",
+      "Inclinación: casi todas las grietas de BGA son horizontales; en ángulo la grieta deja pasar más rayos y se ve como línea clara. Empieza cerca de 60°, con 50° a 65° y giro de 360°.",
+      "CT (tomografía): gira la muestra y arma un modelo 3D; permite cortes virtuales. Para tarjetas grandes existe el CT planar o de ángulo limitado (PCT o X-Plane)."
+     ]
+    },
+    {
+     "kind": "tip",
+     "text": "Lo que absorbe más rayos X se ve más oscuro: el cobre más que el aluminio, y la soldadura con plomo más que la libre de plomo. Vacíos y grietas se ven claros."
+    }
+   ],
+   "keyPoints": [
+    "Orden de confirmación: vecinas, 2D o 2DX, prueba eléctrica, microsección o dye and pry.",
+    "En vista inclinada, un BGA con dos círculos está conectado.",
+    "Microsección y dye and pry destruyen la tarjeta pero dan la verdad de referencia."
+   ]
+  }
+ ],
+ "order": 11,
+ "exam": [
+  {
+   "type": "mc",
+   "q": "¿Cuáles son las cuatro familias de fallas del V810?",
+   "options": [
+    "Máquina, imagen, programa o proceso, y seguridad.",
+    "Luz, aire, agua y energía.",
+    "Cortos, abiertos, analógico y digital.",
+    "SPI, AOI, AXI e ICT."
+   ],
+   "correct": 0,
+   "explain": "La de seguridad siempre detiene la máquina.",
+   "section": "11 (inicio)"
+  },
+  {
+   "type": "mc",
+   "q": "Hay muchos open en un BGA de una sola zona de la tarjeta. ¿Cuál es la causa más probable?",
+   "options": [
+    "Pandeo: la rebanada cae fuera de la esfera.",
+    "Todas esas esferas están abiertas.",
+    "El tubo está fundido.",
+    "Falta la licencia del software."
+   ],
+   "correct": 0,
+   "explain": "Se revisa el enfoque, el mapa de superficie y los soportes.",
+   "section": "11.3"
+  },
+  {
+   "type": "mc",
+   "q": "Aparecen vacíos falsos en forma de media luna en la orilla de las esferas. ¿Qué ajustas?",
+   "options": [
+    "Bajo Percent of Diameter to Test (de 90% a 85%, no menos de 80%).",
+    "Subo el voltaje del tubo.",
+    "Apago la prueba de vacíos.",
+    "Cambio el espesor de la tarjeta."
+   ],
+   "correct": 0,
+   "explain": "La orilla de la esfera estaba contando como vacío.",
+   "section": "11.3"
+  },
+  {
+   "type": "mc",
+   "q": "Los rayos X no encienden. ¿Qué revisas primero?",
+   "options": [
+    "El estado de los interlocks en pantalla y cada puerta.",
+    "La BOM.",
+    "El NDF.",
+    "El Cpk."
+   ],
+   "correct": 0,
+   "explain": "También la llave, el paro de emergencia y el calentamiento.",
+   "section": "11.1"
+  },
+  {
+   "type": "mc",
+   "q": "¿Cuál es la forma menos destructiva de confirmar un defecto dudoso en un BGA?",
+   "options": [
+    "Revisar los tres cortes y comparar con las esferas vecinas.",
+    "Hacer un corte transversal (microsección).",
+    "Hacer dye and pry.",
+    "Romper el componente."
+   ],
+   "correct": 0,
+   "explain": "La microsección y el dye and pry destruyen la tarjeta: son la última palabra.",
+   "section": "11.4"
+  },
+  {
+   "type": "mc",
+   "q": "Hay puentes falsos en todo un tipo de unión. ¿Causa típica?",
+   "options": [
+    "No se aprendió el fondo para cortos (Short Background Regions).",
+    "El tubo está viejo.",
+    "La alineación está demasiado bien.",
+    "El PSP está apagado."
+   ],
+   "correct": 0,
+   "explain": "Se aprende en Initial Tuning con Algorithm Settings desmarcado.",
+   "section": "11.3"
+  },
+  {
+   "type": "tf",
+   "q": "Una falla de seguridad (interlock, lámpara, blindaje o fuga) siempre detiene la máquina.",
+   "answer": true,
+   "explain": "Se detiene y se avisa.",
+   "section": "11 (inicio)"
+  },
+  {
+   "type": "tf",
+   "q": "Un vacío puede hacer que una esfera se vea más ancha y dispare un falso open por vecinas.",
+   "answer": true,
+   "explain": "Void Area Limit for Neighbor Outlier evita ese falso llamado (10% por defecto).",
+   "section": "11.3"
+  },
+  {
+   "type": "tf",
+   "q": "El OLP del V510 y el OLP del V810 nunca pueden convivir en la misma PC.",
+   "answer": false,
+   "explain": "El conflicto se resuelve renombrando mpivc60.dll, como indica ViTrox.",
+   "section": "11.1"
+  },
+  {
+   "type": "case",
+   "q": "Con un lote nuevo de tarjetas aparecen muchos llamados en varios subtipos, y las tarjetas están bien. ¿Qué haces?",
+   "options": [
+    "Revalido y reaprendo con tarjetas buenas del lote nuevo.",
+    "Abro todos los límites.",
+    "Dejo de inspeccionar ese modelo.",
+    "Reaprendo con una tarjeta que falló."
+   ],
+   "correct": 0,
+   "explain": "Cambió el grosor o la cantidad de cobre: lo normal cambió.",
+   "section": "11.3"
+  }
+ ]
+}

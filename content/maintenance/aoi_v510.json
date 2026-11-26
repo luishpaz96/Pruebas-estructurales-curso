@@ -1,0 +1,26 @@
+[
+ {"id":"mt-v5-semanal","machine":"aoi_v510","title":"Rutina semanal del V510 (30 min)","frequency":"semanal",
+  "safety":["Avisa a producción y espera a que salga la última tarjeta.","LOTO: llave principal en 0, saca la llave y pon tu candado en el interruptor principal.","Nunca limpies el transportador con aire comprimido: usa aspiradora.","No uses trapos que suelten pelusa ni rayes la mesa XY o los encoders."],
+  "steps":[
+   {"part":"emergency_stop","action":"toggle","text":"Prueba los paros de emergencia: la torre debe encender todas sus luces."},
+   {"part":"interlock","action":"inspect","text":"Abre la puerta frontal y confirma que la máquina se detiene."},
+   {"part":"pc_ups","action":"clean","text":"Limpia los paneles y el filtro de la PC."},
+   {"part":"fan","action":"inspect","text":"Revisa los ventiladores, incluido el del proyector."},
+   {"part":"gantry","action":"inspect","text":"Con la máquina bloqueada, mueve la mesa XY a mano: debe correr libre en X y en Y."},
+   {"part":"rail_width","action":"calibrate","text":"Manda el AWA a home a 100 mm y verifica el ancho."},
+   {"part":"tower_light","action":"inspect","text":"Verifica la torre: ámbar fijo esperando tarjeta, verde inspeccionando."}
+  ]},
+ {"id":"mt-v5-mensual","machine":"aoi_v510","title":"Rutina mensual del V510: limpieza, lubricación y calibración 3D","frequency":"mensual",
+  "safety":["PC apagada e interruptor principal en OFF antes de abrir el panel eléctrico.","LOTO con tu candado.","Lubrica sólo con grasa a base de litio (Molykote 44 o THK AFB).","Respalda antes de calibrar; la calibración 3D pide contraseña del responsable."],
+  "steps":[
+   {"part":"emergency_stop","action":"toggle","text":"Oprime el paro y aplica LOTO."},
+   {"part":"door","action":"toggle","text":"Abre la cubierta frontal para tener acceso."},
+   {"part":"conveyor","action":"clean","text":"Limpia con trapo seco los sensores ópticos y con 409 o alcohol las bandas de orilla."},
+   {"part":"belt","action":"inspect","text":"Revisa rodamientos y bandas del transportador."},
+   {"part":"camera","action":"clean","text":"Limpia la lente de la cámara con paño para ópticas."},
+   {"part":"gantry","action":"lubricate","text":"Quita la grasa seca y aplica una capa delgada y continua en los rieles del gantry y el tornillo del AWA."},
+   {"part":"calibration_target","action":"calibrate","text":"Coloca el jig y corre la calibración 3D automática (Auto3DCalibration.cad, fiduciales, Ctrl + A, Run)."},
+   {"part":"light_ring","action":"calibrate","text":"Sobre la greycard, Calibrate on Location: cada valor a ±5 de su Target Mean."},
+   {"part":"door","action":"toggle","text":"Cierra la cubierta, retira el LOTO y corre una tarjeta de verificación."}
+  ]}
+]

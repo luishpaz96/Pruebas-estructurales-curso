@@ -1,0 +1,18 @@
+G04 PRACTICA-01 - Academia de Inspeccion · archivo de practica*
+%TF.GenerationSoftware,Academia,gen_board.py,1.0*%
+%TF.FileFunction,Profile,NP*%
+%FSLAX46Y46*%
+%MOMM*%
+%LPD*%
+%ADD10C,0.1000*%
+G01*
+D10*
+X0Y0D02*
+X60000000Y0D01*
+X60000000Y0D02*
+X60000000Y40000000D01*
+X60000000Y40000000D02*
+X0Y40000000D01*
+X0Y40000000D02*
+X0Y0D01*
+M02*

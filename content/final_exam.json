@@ -1,0 +1,328 @@
+{
+ "id": "final",
+ "title": "Examen final integrador",
+ "passScore": 70,
+ "questions": [
+  {
+   "type": "mc",
+   "q": "¿De qué marca es el software AOIGUI?",
+   "options": [
+    "Koh Young",
+    "ViTrox",
+    "Keysight",
+    "Es de todas las marcas"
+   ],
+   "correct": 0,
+   "explain": "AOIGUI es el software principal del Zenith.",
+   "section": "1.4 y Mapa de marcas"
+  },
+  {
+   "type": "mc",
+   "q": "¿De qué marca y máquina es Smart GUI?",
+   "options": [
+    "ViTrox, AOI V510",
+    "Koh Young, Zenith",
+    "ViTrox, AXI V810",
+    "Keysight, HP3070"
+   ],
+   "correct": 0,
+   "explain": "El V810 tiene su propio software de recetas.",
+   "section": "5.11 y Mapa de marcas"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué AOI mide alturas con PSP y 4 proyectores, sin rejilla ni PZT?",
+   "options": [
+    "ViTrox V510",
+    "Koh Young Zenith",
+    "Los dos",
+    "Ninguno"
+   ],
+   "correct": 0,
+   "explain": "El Koh Young usa moiré con rejilla movida por PZT.",
+   "section": "5.1"
+  },
+  {
+   "type": "mc",
+   "q": "La plantilla de un tipo de componente en el Koh Young se llama… y en el V510 se llama…",
+   "options": [
+    "Paquete; algoritmo (C, R, B, S o U).",
+    "Algoritmo; paquete.",
+    "Receta; subtipo.",
+    "Testplan; fixture."
+   ],
+   "correct": 0,
+   "explain": "Receta y subtipo son del V810; testplan y fixture del ICT.",
+   "section": "2.3 y 6.5"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué máquina necesita medición de fuga de radiación cada seis meses?",
+   "options": [
+    "AXI ViTrox V810",
+    "AOI ViTrox V510",
+    "AOI Koh Young",
+    "ICT HP3070"
+   ],
+   "correct": 0,
+   "explain": "Solo el AXI usa rayos X.",
+   "section": "10.1"
+  },
+  {
+   "type": "mc",
+   "q": "Un open en una esfera de BGA, en un nodo sin punto de prueba. ¿Quién lo detecta?",
+   "options": [
+    "El AXI",
+    "El AOI",
+    "El SPI",
+    "El ICT"
+   ],
+   "correct": 0,
+   "explain": "El AOI no ve debajo del BGA y el ICT no puede tocar ese nodo.",
+   "section": "19.1"
+  },
+  {
+   "type": "mc",
+   "q": "Una resistencia de valor equivocado y sin marcado. ¿Quién la detecta?",
+   "options": [
+    "El ICT",
+    "El AOI",
+    "El AXI",
+    "El SPI"
+   ],
+   "correct": 0,
+   "explain": "Solo el ICT mide el valor eléctrico.",
+   "section": "12.1 y 19.1"
+  },
+  {
+   "type": "mc",
+   "q": "¿Dónde se calibra el Koh Young?",
+   "options": [
+    "En KYCal.",
+    "En Lighting Setup de Smart GUI.",
+    "En BT-Basic.",
+    "En Virtual Live."
+   ],
+   "correct": 0,
+   "explain": "Lighting Setup es del V510, BT-Basic del ICT y Virtual Live del V810.",
+   "section": "3.2"
+  },
+  {
+   "type": "mc",
+   "q": "Si repites la misma tarjeta y el llamado sale igual, en el mismo lugar, ¿qué indica?",
+   "options": [
+    "Que es el programa o un defecto real.",
+    "Que es la máquina.",
+    "Que es la medición.",
+    "Que es el operador."
+   ],
+   "correct": 0,
+   "explain": "Si el llamado cambia de lugar, es la máquina o la medición.",
+   "section": "4.2"
+  },
+  {
+   "type": "mc",
+   "q": "¿Cuál es el ancho mínimo de unión de un chip en clase 3?",
+   "options": [
+    "75% de W o de P, lo que sea menor.",
+    "50%",
+    "25%",
+    "100%"
+   ],
+   "correct": 0,
+   "explain": "En clase 1 y 2 es 50%.",
+   "section": "21.4"
+  },
+  {
+   "type": "mc",
+   "q": "En el HP3070, ¿qué prueba va inmediatamente después de la de contacto?",
+   "options": [
+    "Cortos y abiertos.",
+    "Digital en circuito.",
+    "Analógico con energía.",
+    "Testjet."
+   ],
+   "correct": 0,
+   "explain": "Si hay un corto, la prueba se detiene antes de energizar.",
+   "section": "13.1"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué rebanadas usa el V810 para un BGA?",
+   "options": [
+    "Pad, midball y package.",
+    "Angle 1, 2 y 3.",
+    "Talón, centro y punta.",
+    "Contacto, cortos y analógico."
+   ],
+   "correct": 0,
+   "explain": "Cada respuesta incorrecta es de otra máquina o de otro tipo de unión.",
+   "section": "8.2"
+  },
+  {
+   "type": "mc",
+   "q": "En la torre de luces del V510, ¿qué significa la roja fija?",
+   "options": [
+    "La tarjeta falló la inspección.",
+    "Error del PLC.",
+    "Esperando tarjeta.",
+    "Paro de emergencia."
+   ],
+   "correct": 0,
+   "explain": "Roja parpadeando es error del PLC.",
+   "section": "5.3"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué lubricante y frecuencia corresponden a las guías del V510?",
+   "options": [
+    "Grasa de litio cada trimestre.",
+    "NSK PS2 cada 6 meses.",
+    "Aceite cada semana.",
+    "No se lubrican."
+   ],
+   "correct": 0,
+   "explain": "NSK PS2 cada 6 meses es del Koh Young.",
+   "section": "7.3"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué Gerber se usa para programar el SPI Koh Young?",
+   "options": [
+    "El de la capa de pasta (aberturas del stencil).",
+    "El de la capa de cobre de la PCB.",
+    "El de la serigrafía.",
+    "Ninguno: solo el CAD de componentes."
+   ],
+   "correct": 0,
+   "explain": "La capa de cobre es para el AOI; el SPI compara contra las aberturas del stencil.",
+   "section": "17.2"
+  },
+  {
+   "type": "mc",
+   "q": "En el SPI, ¿qué es el 100% de volumen de un depósito?",
+   "options": [
+    "El área de la abertura por el espesor del stencil.",
+    "El área del pad por la altura del componente.",
+    "El promedio de los depósitos de la tarjeta.",
+    "Lo que mida la primera tarjeta."
+   ],
+   "correct": 0,
+   "explain": "Por eso el SPI se programa con el Gerber del stencil.",
+   "section": "16.2"
+  },
+  {
+   "type": "mc",
+   "q": "En boundary scan, ¿cuál es la primera prueba que debe pasar?",
+   "options": [
+    "La integridad de la cadena.",
+    "Las interconexiones.",
+    "Silicon Nails.",
+    "El analógico con energía."
+   ],
+   "correct": 0,
+   "explain": "Si la cadena no contesta completa, ninguna otra prueba de boundary scan sirve.",
+   "section": "15.6"
+  },
+  {
+   "type": "mc",
+   "q": "¿Por qué el head-in-pillow es el defecto más difícil para el AXI?",
+   "options": [
+    "La esfera toca la pasta sin fundirse con ella, y puede conducir y pasar la prueba eléctrica.",
+    "Porque solo pasa en componentes de agujero.",
+    "Porque los rayos X no atraviesan la soldadura.",
+    "Porque solo lo detecta el SPI."
+   ],
+   "correct": 0,
+   "explain": "Por eso el umbral se ajusta con datos y el HiP también se ataca en el proceso (módulos 19 y 20).",
+   "section": "9.7"
+  },
+  {
+   "type": "mc",
+   "q": "En aberturas de stencil chicas, ¿qué relación falla primero?",
+   "options": [
+    "El area ratio.",
+    "El aspect ratio.",
+    "La relación pin contra hoyo.",
+    "El PWI."
+   ],
+   "correct": 0,
+   "explain": "Una abertura de 12 × 12 mil en 5 mil tiene aspect ratio 2.4 (pasa) y area ratio 0.60 (no pasa).",
+   "section": "20.2"
+  },
+  {
+   "type": "tf",
+   "q": "El V510 y el V810 son de ViTrox, pero son máquinas distintas, con software y procedimientos distintos.",
+   "answer": true,
+   "explain": "El V510 es AOI con luz; el V810 es AXI con rayos X.",
+   "section": "Mapa de marcas"
+  },
+  {
+   "type": "tf",
+   "q": "Un GR&R con variación menor a 10% de la tolerancia es aceptable.",
+   "answer": true,
+   "explain": "Aplica a cualquier máquina que mide.",
+   "section": "3.3 y 7.8"
+  },
+  {
+   "type": "tf",
+   "q": "Para bajar falsos llamados, lo primero es abrir tolerancias.",
+   "answer": false,
+   "explain": "Primero se revisa que el componente y sus recuadros se midan bien.",
+   "section": "2.5 y 6.6"
+  },
+  {
+   "type": "tf",
+   "q": "La prueba negativa del V510 confirma que, al girar un componente en la imagen, la máquina lo marca como polaridad mala.",
+   "answer": true,
+   "explain": "Se afina hasta cero ESCAPE.",
+   "section": "6.10"
+  },
+  {
+   "type": "tf",
+   "q": "En un perfil de reflujo, más tiempo arriba del punto de fusión siempre da una unión más fuerte.",
+   "answer": false,
+   "explain": "Con demasiado TAL crece una capa intermetálica gruesa y frágil y el flux se quema; la guía da de 45 a 90 s.",
+   "section": "20.4"
+  },
+  {
+   "type": "case",
+   "q": "En una planta hay un Koh Young y un V510 en líneas vecinas. El V510 empieza a dar muchos falsos llamados 2D en todos sus programas. ¿Qué haces primero?",
+   "options": [
+    "Verifico la iluminación del V510 con la tarjeta gris y limpio la lente; si falla, calibro en Lighting Setup.",
+    "Corro KYCal en el V510.",
+    "Abro tolerancias en todos los programas.",
+    "Reinicio el ICT de la línea."
+   ],
+   "correct": 0,
+   "explain": "Falla en todos los programas apunta a la máquina; KYCal no existe en el V510.",
+   "section": "7.5 y 7.11"
+  },
+  {
+   "type": "case",
+   "q": "Un pin levantado de un QFP llegó al cliente. La máquina lo midió y lo pasó. ¿Qué pasó y qué haces?",
+   "options": [
+    "La tolerancia estaba muy abierta: la corrijo, averiguo quién y cuándo la abrió y valido con un defecto real.",
+    "No se podía ver: compro un AXI.",
+    "El operador lo aceptó: lo reentreno.",
+    "No se inspeccionó: agrego la ventana."
+   ],
+   "correct": 0,
+   "explain": "\"Se midió y pasó\" es el primero de los cuatro escenarios de un escape.",
+   "section": "4.6"
+  },
+  {
+   "type": "case",
+   "q": "El SPI marca poco volumen en las aberturas chicas de un BGA de paso fino en todas las tarjetas, aunque la impresora está limpia y bien alineada. ¿Qué revisas?",
+   "options": [
+    "El area ratio de esas aberturas: si es menor a 0.66, pido un stencil más delgado o escalonado, o uno que suelte mejor la pasta.",
+    "Abro la tolerancia de volumen del SPI.",
+    "Subo la temperatura del horno.",
+    "Le pido al ICT que pruebe ese BGA."
+   ],
+   "correct": 0,
+   "explain": "Si pasa en todas las tarjetas y la impresora está bien, la causa es el diseño del stencil.",
+   "section": "20.2 y 18.4"
+  }
+ ]
+}

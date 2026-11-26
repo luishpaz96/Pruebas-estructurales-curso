@@ -1,0 +1,123 @@
+{
+ "id": "m15",
+ "order": 15,
+ "brand": "ks",
+ "machine": null,
+ "title": "Módulo 15. ICT avanzado: archivos, testplan, BT-Basic y boundary scan",
+ "summary": "",
+ "lessons": [],
+ "exam": [
+  {
+   "type": "mc",
+   "q": "¿Qué puede pasar si agregas una línea de texto al archivo de licencias (.enable)?",
+   "options": [
+    "Que la cabeza no arranque, porque el archivo está cifrado.",
+    "Nada: el sistema ignora las líneas nuevas.",
+    "Que se activen opciones nuevas.",
+    "Que solo falle la prueba de cortos."
+   ],
+   "correct": 0,
+   "explain": "Las licencias se manejan con respaldo y por personal autorizado.",
+   "section": "15.1"
+  },
+  {
+   "type": "mc",
+   "q": "Cambiaste una control card. ¿Qué archivo actualizas para que la cabeza la reconozca en la red?",
+   "options": [
+    "bootptab, con su dirección MAC.",
+    "El testplan.",
+    "El wirelist.",
+    "El archivo de licencias."
+   ],
+   "correct": 0,
+   "explain": "bootptab guarda MAC, IP y máscara de la system card y de las control cards.",
+   "section": "12.7 y 15.1"
+  },
+  {
+   "type": "mc",
+   "q": "¿Para qué sirve el comando autofile?",
+   "options": [
+    "Para saber el número del fixture que está puesto y confirmar que es del modelo del programa.",
+    "Para guardar el testplan.",
+    "Para correr el autoajuste.",
+    "Para generar el archivo de pines."
+   ],
+   "correct": 0,
+   "explain": "El fixture debe estar sujeto a la cabeza.",
+   "section": "15.2"
+  },
+  {
+   "type": "mc",
+   "q": "En un testplan, ¿qué indica boardfailed?",
+   "options": [
+    "Que alguna prueba de la tarjeta falló.",
+    "Que la tarjeta no tiene número de serie.",
+    "Que el fixture no está sujeto.",
+    "Que se venció la licencia."
+   ],
+   "correct": 0,
+   "explain": "Vale 0 al esperar el inicio y 1 en cuanto falla cualquier prueba.",
+   "section": "15.3"
+  },
+  {
+   "type": "mc",
+   "q": "¿Cómo se entra a una subrutina en BT-Basic?",
+   "options": [
+    "Con call y el nombre de la subrutina.",
+    "Con goto a su primera línea.",
+    "Con compile.",
+    "Con load board."
+   ],
+   "correct": 0,
+   "explain": "A una subrutina no se puede entrar con goto.",
+   "section": "15.3"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué hace Safeguard en las pruebas digitales?",
+   "options": [
+    "Limita el forzado (backdrive) de las salidas de otros chips para no dañarlos.",
+    "Protege el testplan con contraseña.",
+    "Respalda los archivos del sistema.",
+    "Impide que el operador cambie de fixture."
+   ],
+   "correct": 0,
+   "explain": "Para probar un chip a veces hay que forzar a los que lo alimentan.",
+   "section": "15.5"
+  },
+  {
+   "type": "tf",
+   "q": "El testplan se tiene que compilar después de cada cambio.",
+   "answer": false,
+   "explain": "El testplan corre con run; lo que se compila son los bloques de prueba.",
+   "section": "15.3"
+  },
+  {
+   "type": "tf",
+   "q": "Para probar con boundary scan las conexiones debajo de un BGA, el fixture necesita una punta en cada pista.",
+   "answer": false,
+   "explain": "Basta con las señales del TAP y los pines que habilitan la cadena.",
+   "section": "15.6"
+  },
+  {
+   "type": "tf",
+   "q": "ignore digital failures sirve para depurar, pero no se deja en producción.",
+   "answer": true,
+   "explain": "Si se queda activo, las fallas digitales no cuentan y salen tarjetas malas.",
+   "section": "15.4"
+  },
+  {
+   "type": "case",
+   "q": "Después de cambiar una pin card, la cabeza ya no termina de arrancar. ¿Qué revisas primero?",
+   "options": [
+    "Que el config coincida con el hardware instalado y que la tarjeta respete las reglas de mezcla.",
+    "El testplan del modelo.",
+    "La licencia de boundary scan.",
+    "Las puntas del fixture."
+   ],
+   "correct": 0,
+   "explain": "El arranque compara el hardware contra el config.",
+   "section": "12.7 y 15.1"
+  }
+ ]
+}

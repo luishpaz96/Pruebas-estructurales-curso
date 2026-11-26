@@ -1,0 +1,257 @@
+{
+ "id": "m1",
+ "brand": "ky",
+ "machine": "aoi_ky",
+ "title": "Módulo 1. De qué se compone un AOI Koh Young",
+ "summary": "Partes del AOI 3D Koh Young Zenith, cómo convierte franjas de luz en altura, la familia de modelos y los archivos y software que usa.",
+ "lessons": [
+  {
+   "id": "m1-l1",
+   "title": "La máquina por fuera y por dentro",
+   "animation": "machine_tour",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "El AOI 3D Koh Young Zenith es una máquina en línea. La tarjeta entra por el transportador, se detiene en el tope, se sujeta con el clamp y el cabezal óptico se mueve sobre ella con el puente (gantry) en X y Y."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Cabezal óptico (probe): cámara, lente principal, 8 módulos de proyección 3D, espejos y luces 2D. Es la parte más cara y delicada.",
+      "Cámara y lente principal: lente telecéntrico; cámara de 4, 8 o 12 megapíxeles con CoaXPress hacia la tarjeta de captura (frame grabber).",
+      "Ejes X, Y y Z: servomotores con husillo de bolas y guías lineales. El eje Z enfoca.",
+      "Transportador: bandas de distribución, sensores ópticos, tope neumático (stopper) y guía de altura.",
+      "Caja eléctrica: iVPC (luces y PZT), GNET-M (ejes y motores a pasos), GNET-D (entradas y salidas), GNET-F (sensores de límite) y servoamplificadores.",
+      "PC de visión y UPS, con Windows 11 IoT Enterprise LTSC en Zenith 2 y Alpha."
+     ]
+    },
+    {
+     "kind": "tip",
+     "text": "Si la imagen sale oscura o la altura 3D se ve rota, revisa primero el cabezal, el frame grabber y el estado de las luces antes de tocar el programa."
+    },
+    {
+     "kind": "warning",
+     "text": "El botón de paro de emergencia (EMO, rojo) se oprime ante cualquier riesgo. La torre verde significa modo automático: la máquina puede moverse en cualquier momento aunque parezca detenida."
+    }
+   ],
+   "keyPoints": [
+    "El cabezal óptico tiene la cámara, los 8 proyectores 3D y las luces 2D.",
+    "GNET-M controla los servos X, Y, Z y el motor de pasos del transportador.",
+    "La neumática trabaja entre 0.4 y 0.5 MPa (58 a 72 psi); lo recomendado es cerca de 0.45 MPa (65 psi).",
+    "La torre de luces indica el estado: verde RUN, amarillo+verde IDLE, amarillo HOMING, rojo con alarma error."
+   ]
+  },
+  {
+   "id": "m1-l2",
+   "title": "Cómo mide en 3D: franjas y PZT",
+   "animation": "moire_fringes",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "La medición se llama perfilometría por desplazamiento de fase (también moiré o luz estructurada). Cada proyector tiene una rejilla (grating) que un actuador piezoeléctrico (PZT) recorre una distancia muy pequeña entre captura y captura."
+    },
+    {
+     "kind": "text",
+     "text": "Cada píxel ve su brillo subir y bajar como una onda. Con cuatro capturas (I1 a I4) la máquina calcula la altura de cada píxel respecto a la superficie de la tarjeta. Sobre un componente, las franjas se recorren y ese corrimiento es proporcional a la altura."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "El AOI proyecta desde 8 direcciones; el SPI de Koh Young usa 4.",
+      "Proyectar desde varios lados evita sombras: lo que un proyector no alcanza lo mide otro.",
+      "Superficies espejo o muy negras devuelven poca señal y son más difíciles de medir."
+     ]
+    },
+    {
+     "kind": "warning",
+     "text": "Si el PZT no recorre siempre la misma distancia, la onda sale deforme y la altura sale mal en todas las tarjetas. Eso se revisa con la calibración de proyección 3D."
+    }
+   ],
+   "keyPoints": [
+    "El principio es desplazamiento de fase: franjas recorridas por el PZT, cuatro capturas por proyector.",
+    "El corrimiento de las franjas es proporcional a la altura del componente.",
+    "Ocho direcciones de proyección reducen sombras entre componentes altos y chicos.",
+    "Una tarjeta muy pandeada genera falsos llamados de altura porque se mide respecto a la superficie de la tarjeta."
+   ]
+  },
+  {
+   "id": "m1-l3",
+   "title": "Familia de modelos y altura máxima",
+   "animation": "machine_tour",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "Koh Young tiene varios modelos de AOI. Confirma el tuyo en la placa de la máquina, porque la altura máxima medible y la resolución cambian entre ellos."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Zenith original: 4M, 8M o 12M; 4 mm de altura máxima. AOI 3D en línea estándar.",
+      "Zenith 2: 8M o 12M; 25 mm; cámaras laterales opcionales.",
+      "Zenith Alpha: 8M o 12M; 4 mm o 25 mm en versiones «+»; con funciones de inteligencia artificial.",
+      "Zenith UHS: alta velocidad; 10 mm (25 mm en UHS+).",
+      "Zenith F: tarjetas flexibles, 12M a 10 µm, 1 mm de altura.",
+      "Zenith S: fuera de línea, para tarjetas grandes, 8M a 15 µm."
+     ]
+    },
+    {
+     "kind": "tip",
+     "text": "Lo más alto que la altura máxima del modelo se revisa en 2D o con cámaras laterales. No intentes medirlo solo en 3D."
+    }
+   ],
+   "keyPoints": [
+    "La resolución depende del lente: cada píxel ve 10, 15 o 20 µm.",
+    "La altura máxima medible va de 1 mm a 25 mm según el modelo.",
+    "La cámara lateral cubre uniones que no se ven desde arriba, como QFN y conectores."
+   ]
+  },
+  {
+   "id": "m1-l4",
+   "title": "Software y archivos del programa",
+   "animation": "process_flow",
+   "blocks": [
+    {
+     "kind": "bullets",
+     "items": [
+      "WinMCS: controla el movimiento de la máquina y hace la búsqueda de origen. Se abre primero.",
+      "AOIGUI: software principal de Zenith; abre, edita y ejecuta los programas (JOB). Se abre después de WinMCS.",
+      "ePM-AOI: convierte el Gerber y el archivo de posiciones (o un ODB++) en un archivo .kypcb. Corre en una PC de oficina.",
+      "KYCal: calibra cámara, iluminación, PZT y altura. Incluye el autodiagnóstico de estabilidad a largo plazo.",
+      "KYConfig: configuración del sistema; permite respaldar y restaurar.",
+      "KSMART: junta datos de todas las máquinas para estadísticas y trazabilidad por número de serie.",
+      "KPO Mounter y KPO Printer: corrigen automáticamente la colocadora o la impresora con datos del AOI o del SPI."
+     ]
+    },
+    {
+     "kind": "text",
+     "text": "Tres archivos: .ePM es el trabajo de ePM-AOI y solo sirve para seguir editando; .kypcb contiene tamaño de tarjeta, pads, posiciones y fiduciales, pero no condiciones de inspección; .kyjob es el programa que se ejecuta, con paquetes y condiciones."
+    },
+    {
+     "kind": "tip",
+     "text": "Cuando un programa no abre o le faltan datos, revisa en qué etapa está: ¿existe el .kypcb? ¿ya se generó el .kyjob en AOIGUI?"
+    }
+   ],
+   "keyPoints": [
+    "ePM-AOI exporta el .kypcb y AOIGUI lo carga y guarda como .kyjob.",
+    "El .kypcb no tiene condiciones de inspección; esas viven en el .kyjob.",
+    "WinMCS se abre antes que AOIGUI.",
+    "KSMART concentra resultados, estadísticas y trazabilidad de todas las máquinas."
+   ]
+  }
+ ],
+ "order": 1,
+ "exam": [
+  {
+   "type": "mc",
+   "q": "¿Cómo mide alturas el AOI de Koh Young?",
+   "options": [
+    "Proyecta franjas de luz (moiré) y calcula la altura según cuánto se recorren.",
+    "Con un láser que barre la tarjeta.",
+    "Con rayos X en rebanadas.",
+    "Tocando la tarjeta con una punta."
+   ],
+   "correct": 0,
+   "explain": "Sobre un objeto alto las franjas se recorren más; ese corrimiento se convierte en altura.",
+   "section": "1.2"
+  },
+  {
+   "type": "mc",
+   "q": "En el Koh Young, ¿qué mueve la rejilla (grating) dentro de cada proyector?",
+   "options": [
+    "Un actuador piezoeléctrico (PZT).",
+    "Un servomotor con husillo de bolas.",
+    "Un motor lineal.",
+    "Un cilindro neumático."
+   ],
+   "correct": 0,
+   "explain": "Si el PZT no se mueve siempre igual, la onda sale deforme y la altura sale mal.",
+   "section": "1.2"
+  },
+  {
+   "type": "mc",
+   "q": "¿Por qué el Koh Young proyecta franjas desde 8 direcciones?",
+   "options": [
+    "Para que lo que un proyector no alcanza por la sombra de un componente alto lo mida otro.",
+    "Para que el ciclo sea más rápido.",
+    "Para leer el texto de los componentes.",
+    "Para no tener que calibrar la máquina."
+   ],
+   "correct": 0,
+   "explain": "Varias direcciones evitan las sombras y ayudan con superficies brillantes.",
+   "section": "1.2"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué tarjeta de la caja eléctrica del Koh Young controla las luces 2D y 3D y el PZT?",
+   "options": [
+    "iVPC",
+    "GNET-M",
+    "GNET-D",
+    "GNET-F"
+   ],
+   "correct": 0,
+   "explain": "GNET-M controla el movimiento, GNET-D las entradas y salidas y GNET-F los límites.",
+   "section": "1.1"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué software del Koh Young se abre primero y hace la búsqueda de origen?",
+   "options": [
+    "WinMCS",
+    "AOIGUI",
+    "ePM-AOI",
+    "KSMART"
+   ],
+   "correct": 0,
+   "explain": "WinMCS controla el movimiento; AOIGUI se abre después.",
+   "section": "1.4"
+  },
+  {
+   "type": "mc",
+   "q": "¿Cuál es el archivo de programa con el que inspecciona el Koh Young?",
+   "options": [
+    ".kyjob",
+    ".kypcb",
+    ".ePM",
+    ".plx"
+   ],
+   "correct": 0,
+   "explain": "ePM-AOI exporta el .kypcb y AOIGUI lo guarda como .kyjob. El .plx es del ViTrox V510.",
+   "section": "1.4"
+  },
+  {
+   "type": "tf",
+   "q": "En la torre de luces del Koh Young, el amarillo solo significa que la máquina está buscando su origen (homing).",
+   "answer": true,
+   "explain": "Amarillo + verde es espera (IDLE) y rojo parpadeando es alarma.",
+   "section": "1.1"
+  },
+  {
+   "type": "tf",
+   "q": "Si el interruptor de control (Control Power) del Koh Young está apagado, la máquina marca el error 27.",
+   "answer": true,
+   "explain": "El interruptor de control alimenta sensores y tarjetas de control.",
+   "section": "1.1"
+  },
+  {
+   "type": "tf",
+   "q": "El vapor de flux no afecta al cabezal porque tiene un vidrio protector, así que nunca se limpia.",
+   "answer": false,
+   "explain": "El flux ensucia la cubierta de humos, los espejos y el lente; por eso existe su limpieza.",
+   "section": "1.2"
+  },
+  {
+   "type": "case",
+   "q": "En todas las tarjetas, de todos los programas, las alturas salen mal y aparece una alarma de PZT. ¿Qué parte del Koh Young es la sospechosa principal?",
+   "options": [
+    "La proyección 3D: el PZT o su amplificador.",
+    "El transportador.",
+    "La BOM del programa.",
+    "El UPS de la PC."
+   ],
+   "correct": 0,
+   "explain": "Falla en todos los programas a la vez apunta a la máquina; la alarma de PZT dice cuál parte.",
+   "section": "1.1 y 4.3"
+  }
+ ]
+}

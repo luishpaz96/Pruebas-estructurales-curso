@@ -1,0 +1,22 @@
+[
+ {"id":"mt-v8-semanal","machine":"axi_v810","title":"Semanal del AXI V810: interlocks y seguridad radiológica","frequency":"semanal",
+  "safety":["Sólo personal autorizado y capacitado en seguridad radiológica.","Los interlocks nunca se puentean.","Si un interlock no corta los rayos X, detén la máquina y avisa al responsable.","Usa tu dosímetro personal."],
+  "steps":[
+   {"part":"tower_light","action":"inspect","text":"Confirma que la lámpara X-RAY ON funciona; si está fundida se cambia antes de seguir."},
+   {"part":"xray_source","action":"toggle","text":"Enciende los rayos X para la prueba de interlocks."},
+   {"part":"interlock","action":"inspect","text":"Con rayos X encendidos abre una puerta: los rayos X deben apagarse al instante."},
+   {"part":"emergency_stop","action":"toggle","text":"Prueba los paros de emergencia."},
+   {"part":"filter","action":"clean","text":"Limpia los filtros de los servidores y del gabinete."},
+   {"part":"conveyor","action":"inspect","text":"Revisa que cortinas y compuertas blindadas no estén rotas ni atoradas."}
+  ]},
+ {"id":"mt-v8-semestral","machine":"axi_v810","title":"Semestral V810: medición de fuga y calibraciones","frequency":"semestral",
+  "safety":["Detector de radiación calibrado y vigente.","Límite de fuga: 0.5 µSv/h (o el de tu licencia local si es más estricto).","No se reanuda la producción con una medición alta.","El subsistema del tubo (130 kV) no lo repara el usuario."],
+  "steps":[
+   {"part":"xray_source","action":"toggle","text":"Haz el calentamiento completo del tubo (warm-up) antes de medir."},
+   {"part":"door","action":"measure","text":"Mide la fuga alrededor de puertas, compuertas y uniones del blindaje con el detector calibrado."},
+   {"part":"detector","action":"calibrate","text":"Calibra ganancia y campo plano del detector (elimina rayas y manchas fijas)."},
+   {"part":"calibration_target","action":"calibrate","text":"Corre la calibración geométrica con el patrón del fabricante."},
+   {"part":"pneumatic","action":"measure","text":"Verifica el aire en 552 kPa (80 psi) y que no haya fugas."},
+   {"part":"gantry","action":"lubricate","text":"Limpia y lubrica las guías de la etapa y del transportador."}
+  ]}
+]

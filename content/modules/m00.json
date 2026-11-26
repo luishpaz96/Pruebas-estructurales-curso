@@ -1,0 +1,123 @@
+{
+ "id": "m0",
+ "order": 0,
+ "brand": "gen",
+ "machine": null,
+ "title": "Módulo 0. Fundamentos desde cero",
+ "summary": "",
+ "lessons": [],
+ "exam": [
+  {
+   "type": "mc",
+   "q": "¿Qué es un falso llamado?",
+   "options": [
+    "La máquina marcó un defecto y la tarjeta estaba bien.",
+    "La máquina dejó pasar un defecto real.",
+    "Un defecto que el operador no alcanzó a ver.",
+    "Una tarjeta que no pudo entrar a la máquina."
+   ],
+   "correct": 0,
+   "explain": "El falso llamado molesta y quita tiempo, pero no llega al cliente.",
+   "section": "0.5"
+  },
+  {
+   "type": "mc",
+   "q": "¿Cuál es el error más grave de una máquina de inspección?",
+   "options": [
+    "El escape, porque el defecto llega al cliente.",
+    "El falso llamado, porque detiene la línea.",
+    "Un tiempo de ciclo alto.",
+    "Un fiducial con calificación baja."
+   ],
+   "correct": 0,
+   "explain": "Un escape es un defecto real que la máquina dejó pasar.",
+   "section": "0.5"
+  },
+  {
+   "type": "mc",
+   "q": "¿Cuál es el orden correcto de estas estaciones en una línea SMT?",
+   "options": [
+    "Impresora de pasta, SPI, colocadora, horno, AOI, AXI, ICT.",
+    "SPI, impresora, horno, colocadora, AOI, ICT, AXI.",
+    "Impresora, colocadora, SPI, horno, ICT, AOI, AXI.",
+    "Colocadora, impresora, horno, SPI, AXI, AOI, ICT."
+   ],
+   "correct": 0,
+   "explain": "Primero se imprime y se mide la pasta, luego se coloca, se suelda y al final se inspecciona y se prueba.",
+   "section": "0.3"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué defecto detecta mejor el AXI que el AOI?",
+   "options": [
+    "Un open o un vacío en una esfera de BGA.",
+    "Un chip faltante.",
+    "Un componente girado 180° con marca visible.",
+    "Un puente visible entre patitas de un QFP."
+   ],
+   "correct": 0,
+   "explain": "Las uniones del BGA quedan debajo del componente: solo los rayos X las ven.",
+   "section": "0.4"
+  },
+  {
+   "type": "mc",
+   "q": "¿Cuántas micras (µm) tiene un milímetro?",
+   "options": [
+    "1000",
+    "100",
+    "10",
+    "10 000"
+   ],
+   "correct": 0,
+   "explain": "Una micra es la milésima parte de un milímetro.",
+   "section": "0.8"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué es un fiducial?",
+   "options": [
+    "Una marca de cobre que la máquina busca para saber exactamente dónde quedó la tarjeta.",
+    "El número de parte de un componente.",
+    "El archivo de diseño de la tarjeta.",
+    "Un tipo de defecto de soldadura."
+   ],
+   "correct": 0,
+   "explain": "Con dos o tres fiduciales la máquina corrige el corrimiento y el giro de la tarjeta.",
+   "section": "0.9"
+  },
+  {
+   "type": "tf",
+   "q": "El ICT puede distinguir una resistencia de 1 kΩ de una de 10 kΩ; el AOI y el AXI normalmente no.",
+   "answer": true,
+   "explain": "El ICT mide valores eléctricos; el AOI y el AXI solo miran forma y tamaño.",
+   "section": "0.7"
+  },
+  {
+   "type": "tf",
+   "q": "El AOI de Koh Young y el AOI ViTrox V510 usan rayos X para ver debajo de los BGA.",
+   "answer": false,
+   "explain": "Los dos AOI usan luz. Solo el AXI ViTrox V810 usa rayos X.",
+   "section": "0.10"
+  },
+  {
+   "type": "tf",
+   "q": "Un nodo es todo lo que está unido por la misma pista de cobre.",
+   "answer": true,
+   "explain": "El ICT necesita un punto de prueba en cada nodo para poder tocarlo.",
+   "section": "0.7"
+  },
+  {
+   "type": "case",
+   "q": "Vas a cambiar una banda dentro de una máquina. ¿Qué haces antes de meter las manos?",
+   "options": [
+    "Apago, quito la llave y pongo mi candado y mi etiqueta en el interruptor principal (LOTO).",
+    "Oprimo el paro de emergencia y empiezo; con eso basta.",
+    "Dejo la máquina en automático para que no se mueva.",
+    "Le pido a un compañero que no toque nada mientras trabajo."
+   ],
+   "correct": 0,
+   "explain": "Con LOTO nadie puede encender la máquina mientras trabajas.",
+   "section": "0.10"
+  }
+ ]
+}

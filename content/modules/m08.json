@@ -1,0 +1,255 @@
+{
+ "id": "m8",
+ "brand": "v8",
+ "machine": "axi_v810",
+ "title": "Módulo 8. De qué se compone un AXI V810",
+ "summary": "Cómo los rayos X forman rebanadas 3D con tomosíntesis, cómo leer una imagen de rayos X, defectos de BGA, partes del V810, reglas de seguridad radiológica y ambientes del software.",
+ "lessons": [
+  {
+   "id": "m8-l1",
+   "title": "Cómo los rayos X forman una imagen",
+   "animation": "xray_tomo",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "El V810 es como un tomógrafo para tarjetas: toma varias vistas desde ángulos distintos y la computadora arma rebanadas, para ver la altura de las esferas de un BGA sin que estorben las capas de arriba o de abajo."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Transmisión 2D: una sola toma donde se enciman todas las capas.",
+      "Laminografía (5DX de Agilent): el haz gira dentro del tubo y lo que no está en el plano de enfoque se borra.",
+      "Tomosíntesis digital (V810): el tubo y los detectores no se mueven; se mueve la tarjeta. Varias cámaras TDI en ángulos distintos toman la imagen al mismo tiempo y el procesador IRP arma las rebanadas 3D."
+     ]
+    },
+    {
+     "kind": "tip",
+     "text": "Regla para leer cualquier imagen de rayos X: más oscuro significa más metal. Una burbuja dentro de una esfera se ve como una mancha clara."
+    }
+   ],
+   "keyPoints": [
+    "En 2D las capas se encimen; en 3D se separan en rebanadas.",
+    "La soldadura frena más los rayos X, por eso sale oscura.",
+    "Casi todos los algoritmos del V810 sacan el promedio de gris por renglón y grafican el perfil de la unión.",
+    "El V810 usa tomosíntesis, no laminografía."
+   ]
+  },
+  {
+   "id": "m8-l2",
+   "title": "Las rebanadas de un BGA",
+   "animation": "xray_tomo",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "Un BGA se revisa con tres rebanadas: package (corte del paquete, mediano), midball (corte de bola en el centro, el más grande) y pad (corte del pad, mediano). Con ellas se prueban open, vacíos, soldadura insuficiente, desalineación, faltante y corto."
+    },
+    {
+     "kind": "text",
+     "text": "Una esfera bien soldada tiene forma de barril: es más ancha al centro. La máquina mide el diámetro en tres alturas y lo compara con las esferas vecinas. Por eso la mejor forma de juzgar una esfera sospechosa es comparándola con sus vecinas."
+    }
+   ],
+   "keyPoints": [
+    "Las tres rebanadas de un BGA son package, midball y pad.",
+    "Una esfera correcta tiene forma de barril.",
+    "El truco para juzgar es siempre comparar la esfera con sus vecinas."
+   ]
+  },
+  {
+   "id": "m8-l3",
+   "title": "Cómo se ven los defectos en rayos X",
+   "animation": "solder_joint",
+   "blocks": [
+    {
+     "kind": "bullets",
+     "items": [
+      "Correcto: todas las esferas iguales.",
+      "Vacío: mancha clara dentro de la esfera. La norma IPC marca defecto si pasa de 25% del área de la esfera en la imagen; ediciones recientes de IPC-A-610 e IPC-7095 usan 30%.",
+      "Puente: dos esferas unidas, o puente a una vía.",
+      "Open o insuficiente: esfera más chica y clara.",
+      "Esfera faltante: hueco en la matriz.",
+      "Head-in-Pillow (HiP): doble contorno, sutil; la esfera apoyada sobre la pasta sin fundirse."
+     ]
+    },
+    {
+     "kind": "warning",
+     "text": "La norma y el requisito del cliente definen el tamaño de un vacío que cuenta como defecto. Verifica la edición vigente y el requisito antes de fijar un límite."
+    }
+   ],
+   "keyPoints": [
+    "Vacío: mancha clara en la esfera.",
+    "Puente: dos esferas unidas.",
+    "Open: esfera más chica y clara.",
+    "HiP es el defecto más difícil de ver y el que más se escapa."
+   ]
+  },
+  {
+   "id": "m8-l4",
+   "title": "Partes de la máquina y seguridad radiológica",
+   "animation": "safety_radiation",
+   "blocks": [
+    {
+     "kind": "bullets",
+     "items": [
+      "Tubo de rayos X: trabaja con 130,000 V de corriente directa; kV controla qué tanto penetra y corriente qué tan brillante es. El subsistema de alto voltaje no lo repara el usuario.",
+      "Detectores (cámaras TDI): varias cámaras en ángulos distintos convierten los rayos X en imagen mientras la tarjeta pasa.",
+      "IRP: procesador de reconstrucción que arma las rebanadas 3D.",
+      "PSP (Phase Shift Profilometry): sensor óptico que mapea la superficie de la tarjeta para colocar las rebanadas.",
+      "Gabinete blindado con plomo, compuertas, interlocks en puertas y cubiertas, etapa X-Y y sensor de superficie.",
+      "Aire comprimido a 552 kPa (80 psi); energía trifásica de 200 a 240 V o de 380 a 415 V."
+     ]
+    },
+    {
+     "kind": "warning",
+     "text": "No desactives los interlocks por ningún motivo, no perforas ni modificas los paneles de blindaje y no das servicio a ninguna parte del subsistema de rayos X. La fuga de radiación no debe pasar de 0.5 µSv/h (0.05 mR/h); la prueba de fuga se hace cada seis meses."
+    }
+   ],
+   "keyPoints": [
+    "Tubo a 130,000 V; solo personal autorizado toca el subsistema de alto voltaje.",
+    "Fuga de radiación menor a 0.5 µSv/h; prueba cada seis meses.",
+    "Los interlocks cortan los rayos X y el movimiento al abrir cualquier puerta.",
+    "PSP mapea la superficie; prefiere PSP a láser por los patrones de cobre."
+   ]
+  },
+  {
+   "id": "m8-l5",
+   "title": "Familia de modelos y ambientes del software",
+   "animation": "machine_tour",
+   "blocks": [
+    {
+     "kind": "bullets",
+     "items": [
+      "V810 y V810i S2 (S2EX, XLT, XLW): segunda generación; XLT y XLW aceptan tarjetas grandes y pesadas.",
+      "V810i S3 y V810Ai S3: tercera generación con reconstrucción propia, servidores integrados e IA.",
+      "V810Ai S3 Dual Lane: dos carriles; ViTrox reporta entre 45% y 50% más producción.",
+      "Serie S2: resolución de 19 u 11 µm; tarjeta máxima 457 × 609 mm; espesor de 0.5 a 4 mm (7 mm con carrier); peso de la máquina cerca de 3,300 kg."
+     ]
+    },
+    {
+     "kind": "text",
+     "text": "El software se organiza en seis ambientes: Main (sistema, recetas), Recipe (crear y afinar), Production (correr), Options (configuración y cuentas), Services (servicio) y Virtual Live (rebanar a cualquier altura). Los usuarios son Operator, Service, Developer y Administrator; solo el Administrator crea cuentas. Cambia la contraseña de fábrica al instalar."
+    }
+   ],
+   "keyPoints": [
+    "Hay seis ambientes de software: Main, Recipe, Production, Options, Services y Virtual Live.",
+    "Solo el Administrator crea cuentas y cambia contraseñas.",
+    "Las licencias nuevas son de software ligadas a una PC mediante archivo .hwid y llave .vkey.",
+    "OLP corre el mismo software en una PC de oficina."
+   ]
+  }
+ ],
+ "order": 8,
+ "exam": [
+  {
+   "type": "mc",
+   "q": "En una imagen de rayos X del V810, ¿cómo se ve una zona con mucha soldadura?",
+   "options": [
+    "Oscura",
+    "Clara",
+    "Roja",
+    "Invisible"
+   ],
+   "correct": 0,
+   "explain": "Regla: más oscuro = más metal.",
+   "section": "8.1"
+  },
+  {
+   "type": "mc",
+   "q": "¿Cómo se ve un vacío (burbuja) dentro de una esfera de BGA?",
+   "options": [
+    "Como una mancha clara.",
+    "Como una mancha oscura.",
+    "Como una raya negra.",
+    "No se ve."
+   ],
+   "correct": 0,
+   "explain": "Donde no hay metal pasa más radiación y la imagen sale clara.",
+   "section": "8.1"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué técnica de rayos X usa el V810?",
+   "options": [
+    "Tomosíntesis digital: se mueve la tarjeta y varias cámaras TDI toman ángulos distintos.",
+    "Laminografía con un haz que gira.",
+    "Transmisión 2D simple.",
+    "PSP con 4 proyectores."
+   ],
+   "correct": 0,
+   "explain": "El procesador IRP junta las vistas y arma las rebanadas 3D.",
+   "section": "8.1"
+  },
+  {
+   "type": "mc",
+   "q": "¿Cuáles son las tres rebanadas de un BGA?",
+   "options": [
+    "Package, midball y pad.",
+    "Top, bottom y side.",
+    "Talón, centro y punta.",
+    "Angle 1, Angle 2 y Angle 3."
+   ],
+   "correct": 0,
+   "explain": "Talón, centro y punta son del perfil de una patita; Angle 1 a 4 son planos del V510.",
+   "section": "8.2"
+  },
+  {
+   "type": "mc",
+   "q": "¿Para qué sirve el PSP en el V810?",
+   "options": [
+    "Para mapear la superficie de la tarjeta y saber a qué altura poner las rebanadas.",
+    "Para generar los rayos X.",
+    "Para leer códigos de barras.",
+    "Para medir la fuga de radiación."
+   ],
+   "correct": 0,
+   "explain": "Está pensado para tarjetas de pines pasantes y press-fit.",
+   "section": "8.4"
+  },
+  {
+   "type": "mc",
+   "q": "Según ViTrox, ¿cuál es la fuga de radiación máxima alrededor del V810?",
+   "options": [
+    "0.5 µSv/h (0.05 mR/h)",
+    "5 mSv/h",
+    "50 µSv/h",
+    "No hay límite"
+   ],
+   "correct": 0,
+   "explain": "La prueba de fuga se hace cada seis meses.",
+   "section": "8.4"
+  },
+  {
+   "type": "tf",
+   "q": "El tubo de rayos X del V810 trabaja con 130,000 V y su subsistema de alto voltaje no lo repara el usuario.",
+   "answer": true,
+   "explain": "Solo personal autorizado.",
+   "section": "8.4"
+  },
+  {
+   "type": "tf",
+   "q": "Virtual Live sirve para rebanar una zona a cualquier altura y ver dónde está el plano correcto.",
+   "answer": true,
+   "explain": "Es uno de los seis ambientes del software.",
+   "section": "8.6"
+  },
+  {
+   "type": "tf",
+   "q": "En el V810, el usuario Operator puede crear cuentas y cambiar contraseñas.",
+   "answer": false,
+   "explain": "Solo el Administrator crea cuentas y cambia contraseñas.",
+   "section": "8.6"
+  },
+  {
+   "type": "case",
+   "q": "En una imagen 3D del V810, una esfera de BGA tiene una mancha redonda clara que no tienen sus vecinas. ¿Qué es lo más probable?",
+   "options": [
+    "Un vacío dentro de la esfera.",
+    "Un puente entre esferas.",
+    "Una esfera faltante.",
+    "Exceso de soldadura."
+   ],
+   "correct": 0,
+   "explain": "Lo claro es falta de metal: una burbuja.",
+   "section": "8.1 y 8.3"
+  }
+ ]
+}

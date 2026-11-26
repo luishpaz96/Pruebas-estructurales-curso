@@ -1,0 +1,109 @@
+{
+ "id": "practica01",
+ "name": "PRACTICA-01 (MCU + FPGA BGA)",
+ "width": 60.0,
+ "height": 40.0,
+ "thickness": 1.6,
+ "description": "Tarjeta de práctica de 60 × 40 mm con QFP-32, BGA-64, SOIC-8, SOT-23, chips 0603/0805, diodo y capacitor polarizados, conector PTH y 6 test points.",
+ "files": {
+  "copper": "PRACTICA01-F_Cu.gtl",
+  "mask": "PRACTICA01-F_Mask.gts",
+  "paste": "PRACTICA01-F_Paste.gtp",
+  "silk": "PRACTICA01-F_Silkscreen.gto",
+  "outline": "PRACTICA01-Edge_Cuts.gm1",
+  "drill": "PRACTICA01.drl",
+  "centroid": "PRACTICA01-pos.csv",
+  "bom": "PRACTICA01-BOM.csv",
+  "netlist": "PRACTICA01.ipc"
+ },
+ "packages": {
+  "0603": {
+   "algo": "CR",
+   "height": 0.45,
+   "body": [
+    1.6,
+    0.8
+   ]
+  },
+  "0805": {
+   "algo": "CR",
+   "height": 0.6,
+   "body": [
+    2.0,
+    1.25
+   ]
+  },
+  "SOD-123": {
+   "algo": "POL",
+   "height": 1.1,
+   "body": [
+    2.7,
+    1.6
+   ]
+  },
+  "SMA-CAP": {
+   "algo": "POL",
+   "height": 4.5,
+   "body": [
+    3.3,
+    3.3
+   ]
+  },
+  "SOT-23": {
+   "algo": "GW",
+   "height": 1.0,
+   "body": [
+    2.9,
+    1.3
+   ]
+  },
+  "SOIC-8": {
+   "algo": "GW",
+   "height": 1.5,
+   "body": [
+    4.9,
+    3.9
+   ]
+  },
+  "QFP-32": {
+   "algo": "GW",
+   "height": 1.4,
+   "body": [
+    7.0,
+    7.0
+   ]
+  },
+  "BGA-64": {
+   "algo": "BGA",
+   "height": 1.2,
+   "body": [
+    7.0,
+    7.0
+   ]
+  },
+  "HDR-1x6": {
+   "algo": "PTH",
+   "height": 8.5,
+   "body": [
+    2.5,
+    15.2
+   ]
+  },
+  "FID": {
+   "algo": "FID",
+   "height": 0,
+   "body": [
+    0,
+    0
+   ]
+  },
+  "TP": {
+   "algo": "TP",
+   "height": 0,
+   "body": [
+    0,
+    0
+   ]
+  }
+ }
+}

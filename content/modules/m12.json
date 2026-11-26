@@ -1,0 +1,284 @@
+{
+ "id": "m12",
+ "brand": "ks",
+ "machine": "ict",
+ "title": "Módulo 12. De qué se compone un ICT HP3070 y cómo se trabaja en él",
+ "summary": "Qué es una prueba en circuito (ICT), las cuatro pruebas estructurales, la familia HP3070 y sus partes, el direccionamiento BRC, los usuarios y el ambiente de trabajo HP-Unix con BT-Basic.",
+ "lessons": [
+  {
+   "id": "m12-l1",
+   "title": "Qué es el ICT y las cuatro pruebas estructurales",
+   "animation": "ict_bed_of_nails",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "El AOI y el AXI miran la tarjeta; el ICT la toca y la mide. La tarjeta se coloca sobre una cama de clavos: cientos de puntas con resorte que tocan los puntos de prueba de cada nodo (cada pista o red de la tarjeta). La máquina hace lo que harías con un multímetro, con miles de mediciones por minuto: busca cortos y abiertos, mide resistencias y capacitores, revisa diodos y transistores y, con la tarjeta energizada, prueba los digitales."
+    },
+    {
+     "kind": "text",
+     "text": "Es una prueba estructural: no prueba que el producto haga su función final, sino que la tarjeta se armó bien (componente correcto, con su valor, en su lugar, con orientación correcta y bien soldado)."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "SPI: mide la pasta antes de colocar componentes.",
+      "AOI 3D (Koh Young o V510): ve componente y filete; no ve uniones ocultas ni valores eléctricos.",
+      "AXI 3D (V810): ve BGA, vacíos, puentes y opens ocultos; no distingue 1 kΩ de 10 kΩ.",
+      "ICT (HP3070): valor equivocado, componente dañado, cortos y abiertos eléctricos, polaridad de capacitores; no ve nodos sin punto de prueba ni defectos que todavía conducen."
+     ]
+    },
+    {
+     "kind": "tip",
+     "text": "Ninguna estación lo ve todo. Por eso se combinan; en el módulo 19 se arma la matriz de cobertura con las cuatro."
+    }
+   ],
+   "keyPoints": [
+    "El ICT toca cada nodo con puntas de resorte y mide valores eléctricos.",
+    "Es una prueba estructural: confirma la forma de armado, no la función final.",
+    "Los defectos que todavía conducen (poca soldadura, vacíos) no son su fuerte.",
+    "Un nodo es todo lo que está unido por la misma pista de cobre."
+   ]
+  },
+  {
+   "id": "m12-l2",
+   "title": "La familia HP3070 y las partes del equipo",
+   "animation": "machine_tour",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "El HP3070 nació en Hewlett-Packard, pasó a Agilent y hoy es Keysight, que lo vende como i3070. En las plantas todavía se le dice HP, Agilent o 3070. Los tres primeros dígitos del modelo dicen cuántos módulos caben (307x: cuatro; 317x: dos; 327x: uno). El último dígito dice el tipo de prueba: x2 proceso de bajo costo (Testjet, analógico y cortos y abiertos); x3 in-circuit; x4 funcional; x5 combinacional."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Cabeza de prueba (testhead): el hardware de pruebas; arriba se monta el fixture.",
+      "Fixture (cama de clavos): interfaz hecha a la medida de cada tarjeta; con vacío baja la tarjeta contra las puntas.",
+      "Módulos 0 a 3: cajas de tarjetas dentro de la cabeza.",
+      "Controlador (SPU): computadora con HP-UX (Unix); Series 3 usa B180L o C240.",
+      "Fuentes DUT: energizan la tarjeta bajo prueba (HP6621A, HP6624A, HP6634A, HP6642A); se declaran en el config.",
+      "Manejador de tarjetas opcional; sin él el operador carga a mano."
+     ]
+    },
+    {
+     "kind": "text",
+     "text": "En un sistema de cuatro módulos, la PDU recibe 184 a 252 V rms y reparte AC y DC; la system card comunica el controlador con los módulos y controla el fixture; y cada módulo tiene su MPU con +20, +12, +5, −10 y −20 V."
+    }
+   ],
+   "keyPoints": [
+    "Los tres primeros dígitos del modelo indican módulos; el último, el tipo de prueba.",
+    "El sistema x3 es in-circuit: analógico, digital e híbrido.",
+    "El fixture se hace a la medida de cada tarjeta.",
+    "La system card da el paro de emergencia de todas las fuentes de AC."
+   ]
+  },
+  {
+   "id": "m12-l3",
+   "title": "Direccionamiento BRC y usuarios del sistema",
+   "animation": "ict_bed_of_nails",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "Cada pin de la interfaz entre cabeza y fixture tiene una dirección BRC: Banco, Renglón (row) y Columna. Visto de frente, el banco 1 está a la derecha y el banco 2 a la izquierda; cada banco tiene 23 renglones y 78 columnas. Una tarjeta de densidad sencilla usa 5 dígitos: «21437» es banco 2, renglón 14, columna 37. En doble densidad se agrega un dígito para la segunda fila: «214137» es el mismo lugar en la segunda fila de pines."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "operator: el operador que prueba tarjetas; es el único sin contraseña.",
+      "user1 a user4: programadores de pruebas.",
+      "root: administrador del sistema.",
+      "service1: cambios de configuración y diagnósticos.",
+      "calibrate: calibración; shutdown: apagado de cabeza y controlador."
+     ]
+    },
+    {
+     "kind": "warning",
+     "text": "Las contraseñas las asigna y cuida el administrador de la planta. Un comando mal usado con un usuario de servicio puede dañar archivos o el sistema."
+    }
+   ],
+   "keyPoints": [
+    "Un BRC de 5 dígitos es banco, renglón y columna; el de 6 agrega la segunda fila en doble densidad.",
+    "Cada banco tiene 23 renglones y 78 columnas.",
+    "Cuando un reporte da un BRC sabes en qué módulo, tarjeta y pin buscar."
+   ]
+  },
+  {
+   "id": "m12-l4",
+   "title": "Shell y BT-Basic: los dos ambientes de trabajo",
+   "animation": "intro_line",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "En el Shell se trabaja con comandos Unix para manejar archivos; en BT-Basic se escriben, corren y depuran las pruebas. Con exe pasas de BT-Basic al Shell y con exit regresas. Un comando de un ambiente no funciona en el otro."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "load board: carga la información de la tarjeta del directorio actual; debug board abre la ventana de debug.",
+      "compile \"file\": revisa errores y crea el ejecutable file.o. Si cambias la fuente y no compilas, el cambio no existe para la máquina.",
+      "testhead power on y testhead power off: encender o apagar la cabeza; testhead is 1 y testhead is * toman y sueltan el control (solo una ventana a la vez).",
+      "fixture lock y fixture unlock: sujetar y liberar el fixture; faon y faoff bajan o liberan la tarjeta con vacío.",
+      "unpowered y powered: preparar pruebas sin energía (descarga capacitores primero) o encender las fuentes.",
+      "find pins y verify: activan la punta guiada para buscar puntas o verificar sensores de Testjet y Polarity."
+     ]
+    },
+    {
+     "kind": "tip",
+     "text": "Archivos clave del directorio de cada tarjeta: testplan (programa principal; se corre con run y no se compila), config, wirelist (relaciona nodos con BRC), pins, shorts, testorder y las carpetas analog, digital y functional."
+    }
+   ],
+   "keyPoints": [
+    "Compile crea el .o que la máquina ejecuta.",
+    "Testplan no se compila: se ejecuta con run.",
+    "Solo una ventana puede controlar la cabeza a la vez.",
+    "Usa man <comando> en el Shell para la ayuda."
+   ]
+  },
+  {
+   "id": "m12-l5",
+   "title": "Tarjetas internas, red y arranque de la cabeza",
+   "animation": "ict_bed_of_nails",
+   "blocks": [
+    {
+     "kind": "bullets",
+     "items": [
+      "Cada módulo tiene 11 ranuras: ASRU en la 1, control card en la 6 y hasta 9 pin cards en las demás.",
+      "Control card XT, XTP o XTPA; la P agrega programación de memorias flash y PLD; la XTPA usa red de 100 Mbps y software 8.30p o más nuevo.",
+      "ASRU: mediciones analógicas, fuente para Testjet y referencias para el autoajuste.",
+      "Pin cards: híbridas a 6.25, 12.5 o 20 millones de patrones por segundo; doble densidad da 144 puntas, así que un módulo lleno da 1,296.",
+      "Reglas de mezcla: las de 20 MP/s no se mezclan con las de 6 o 12; cada módulo necesita al menos una híbrida si hay digitales.",
+      "Red: LAN0 es la de la planta; LAN1 es privada de la cabeza. Cada elemento está en el archivo bootptab."
+     ]
+    },
+    {
+     "kind": "text",
+     "text": "Arranque: testhead power on o boot. Arranca la system card con su autoprueba, luego los módulos empezando por el 3, y el sistema revisa el hardware contra el config. LED0 verde al inicio, luego LED3 y al final LED7 parpadeando a 1 Hz cuando la red ya funciona."
+    },
+    {
+     "kind": "warning",
+     "text": "Si cambiaste una tarjeta y no el config, el arranque falla. Antes de cambiar una system card, recuerda que cada una tiene su propia dirección MAC."
+    }
+   ],
+   "keyPoints": [
+    "Si la cabeza no arranca: paro de emergencia, fusibles y breakers, +5 V y +24 V en la system card, LED y config.",
+    "LED7 parpadeando a 1 Hz indica que la red funciona.",
+    "Si una tarjeta no responde al ping, revisa hub, cables, terminadores y bootptab.",
+    "Cambiar conectores entre controles ayuda a saber si falla la tarjeta o el cable."
+   ]
+  }
+ ],
+ "order": 12,
+ "exam": [
+  {
+   "type": "mc",
+   "q": "¿Qué puede hacer el ICT que no pueden hacer el AOI ni el AXI?",
+   "options": [
+    "Medir valores eléctricos: distingue 1 kΩ de 10 kΩ.",
+    "Ver vacíos dentro de un BGA.",
+    "Medir la altura del filete.",
+    "Leer la serigrafía."
+   ],
+   "correct": 0,
+   "explain": "El AXI no distingue valores; el ICT sí.",
+   "section": "12.1"
+  },
+  {
+   "type": "mc",
+   "q": "En un HP3073, ¿qué dice el último dígito (3)?",
+   "options": [
+    "Que es un sistema in-circuit: analógico, digital e híbrido.",
+    "Que tiene 3 módulos.",
+    "Que trabaja a 3 kV.",
+    "Que tiene la versión 3 del software."
+   ],
+   "correct": 0,
+   "explain": "Los primeros dígitos dicen cuántos módulos caben en la cabeza.",
+   "section": "12.2"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué es el fixture?",
+   "options": [
+    "La cama de clavos hecha a la medida de cada tarjeta: la interfaz entre la cabeza y la tarjeta.",
+    "La computadora que controla el sistema.",
+    "Una fuente para energizar la tarjeta.",
+    "Un archivo de BT-Basic."
+   ],
+   "correct": 0,
+   "explain": "Con vacío baja la tarjeta contra las puntas.",
+   "section": "12.3"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué significa BRC?",
+   "options": [
+    "Banco, Renglón y Columna: la dirección de cada pin de la interfaz.",
+    "Board Reference Code.",
+    "Bus de referencia común.",
+    "Barcode Reader Control."
+   ],
+   "correct": 0,
+   "explain": "Cada banco tiene 23 renglones y 78 columnas.",
+   "section": "12.4"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué usuario del HP3070 es el único sin contraseña?",
+   "options": [
+    "operator",
+    "root",
+    "service1",
+    "calibrate"
+   ],
+   "correct": 0,
+   "explain": "Las demás contraseñas las cuida el administrador de la planta.",
+   "section": "12.5"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué tarjeta del módulo tiene el MOA, el amplificador con que se hacen las mediciones analógicas?",
+   "options": [
+    "ASRU",
+    "Control card",
+    "Mother card",
+    "Pin card"
+   ],
+   "correct": 0,
+   "explain": "Va en el slot 1.",
+   "section": "12.3"
+  },
+  {
+   "type": "tf",
+   "q": "Si cambias un archivo fuente de prueba y no lo compilas, la máquina sigue probando con el objeto viejo.",
+   "answer": true,
+   "explain": "Sin compile el cambio no existe.",
+   "section": "12.6"
+  },
+  {
+   "type": "tf",
+   "q": "El testplan se compila igual que las demás pruebas.",
+   "answer": false,
+   "explain": "El testplan no se compila: los cambios cuentan al ejecutarlo con run.",
+   "section": "12.6"
+  },
+  {
+   "type": "tf",
+   "q": "Con exe pasas de BT-Basic al Shell y con exit regresas.",
+   "answer": true,
+   "explain": "Son dos \"cuartos\" con idiomas distintos.",
+   "section": "12.6"
+  },
+  {
+   "type": "case",
+   "q": "Un compañero dice que el ICT cubre un BGA. Un open en una esfera de ese BGA está en un nodo sin punto de prueba. ¿Lo detecta el ICT?",
+   "options": [
+    "No: sin punto de prueba no puede tocar ese nodo; ese open lo ve el AXI.",
+    "Sí, siempre.",
+    "Sí, con la prueba de contacto.",
+    "Solo con la tarjeta encendida."
+   ],
+   "correct": 0,
+   "explain": "Los nodos sin punto de prueba son el punto ciego del ICT.",
+   "section": "12.1"
+  }
+ ]
+}

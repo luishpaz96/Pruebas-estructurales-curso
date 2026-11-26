@@ -1,0 +1,259 @@
+{
+ "id": "m10",
+ "brand": "v8",
+ "machine": "axi_v810",
+ "title": "Módulo 10. Mantenimiento y seguridad radiológica (V810)",
+ "summary": "Seguridad radiológica del AXI V810 (tiempo, distancia y blindaje, interlocks y fuga), plan de mantenimiento, calibraciones del sistema y cuidado del tubo de rayos X.",
+ "lessons": [
+  {
+   "id": "m10-l1",
+   "title": "Seguridad radiológica: tiempo, distancia y blindaje",
+   "animation": "safety_radiation",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "Las tres defensas contra la radiación son tiempo (estar expuesto lo menos posible), distancia (al doble de distancia, la cuarta parte) y blindaje (el gabinete con plomo). En operación normal, el blindaje hace todo el trabajo. El principio es ALARA: la exposición tan baja como sea razonablemente posible."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "La radiación solo existe mientras el tubo está encendido; la máquina no deja radiación al apagarla.",
+      "Un equipo de rayos X normalmente requiere registro o licencia y una persona responsable de seguridad radiológica en la planta.",
+      "Medición de fuga con detector calibrado: al instalar, después de servicios que abran el blindaje y cada seis meses (máximo 0.5 µSv/h, 0.05 mR/h).",
+      "Prueba de interlocks: con los rayos X encendidos, abrir una puerta debe apagarlos al instante.",
+      "La lámpara X-RAY ON debe funcionar siempre; si está fundida, se cambia antes de seguir."
+     ]
+    },
+    {
+     "kind": "warning",
+     "text": "Los interlocks nunca se puentean. Si la licencia local pide un límite más estricto que el del manual, manda el límite de la licencia."
+    }
+   ],
+   "keyPoints": [
+    "Tiempo, distancia y blindaje son las tres defensas.",
+    "Fuga máxima 0.5 µSv/h; medición cada seis meses.",
+    "Prueba de interlock: abrir una puerta con rayos X encendidos debe apagarlos al instante.",
+    "Los AOI Koh Young y V510 usan luz; solo el V810 tiene seguridad radiológica."
+   ]
+  },
+  {
+   "id": "m10-l2",
+   "title": "Cuándo detener la máquina y avisar",
+   "animation": "safety_radiation",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "Detén la máquina y avisa si un interlock no corta los rayos X, si la lámpara de aviso no enciende, si una cortina o compuerta blindada está rota o no cierra, o si una medición de fuga sale alta. No se reanuda hasta tener una nueva medición aceptable."
+    },
+    {
+     "kind": "tip",
+     "text": "Si una tarjeta queda atorada en la compuerta, revisa primero cortinas, sensores y ancho; no fuerces la compuerta."
+    },
+    {
+     "kind": "warning",
+     "text": "Solo personal autorizado abre cubiertas internas o el compartimiento del tubo. El tubo trabaja a 130,000 V de corriente directa y su subsistema no lo repara el usuario. Las partes en movimiento (etapa X-Y, AWA, tubo y barreras) se mueven con mucha energía; con un panel abierto el movimiento se deshabilita y no debe forzarse."
+    }
+   ],
+   "keyPoints": [
+    "Cuatro situaciones obligan a detener: interlock que no corta, lámpara apagada, blindaje roto y fuga alta.",
+    "No se reanuda sin una nueva medición aceptable.",
+    "El tubo a 130,000 V es solo para personal autorizado."
+   ]
+  },
+  {
+   "id": "m10-l3",
+   "title": "Plan de mantenimiento del V810",
+   "animation": "machine_tour",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "Los manuales de ViTrox no incluyen un plan completo del V810, salvo la medición de fuga cada seis meses. Las demás frecuencias son punto de partida de práctica industrial; ajústalas con el plan de servicio de ViTrox."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Al encender: calentamiento del tubo (warm-up); dura más si la máquina estuvo apagada varios días.",
+      "Cada turno (operador): revisar alarmas y la lámpara X-RAY ON; pasar la tarjeta de verificación de imagen si la planta la usa.",
+      "Diario (operador): limpiar el transportador; revisar que cortinas y compuertas no estén rotas ni atoradas.",
+      "Semanal (técnico): probar interlocks y paros de emergencia; limpiar filtros de servidores y gabinete; revisar temperatura del cuarto.",
+      "Mensual (técnico): limpiar y lubricar guías de la etapa y del transportador; revisar aire de 552 kPa (80 psi) y fugas; respaldar recetas y configuración.",
+      "Trimestral (técnico certificado): calibraciones de detectores, geometría y sensor de superficie.",
+      "Según horas de uso: revisar horas del tubo y la tendencia de su corriente; planear el reemplazo antes de que falle.",
+      "Anual: servicio del fabricante."
+     ]
+    }
+   ],
+   "keyPoints": [
+    "Calentar el tubo al encender; nunca saltar el calentamiento.",
+    "Probar interlocks y paros cada semana.",
+    "Medición de fuga cada seis meses, con detector calibrado.",
+    "Respalda recetas y revisa que la limpieza automática de resultados esté activa."
+   ]
+  },
+  {
+   "id": "m10-l4",
+   "title": "Calibraciones del V810 y confirmación automática",
+   "animation": "calibration_target",
+   "blocks": [
+    {
+     "kind": "bullets",
+     "items": [
+      "Detector (ganancia y campo plano): iguala la respuesta de todos los píxeles; si está mal, aparecen rayas, manchas o puntos fijos.",
+      "Geométrica: posición exacta entre tubo, detectores y etapa; si está mal, las rebanadas salen borrosas o con doble contorno.",
+      "Sensor de superficie: que la altura medida de la tarjeta sea la real; si está mal, todas las rebanadas caen muy arriba o muy abajo.",
+      "Etapa y transportador: posición, ancho y origen."
+     ]
+    },
+    {
+     "kind": "text",
+     "text": "Las calibraciones usan patrones del fabricante: guárdalos en su estuche y registra fecha y resultado de cada una. El V810 corre confirmación y ajuste automáticos (CDNA): en Production Options, el modo Standard las corre siempre y el modo Passive solo las que la receta necesita. El arranque y apagado programados (Short Term Shutdown y Auto Startup) ayudan a tener la máquina caliente al iniciar turno."
+    }
+   ],
+   "keyPoints": [
+    "Detector, geometría, sensor de superficie y etapa son las calibraciones del sistema.",
+    "Un defecto de imagen se relaciona con la calibración que falta.",
+    "Standard corre siempre las confirmaciones; Passive solo las necesarias.",
+    "Registra cada calibración con fecha y resultado."
+   ]
+  },
+  {
+   "id": "m10-l5",
+   "title": "Cuidar el tubo de rayos X",
+   "animation": "xray_tomo",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "El tubo es la pieza más cara y la que más se desgasta. Su vida depende de las horas encendido y de la potencia usada. El calentamiento protege el tubo y estabiliza el haz, por eso nunca se salta."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Señales de que se acerca su fin: imágenes con más grano usando los mismos ajustes, corriente inestable y alarmas de alto voltaje o de arco.",
+      "Si la alarma es de alto voltaje o de arco: revisa horas del tubo, repite el calentamiento completo y el clima del cuarto; si sigue, escala a ViTrox.",
+      "El cambio de tubo y la medición de fuga posterior los hace personal autorizado."
+     ]
+    }
+   ],
+   "keyPoints": [
+    "El calentamiento inicial es obligatorio para proteger el tubo.",
+    "Vigila la tendencia de corriente y las horas del tubo.",
+    "Planea el reemplazo antes de que falle."
+   ]
+  }
+ ],
+ "order": 10,
+ "exam": [
+  {
+   "type": "mc",
+   "q": "¿Qué significa ALARA?",
+   "options": [
+    "Que la exposición sea tan baja como sea razonablemente posible.",
+    "Que el tubo trabaje al máximo voltaje.",
+    "Un tipo de calibración del detector.",
+    "Un tipo de interlock."
+   ],
+   "correct": 0,
+   "explain": "Es un principio universal de protección radiológica.",
+   "section": "10.1"
+  },
+  {
+   "type": "mc",
+   "q": "¿Cuáles son las tres defensas contra la radiación?",
+   "options": [
+    "Tiempo, distancia y blindaje.",
+    "Guantes, lentes y bata.",
+    "Voltaje, corriente y frecuencia.",
+    "Ventilación, luz y aire."
+   ],
+   "correct": 0,
+   "explain": "En operación normal, el blindaje del gabinete hace todo el trabajo.",
+   "section": "10.1"
+  },
+  {
+   "type": "mc",
+   "q": "Según ViTrox, ¿cada cuánto se mide la fuga de radiación del V810?",
+   "options": [
+    "Cada seis meses.",
+    "Cada año.",
+    "Cada turno.",
+    "Nunca, si no se abre el gabinete."
+   ],
+   "correct": 0,
+   "explain": "También después de cualquier servicio que abra el blindaje.",
+   "section": "10.1"
+  },
+  {
+   "type": "mc",
+   "q": "Ves rayas o manchas fijas en todas las imágenes. ¿Qué calibración falta?",
+   "options": [
+    "Detector (ganancia y campo plano).",
+    "Geométrica.",
+    "Sensor de superficie.",
+    "Etapa y transportador."
+   ],
+   "correct": 0,
+   "explain": "La del detector iguala la respuesta de todos sus píxeles.",
+   "section": "10.3"
+  },
+  {
+   "type": "mc",
+   "q": "Todas las rebanadas caen muy arriba o muy abajo. ¿Qué revisas?",
+   "options": [
+    "La calibración del sensor de superficie.",
+    "La calibración del detector.",
+    "La calibración geométrica.",
+    "La iluminación."
+   ],
+   "correct": 0,
+   "explain": "También revisa el espesor de tarjeta capturado en la receta.",
+   "section": "10.3"
+  },
+  {
+   "type": "mc",
+   "q": "¿Para qué sirve el calentamiento (warm-up) del tubo?",
+   "options": [
+    "Protege el tubo y estabiliza el haz; nunca se salta.",
+    "Enfría el detector.",
+    "Limpia la imagen de ruido.",
+    "Calibra el PSP."
+   ],
+   "correct": 0,
+   "explain": "Dura más si la máquina estuvo apagada varios días.",
+   "section": "10.4"
+  },
+  {
+   "type": "tf",
+   "q": "Una tarjeta inspeccionada con rayos X queda radiactiva un tiempo.",
+   "answer": false,
+   "explain": "La radiación solo existe mientras el tubo está encendido.",
+   "section": "10 (Explicado simple)"
+  },
+  {
+   "type": "tf",
+   "q": "Si un interlock no corta los rayos X al abrir una puerta, la máquina sale de servicio.",
+   "answer": true,
+   "explain": "No se reanuda hasta corregirlo y tener una nueva medición aceptable.",
+   "section": "10.1"
+  },
+  {
+   "type": "tf",
+   "q": "Se puede puentear un interlock un rato si la producción lo necesita.",
+   "answer": false,
+   "explain": "Los interlocks no se puentean nunca.",
+   "section": "10.1"
+  },
+  {
+   "type": "case",
+   "q": "Durante tu turno notas que la lámpara X-RAY ON no enciende aunque la máquina está inspeccionando. ¿Qué haces?",
+   "options": [
+    "Detengo la máquina y aviso; no se reanuda hasta corregirlo.",
+    "Sigo trabajando: la lámpara es solo un aviso.",
+    "Tapo la lámpara con cinta.",
+    "Subo el voltaje del tubo."
+   ],
+   "correct": 0,
+   "explain": "La lámpara debe funcionar siempre; si está fundida, se cambia antes de seguir.",
+   "section": "10.1"
+  }
+ ]
+}

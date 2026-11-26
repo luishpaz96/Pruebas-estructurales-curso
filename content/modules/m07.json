@@ -1,0 +1,273 @@
+{
+ "id": "m7",
+ "brand": "v5",
+ "machine": "aoi_v510",
+ "title": "Módulo 7. Mantenimiento, calibración y diagnóstico del V510",
+ "summary": "Rutinas oficiales semanal, mensual, trimestral y anual del V510, lubricación, calibración de iluminación y 3D con el jig, GR&R, prueba SMEMA y tabla de diagnóstico.",
+ "lessons": [
+  {
+   "id": "m7-l1",
+   "title": "Seguridad y plan de mantenimiento oficial",
+   "animation": "intro_line",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "ViTrox divide el mantenimiento en cuatro rutinas y cada una incluye la anterior: semanal (30 min), mensual (2.5 h), trimestral (3.5 h) y anual (10 h). El manual dice que el plan se sigue estrictamente."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "LOTO antes de meter las manos: apaga con la llave principal en 0, saca la llave y pon tu candado en el interruptor principal.",
+      "Solo personal capacitado; la prueba de aislamiento anual la hace solo un técnico calificado.",
+      "Nunca limpies el transportador con aire comprimido: mete suciedad en los ejes de los motores. Usa aspiradora.",
+      "Nunca desarmes los motores.",
+      "No limpies con trapos que suelten pelusa ni rayes la mesa XY o los encoders."
+     ]
+    },
+    {
+     "kind": "warning",
+     "text": "Revisa cada mes que al abrir la puerta frontal la máquina se detenga."
+    }
+   ],
+   "keyPoints": [
+    "Semanal 30 min, mensual 2.5 h, trimestral 3.5 h, anual 10 h.",
+    "Cada rutina incluye la anterior.",
+    "La prueba de aislamiento anual exige que la resistencia L-tierra y N-tierra sea mayor a 1 MΩ.",
+    "Nunca aire comprimido en el transportador ni desarmar motores."
+   ]
+  },
+  {
+   "id": "m7-l2",
+   "title": "Rutina semanal, mensual y lubricación",
+   "animation": "machine_tour",
+   "blocks": [
+    {
+     "kind": "bullets",
+     "items": [
+      "Semanal: correr una tarjeta, limpiar paneles y filtro de la PC, revisar ventiladores, mover la mesa XY a mano (debe correr libre en X y Y), probar puerta y paros de emergencia, home del AWA a 100 mm, sensores, placas magnéticas y encoders, ventilador del proyector y LED del switch POE.",
+      "Mensual: con la PC apagada y el interruptor principal en OFF, revisar el panel eléctrico y cables; limpiar con trapo seco los sensores ópticos; limpiar la lente de la cámara; revisar rodamientos y bandas del transportador; limpiar y lubricar los rieles del gantry y el tornillo del AWA; calibración 3D y verificación de iluminación.",
+      "Trimestral: apriete de conexiones, limpieza interna y lubricación de guías y de los 4 carros de rodamiento de cada eje."
+     ]
+    },
+    {
+     "kind": "text",
+     "text": "Lubricación: solo grasa a base de litio; el manual recomienda Molykote 44 de Dow Corning o la grasa AFB de THK. Quita la grasa seca con trapo y, para lo difícil, un hisopo con aguarrás (white spirit). Cuando se evapore, pon una capa delgada y continua con pincel de cerda natural o pistola de grasa con boquilla tipo UU."
+    },
+    {
+     "kind": "tip",
+     "text": "Las bandas de orilla se limpian con limpiador 409 o alcohol."
+    }
+   ],
+   "keyPoints": [
+    "La semanal incluye 16 puntos, desde correr una tarjeta hasta ver los LED del switch POE.",
+    "Lubricar guías y cada uno de los 4 carros por eje cada trimestre.",
+    "Solo grasa de litio; no lubricar cada trimestre puede dañar rieles y anular la garantía."
+   ]
+  },
+  {
+   "id": "m7-l3",
+   "title": "Calibración de iluminación y 3D con el jig",
+   "animation": "calibration_target",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "Verificar es medir y comparar; calibrar es dejar que el software ajuste la luz hasta el objetivo. Ambas se hacen sobre la tarjeta gris (greycard). Lighting Setup: abre Utilities, calibra con Calibrate on Location, revisa que cada valor quede a ±5 de su Target Mean, guarda."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Objetivos post horno: rojo a 90° = 80; rojo a 70° y 60° = 55; 45° rojo = 50; 45° verde = 130; 45° azul = 130; 45° rojo (45L) = 200. Antes del horno o mixto cambian a 45 para 70° y 60°, verde 110 y azul 110.",
+      "Calibración 3D automática con el jig: revisa que Auto3DCalibration.cad esté en C:\\CPI\\cad, fiduciales 1, Ctrl + A y Run; guarda las franjas en C:\\CPI\\fringe\\Auto3DCalib. Pide una contraseña de ViTrox o del responsable.",
+      "Offset 3D: Utilities > Calibration > 3D Calibration > 3D Offset On Location; debe decir «3D Offset Correction Done».",
+      "Revisión mensual: jig normal en 6.5 mm (o 11.5 mm en altura extendida); escalera 1:100, 1:200 y 1:500 debe medir 100, 200 y 500 µm con ±10 µm."
+     ]
+    },
+    {
+     "kind": "warning",
+     "text": "Si la verificación de iluminación falla, calibra la iluminación. Con franjas borrosas no se calibra: revisa el enfoque del proyector."
+    }
+   ],
+   "keyPoints": [
+    "Cada valor de iluminación debe quedar a ±5 de su objetivo.",
+    "La diferencia de altura en AverageHeightDifference.txt debe ser menor a 100 µm.",
+    "La escalera de alturas debe estar dentro de ±10 µm.",
+    "Si no lee el código del jig, escribe su altura real; si no la trae, usa 500 µm."
+   ]
+  },
+  {
+   "id": "m7-l4",
+   "title": "Calibración 3D manual y GR&R del V510",
+   "animation": "calibration_target",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "La calibración 3D manual se hace en instalación o tras cambiar hardware de visión. Antes revisa: cables CXP en orden C1 a C4, apertura de la lente entre f/6 y f/8, cada proyector con sus cables de 12 vías y 12 V, y la placa de corrección de offset en su lugar. Con el programa 3DCalibrationJig baja la perilla del jig de 11.5 mm a 0.0 mm en pasos de 0.5 mm hasta «Calibration Done»."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Estática normal (unos 30 min): offset de cada proyector y diferencia de ROI menores a 20; reporte 03000RR_Report.txt.",
+      "Estática rápida: 9 proyecciones sobre la parte plana; límite de 40 en el reporte 010_RR_Overal_Report.",
+      "Dinámica (unas 3 h): tarjeta de escalón de 300 µm, 100 ciclos; altura mínima ≥250, máxima ≤320, diferencia menor a 40, promedio entre 250 y 350 µm, y GRnR menor a 10%."
+     ]
+    },
+    {
+     "kind": "tip",
+     "text": "Si el GR&R dinámico sale fuera, aprieta los proyectores, repite la calibración 3D y repite el GR&R. No ajustes umbrales de programas para esconder una máquina que no repite."
+    }
+   ],
+   "keyPoints": [
+    "GR&R menor a 10% es confiable.",
+    "El GR&R dinámico usa 300 archivos, Sigma 5.15 y tolerancia de proceso (PT) 60.",
+    "Revisión de enfoque: las franjas de las subcarpetas 0, 9 y 17 deben verse nítidas.",
+    "Antes de cualquier GR&R: ventiladores funcionando, placa de offset en su lugar y calibración 3D reciente."
+   ]
+  },
+  {
+   "id": "m7-l5",
+   "title": "SMEMA, sensores del transportador y diagnóstico",
+   "animation": "process_flow",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "SMEMA es la plática eléctrica entre máquinas: «tengo tarjeta» y «estoy libre». El V510 usa conectores de 14 pines según IPC-9851. Prueba con multímetro: puenteando los pines 3 y 4 de entrada el transportador debe correr; +24 V entre pines 3 y 4; continuidad entre pines 1 y 2 de entrada cuando está libre y deja de pitar al cargar tarjeta; +24 V en pines 1 y 2 de salida; continuidad entre 7 y 8 de salida con tarjeta detenida."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Torre con todas las luces encendidas: paro de emergencia o puerta abierta.",
+      "Rojo parpadeando: error de PLC; corrige la causa y oprime PLC Reset.",
+      "Ámbar fijo y no entra: revisa la señal SMEMA de la máquina anterior, sensores de entrada y ancho del AWA.",
+      "Tarjeta no sale: revisa que la máquina siguiente esté libre y el sensor de salida.",
+      "Relé de seguridad Allen-Bradley vigila paros y puerta; corta el movimiento hasta oprimir ES Reset."
+     ]
+    },
+    {
+     "kind": "warning",
+     "text": "Las señales de salida nunca deben estar encendidas a la vez. Si la línea usa el arreglo antiguo de pines de ViTrox, no cambies pines de memoria: sigue su procedimiento."
+    }
+   ],
+   "keyPoints": [
+    "SMEMA de 14 pines según IPC-9851; prueba con multímetro en pines 1 a 8.",
+    "El PLC lee sensores de 24 V y maneja transportador, topes, prensas, AWA, torre y SMEMA.",
+    "En el diagnóstico sigue el método de cinco pasos del módulo 4.",
+    "Guarda los registros de C:\\cpi\\log y la carpeta C:\\cpi\\fringe antes de cambiar hardware o software."
+   ]
+  }
+ ],
+ "order": 7,
+ "exam": [
+  {
+   "type": "mc",
+   "q": "Según su lista oficial, ¿cuánto dura la rutina semanal del V510?",
+   "options": [
+    "30 minutos",
+    "2.5 horas",
+    "3.5 horas",
+    "10 horas"
+   ],
+   "correct": 0,
+   "explain": "Mensual 2.5 h, trimestral 3.5 h y anual 10 h.",
+   "section": "7.2"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué grasa lleva el V510 en sus guías y cada cuánto?",
+   "options": [
+    "Grasa a base de litio (Molykote 44 o AFB de THK), cada trimestre.",
+    "NSK PS2, cada 6 meses.",
+    "Aceite de máquina, cada semana.",
+    "Ninguna: los motores lineales no llevan guías."
+   ],
+   "correct": 0,
+   "explain": "NSK PS2 cada 6 meses es del Koh Young.",
+   "section": "7.3"
+  },
+  {
+   "type": "mc",
+   "q": "En la revisión mensual, ¿qué deben medir los escalones 1:100, 1:200 y 1:500 del jig?",
+   "options": [
+    "100, 200 y 500 µm, con ±10 µm.",
+    "100, 200 y 500 mm, con ±1 mm.",
+    "1, 2 y 5 µm.",
+    "Cualquier valor, mientras sea parejo."
+   ],
+   "correct": 0,
+   "explain": "Si un escalón sale de rango, se calibra de nuevo.",
+   "section": "7.6"
+  },
+  {
+   "type": "mc",
+   "q": "Después de la corrección de offset 3D, ¿qué revisas en AverageHeightDifference.txt?",
+   "options": [
+    "Que la diferencia por región y la de altura sean menores a 100 µm.",
+    "Que sean mayores a 700.",
+    "Que el GRnR sea menor a 10%.",
+    "Que sean exactamente cero."
+   ],
+   "correct": 0,
+   "explain": "El archivo está en C:\\cpi\\log\\OffSetCorrection.",
+   "section": "7.6"
+  },
+  {
+   "type": "mc",
+   "q": "En la calibración de iluminación (Calibrate on Location), ¿qué tan cerca del objetivo debe quedar cada valor?",
+   "options": [
+    "±5",
+    "±50",
+    "±0.5",
+    "±25"
+   ],
+   "correct": 0,
+   "explain": "La lista mensual de verificación usa ±3 (±2 en los colores \"verdaderos\").",
+   "section": "7.5"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué debe dar el GR&R dinámico en la calculadora GRnR?",
+   "options": [
+    "Menos de 10%.",
+    "Menos de 40%.",
+    "Más de 90%.",
+    "Menos de 20 µm."
+   ],
+   "correct": 0,
+   "explain": "Con Sigma 5.15 y tolerancia de proceso 60.",
+   "section": "7.8"
+  },
+  {
+   "type": "tf",
+   "q": "Para limpiar el transportador del V510 se recomienda aire comprimido.",
+   "answer": false,
+   "explain": "Nunca: mete suciedad en los ejes de los motores. Se usa aspiradora.",
+   "section": "7.1"
+  },
+  {
+   "type": "tf",
+   "q": "Si el jig de calibración no trae su altura escrita, se usa el valor por defecto de 500 µm.",
+   "answer": true,
+   "explain": "Es la indicación de la guía de calibración 3D automática.",
+   "section": "7.6"
+  },
+  {
+   "type": "tf",
+   "q": "En la prueba de SMEMA, con el V510 vacío, al puentear los pines 3 y 4 del conector de entrada el transportador debe correr.",
+   "answer": true,
+   "explain": "Así se simula que la máquina anterior tiene una tarjeta lista.",
+   "section": "7.10"
+  },
+  {
+   "type": "case",
+   "q": "El GR&R dinámico del V510 salió fuera de especificación. ¿Qué indica el manual de ViTrox?",
+   "options": [
+    "Revisar que los proyectores estén bien apretados, recalibrar 3D y repetir el GR&R dinámico.",
+    "Abrir los umbrales de los programas.",
+    "Cambiar la cámara de inmediato.",
+    "Ignorarlo si la producción va bien."
+   ],
+   "correct": 0,
+   "explain": "No se esconde con umbrales una máquina que no repite.",
+   "section": "7.8"
+  }
+ ]
+}

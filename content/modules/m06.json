@@ -1,0 +1,278 @@
+{
+ "id": "m6",
+ "brand": "v5",
+ "machine": "aoi_v510",
+ "title": "Módulo 6. Creación de programas en el V510",
+ "summary": "Conversión del CAD y la BOM con VAYO, fiduciales y algoritmos C, R, B, S y U en Smart GUI, cómo decide cada inspección 3D y validación con la prueba negativa.",
+ "lessons": [
+  {
+   "id": "m6-l1",
+   "title": "Convertir el CAD y la BOM con VAYO",
+   "animation": "process_flow",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "Lo que necesitas: el CAD de la tarjeta (posición, giro y forma de cada componente y pad), la BOM con al menos referencia y número de parte, VAYO Accelerator, una tarjeta buena conocida (KGB) y varias tarjetas de producción; ViTrox pide afinar con al menos 10 tarjetas."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "New Job: cargar el CAD con Browse y Auto Import.",
+      "Import BOM (Template): regla Line Input y Auto Separator; marcar qué columna es RefDes, MPN y PN; Check y luego Import.",
+      "Mark Setting: fiduciales 1 y 2 de la cara de arriba y de la cara de abajo.",
+      "Parts Selection: elegir solo las partes que están en BOM.",
+      "Export V510 con la dirección de la tarjeta (PCB Direction).",
+      "Se generan 9 archivos en JobPath\\ViTroxV510; se copian a C:\\CPI\\cad, menos ProgramName_B_PTH.plx."
+     ]
+    },
+    {
+     "kind": "warning",
+     "text": "Si la dirección de la tarjeta o la columna de la BOM están mal, todo el programa sale girado o con números de parte revueltos. Antes de afinar, revisa en la máquina que componentes de cada esquina caigan en su lugar y con su giro."
+    }
+   ],
+   "keyPoints": [
+    "Lo que está en CAD y en BOM se coloca; lo que está solo en CAD es componente no poblado.",
+    "Los archivos generados van a C:\\CPI\\cad, excepto el B_PTH.plx.",
+    "El archivo .plx lista referencia, número de parte, X, Y, cara (T o B) y rotación.",
+    "Verifica la orientación en varias esquinas antes de afinar."
+   ]
+  },
+  {
+   "id": "m6-l2",
+   "title": "Enseñar fiduciales en Smart GUI",
+   "animation": "conveyor_fiducial",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "El fiducial es la marca de cobre que dice dónde quedó la tarjeta. El V510 lo busca en 2D y le da una calificación. Si Ctrl + A no lo encuentra, Manual Find abre el Fiducial Editor."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Search Area (amarillo): cuadrada y suficiente, sin tocar pads brillantes parecidos.",
+      "Template (verde): un poco más grande que el fiducial y más chica que la zona de búsqueda.",
+      "Inner y Outer Radius: el interior un poco más chico que el fiducial; el exterior un poco más grande. La diferencia suele ser de 30 a 50.",
+      "Background, Middle y Foreground: gris esperado afuera (50 a 100), en el anillo (100 a 200) y adentro (200 a 250).",
+      "Presence Threshold: calificación mínima, normalmente arriba de 700.",
+      "Alternate (+ ALT) y Use Best Fiducial Score para un fiducial alterno."
+     ]
+    },
+    {
+     "kind": "tip",
+     "text": "Al final: clic derecho en el fiducial, «set this point as Fiducial X», Inspect All para confirmar que todos pasan el mínimo, Save y Close."
+    }
+   ],
+   "keyPoints": [
+    "La calificación del fiducial debe estar normalmente arriba de 700.",
+    "Inner y Outer Radius se separan 30 a 50 unidades.",
+    "Adaptive Brightness ayuda en fiduciales difíciles, pero sube el tiempo de ciclo.",
+    "Inspect All verifica que todos los fiduciales pasen."
+   ]
+  },
+  {
+   "id": "m6-l3",
+   "title": "Algoritmos C, R, B, S y U y el Trainer",
+   "animation": "intro_line",
+   "blocks": [
+    {
+     "kind": "bullets",
+     "items": [
+      "C y R: chips, capacitores y resistencias. Localización, cuerpo, uniones, materia extraña y eOCV en resistencias.",
+      "B: componentes con cuerpo y grupos de terminales, como SOT, diodos, zumbadores, cristales o inductores de potencia. Hasta 4 grupos de uniones.",
+      "S: circuitos integrados con filas de patitas, como SOIC, SOP y QFP. Localiza las filas, revisa pin levantado o faltante, uniones y puentes.",
+      "U: lo que no encaja en los demás (conectores, pines pasantes, códigos de barras, zonas libres); se arma con herramientas."
+     ]
+    },
+    {
+     "kind": "text",
+     "text": "En la Trainer Page: elige un número de parte en la lista Untrained, busca un algoritmo golden de su tipo y tamaño, asígnalo por número de parte, referencia o forma. Usa Assign para uno tal cual o Create para una copia que puedas modificar sin cambiar el golden de otros programas. El nombre de la copia debe empezar con C, R, B, S o U."
+    },
+    {
+     "kind": "tip",
+     "text": "La IA del Trainer necesita licencia. Sin licencia, asigna manualmente desde la lista de algoritmos golden."
+    }
+   ],
+   "keyPoints": [
+    "La letra inicial del algoritmo indica su tipo: C, R, B, S o U.",
+    "Create genera una copia para ajustar sin tocar el golden compartido.",
+    "Break o Break & Delete quita un algoritmo asignado.",
+    "Tipo U se arma con herramientas como 3D Locator, Cross Section y Box to Box."
+   ]
+  },
+  {
+   "id": "m6-l4",
+   "title": "Cómo decide cada inspección 3D",
+   "animation": "solder_joint",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "Todas las inspecciones comparan una medición contra un umbral. Ejemplo del chip: con altura de 800 µm, Missing al 50% y Billboard de 150 µm. Un chip que mide 100 µm falla como faltante (12.5%); uno de 1000 µm falla como de canto, porque supera 800 + 150 = 950 µm."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Pin levantado en modo relativo: referencia = promedio de patitas (256 µm). Con umbral de 90 µm, una patita de 472 µm falla porque pasa de 346 µm.",
+      "Modo absoluto: la referencia es una altura de patita capturada (Lead Height); el Cookbook lo recomienda en tipos B y S.",
+      "Terminal Reference: umbral en % de la altura de la terminal (terminal de 250 µm con 50% cuenta píxeles arriba de 125 µm).",
+      "Solder Profile (recomendado): sigue pico, hombro, rodilla y punta de la soldadura; una unión plana falla."
+     ]
+    },
+    {
+     "kind": "tip",
+     "text": "En una unión muy brillante, 2D dio 14% de cobertura y falló con mínimo 50%. Con 2D + 3D dio 86% y pasó. Por eso se combinan."
+    }
+   ],
+   "keyPoints": [
+    "Missing: altura medida ÷ altura del componente × 100 debe ser mayor o igual al umbral.",
+    "Billboard: altura medida menor que altura del componente más el umbral en µm.",
+    "Solder Profile sigue la forma de la unión desde la terminal.",
+    "Puente 2D + 3D: falla si falla 2D o 3D (lógica OR)."
+   ]
+  },
+  {
+   "id": "m6-l5",
+   "title": "Validar: prueba negativa, Cookbook y producción",
+   "animation": "defect_gallery",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "La prueba negativa gira cada componente en la imagen y revisa que la máquina sí marque polaridad mala. Con una tarjeta buena corre Orientation Negative Test en el menú Inspection. ESCAPE: siguió pasando al girarlo. OK: falló como debía. FALSE CALL: falló sin girarlo. OUT OF BOUND: muy grande para la vista. OFF: sin polaridad ni eOCV."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Afina cada ESCAPE con clic derecho, Edit Device y Visit All. Repite hasta cero ESCAPE.",
+      "Después pasa la tarjeta con defectos sembrados: faltante, girado, desplazado, tombstone, de canto, pin levantado, puente, soldadura insuficiente y parte equivocada.",
+      "Cookbook de ViTrox: valores de partida para 01005 a 1206; por ejemplo 0402 con cuerpo de 1000 × 500 µm, faltante 70% y coplanaridad 80/60 µm. Ajústalos con tu tarjeta buena.",
+      "En producción: Block Skip para omitir tarjetas malas de un panel, V-Tile para guardar imágenes por fecha y tarjeta, y desactivar Always Save Image para no llenar el disco."
+     ]
+    },
+    {
+     "kind": "warning",
+     "text": "Los valores del Cookbook son punto de partida, no verdad final. Cierra los límites si los componentes están muy juntos o los pads son chicos."
+    }
+   ],
+   "keyPoints": [
+    "Prueba negativa hasta cero ESCAPE de polaridad.",
+    "Valida con defectos sembrados después de la prueba negativa.",
+    "AI Smart Programming cubre cerca de 80% de los componentes y necesita licencia.",
+    "Block Skip y Always Save Image afectan producción; úsalos con cuidado."
+   ]
+  }
+ ],
+ "order": 6,
+ "exam": [
+  {
+   "type": "mc",
+   "q": "¿Qué programa convierte el CAD y la BOM para el V510?",
+   "options": [
+    "VAYO Accelerator",
+    "ePM-AOI",
+    "IPG",
+    "KYConfig"
+   ],
+   "correct": 0,
+   "explain": "ePM-AOI es del Koh Young e IPG es del ICT.",
+   "section": "6.2"
+  },
+  {
+   "type": "mc",
+   "q": "Después de exportar con VAYO, ¿qué se copia a C:\\CPI\\cad?",
+   "options": [
+    "Los archivos de JobPath\\ViTroxV510, menos ProgramName_B_PTH.plx.",
+    "Solo el archivo .kyjob.",
+    "Solo la BOM en Excel.",
+    "Todos los archivos Gerber."
+   ],
+   "correct": 0,
+   "explain": "VAYO genera 9 archivos en esa carpeta.",
+   "section": "6.2"
+  },
+  {
+   "type": "mc",
+   "q": "En el Fiducial Editor, ¿qué calificación mínima (Presence Threshold) se recomienda normalmente?",
+   "options": [
+    "Arriba de 700.",
+    "Arriba de 70.",
+    "Entre 50 y 100.",
+    "Cero, para que siempre pase."
+   ],
+   "correct": 0,
+   "explain": "Un umbral flojo deja pasar una mala localización.",
+   "section": "6.4"
+  },
+  {
+   "type": "mc",
+   "q": "Un SOIC con dos filas de patitas, ¿con qué tipo de algoritmo se inspecciona en el V510?",
+   "options": [
+    "Tipo S",
+    "Tipo C",
+    "Tipo R",
+    "Tipo U"
+   ],
+   "correct": 0,
+   "explain": "C y R son chips, B son cuerpos con grupos de terminales y U lo que no encaja.",
+   "section": "6.5"
+  },
+  {
+   "type": "mc",
+   "q": "Un chip de 800 µm con umbral de faltante de 50% mide 100 µm de alto. ¿Qué resultado da?",
+   "options": [
+    "Falla como faltante: 100 ÷ 800 = 12.5%, menos de 50%.",
+    "Pasa, porque mide más de cero.",
+    "Falla como de canto (billboard).",
+    "Falla de polaridad."
+   ],
+   "correct": 0,
+   "explain": "De canto fallaría si midiera más de 800 + umbral de billboard.",
+   "section": "6.7"
+  },
+  {
+   "type": "mc",
+   "q": "Pin levantado en modo relativo: el promedio de las patitas es 256 µm y el umbral es 90 µm. ¿Desde qué altura falla una patita?",
+   "options": [
+    "Desde más de 346 µm.",
+    "Desde más de 256 µm.",
+    "Desde más de 166 µm.",
+    "Desde más de 90 µm."
+   ],
+   "correct": 0,
+   "explain": "256 + 90 = 346 µm. En el ejemplo del manual una patita de 472 µm falla.",
+   "section": "6.7"
+  },
+  {
+   "type": "tf",
+   "q": "Si creas una copia (Create) de un algoritmo golden y la modificas, tus cambios no afectan al golden que usan otros programas.",
+   "answer": true,
+   "explain": "Por eso se crea una copia antes de modificar.",
+   "section": "6.5"
+  },
+  {
+   "type": "tf",
+   "q": "En la prueba negativa, ESCAPE significa que, al girar el componente en la imagen, la máquina lo siguió pasando.",
+   "answer": true,
+   "explain": "Se afina hasta que no quede ningún ESCAPE.",
+   "section": "6.10"
+  },
+  {
+   "type": "tf",
+   "q": "Los valores del Cookbook de ViTrox se usan tal cual, sin afinarlos con tus tarjetas.",
+   "answer": false,
+   "explain": "Son un punto de partida: se afinan con tu tarjeta buena y al menos 10 tarjetas.",
+   "section": "6.8"
+  },
+  {
+   "type": "case",
+   "q": "Terminas la Orientation Negative Test y quedan 3 componentes en ESCAPE. ¿Qué haces?",
+   "options": [
+    "Afino cada uno (Edit Device, polaridad o eOCV, Visit All) y repito hasta cero ESCAPE.",
+    "Libero el programa: 3 no es mucho.",
+    "Apago la polaridad de esos componentes.",
+    "Cambio esos componentes en la tarjeta."
+   ],
+   "correct": 0,
+   "explain": "Un ESCAPE es un componente que pasaría aunque estuviera girado.",
+   "section": "6.10"
+  }
+ ]
+}

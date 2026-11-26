@@ -1,0 +1,123 @@
+{
+ "id": "m17",
+ "order": 17,
+ "brand": "spi",
+ "machine": null,
+ "title": "Módulo 17. Creación de programas en el SPI (Koh Young)",
+ "summary": "",
+ "lessons": [],
+ "exam": [
+  {
+   "type": "mc",
+   "q": "¿Qué Gerber se usa para programar el SPI?",
+   "options": [
+    "El de la capa de pasta (los agujeros del stencil).",
+    "El de la capa de cobre de la PCB.",
+    "El de serigrafía.",
+    "El de máscara de soldadura."
+   ],
+   "correct": 0,
+   "explain": "El cobre es para el AOI (ePM-AOI); el SPI compara contra el stencil.",
+   "section": "17.2"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué programa convierte el archivo .pad en el job .mdb?",
+   "options": [
+    "CEditor.",
+    "ePM-SPI.",
+    "SPC Plus.",
+    "WinMCS."
+   ],
+   "correct": 0,
+   "explain": "ePM-SPI genera el .pad; la SPI GUI inspecciona con el .mdb.",
+   "section": "17.1"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué corrigen tres fiduciales en L que no corrigen dos?",
+   "options": [
+    "Escala, estiramiento y torcedura de la tarjeta.",
+    "Solo el giro.",
+    "La altura de la pasta.",
+    "El color de la tarjeta."
+   ],
+   "correct": 0,
+   "explain": "Dos fiduciales corrigen X, Y y giro.",
+   "section": "17.2"
+  },
+  {
+   "type": "mc",
+   "q": "¿Cuál es la diferencia entre Error y Warning?",
+   "options": [
+    "El Error marca la tarjeta como mala y detiene la máquina; el Warning solo avisa.",
+    "Son iguales; solo cambia el color.",
+    "El Warning detiene la máquina y el Error no.",
+    "El Warning solo se usa en BGA."
+   ],
+   "correct": 0,
+   "explain": "El Warning es la alerta temprana de que el proceso se mueve.",
+   "section": "17.5"
+  },
+  {
+   "type": "mc",
+   "q": "Un depósito tiene altura máxima de 300 µm y promedio de 120 µm; la tolerancia de forma es 180 µm. ¿Qué sale?",
+   "options": [
+    "Defecto de forma (pico u oreja de perro).",
+    "Pasa, porque el volumen está bien.",
+    "Defecto de puente.",
+    "Defecto de coplanaridad."
+   ],
+   "correct": 0,
+   "explain": "Balance = 300 − 120 = 180 µm: llega al límite.",
+   "section": "17.5"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué necesita la inspección de bolitas de soldadura?",
+   "options": [
+    "Iluminación RGB.",
+    "Un BBT de tres tarjetas.",
+    "Tres fiduciales.",
+    "El Gerber de cobre."
+   ],
+   "correct": 0,
+   "explain": "Es parte de la inspección de manchas (smear).",
+   "section": "17.5"
+  },
+  {
+   "type": "tf",
+   "q": "GBBT es la mejor opción para tarjetas con acabado HASL.",
+   "answer": false,
+   "explain": "Con HASL solo se usa BBT, y aun así la medición es menos precisa.",
+   "section": "17.6"
+  },
+  {
+   "type": "tf",
+   "q": "Las tolerancias de fábrica del SPI son la recomendación de Koh Young para producción.",
+   "answer": false,
+   "explain": "Son un punto de partida; las define ingeniería con datos.",
+   "section": "17.5"
+  },
+  {
+   "type": "tf",
+   "q": "La puntuación mínima recomendada para enseñar un fiducial es 80.",
+   "answer": true,
+   "explain": "El asistente de brillo prueba luces y escoges la de mejor puntuación.",
+   "section": "17.6"
+  },
+  {
+   "type": "case",
+   "q": "En un BGA algunos pads tienen menos pasta que otros, aunque todos pasan volumen. ¿Qué agregas?",
+   "options": [
+    "Inspección de coplanaridad del componente, para comparar la pasta entre sus pads.",
+    "Inspección de bolitas de soldadura.",
+    "Offset en mm.",
+    "Subir a 90 % el mínimo de volumen de todo el programa."
+   ],
+   "correct": 0,
+   "explain": "La coplanaridad busca que todas las esferas toquen pasta pareja.",
+   "section": "17.5"
+  }
+ ]
+}

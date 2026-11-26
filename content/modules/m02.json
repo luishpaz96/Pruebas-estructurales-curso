@@ -1,0 +1,290 @@
+{
+ "id": "m2",
+ "brand": "ky",
+ "machine": "aoi_ky",
+ "title": "Módulo 2. Operación y creación de programas (Koh Young)",
+ "summary": "Cómo operar una corrida, qué archivos pedir antes de programar, cómo crear un programa en ePM-AOI y AOIGUI, ajustar tolerancias y validar con defectos sembrados.",
+ "lessons": [
+  {
+   "id": "m2-l1",
+   "title": "Encender, operar una corrida y apagar",
+   "animation": "intro_line",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "Encendido: alimentación principal, después UPS, después PC y al final alimentación de control. Espera a que Windows arranque, abre WinMCS (la máquina busca su origen con la torre en amarillo) y luego AOIGUI con el programa cargado."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Revisa el estado: sin alarmas y con el autodiagnóstico del turno aprobado.",
+      "Carga el programa correcto: deben coincidir número de parte, revisión y cara (TOP o BOTTOM).",
+      "Verifica ancho del transportador y soportes; la tarjeta debe pasar libre y quedar bien apoyada.",
+      "Corre la primera tarjeta y confirma que encontró los fiduciales y que no hay llamados masivos.",
+      "Clasifica cada llamado en la estación de revisión como defecto real (con su tipo) o falso."
+     ]
+    },
+    {
+     "kind": "text",
+     "text": "Apagado: deja la máquina en IDLE, cierra AOIGUI con Salir (solo un usuario supervisor puede cerrarlo), apaga Windows, luego la alimentación de control, la principal y al final el UPS."
+    },
+    {
+     "kind": "warning",
+     "text": "Clasificar rápido y sin mirar es la causa número uno de escapes. Marcar «falso» un defecto real borra el trabajo de toda la máquina. Ante la duda, mira la tarjeta física con lupa o pide ayuda."
+    }
+   ],
+   "keyPoints": [
+    "Encender: principal, UPS, PC y control; apagar en orden inverso.",
+    "Verifica número de parte, revisión y cara antes de correr.",
+    "Cada llamado se clasifica como defecto real o falso; las tarjetas con defecto van a retrabajo con reporte.",
+    "Nunca se pasan tarjetas sin revisar."
+   ]
+  },
+  {
+   "id": "m2-l2",
+   "title": "Qué necesitas antes de programar",
+   "animation": "process_flow",
+   "blocks": [
+    {
+     "kind": "bullets",
+     "items": [
+      "Archivo de posiciones (centroide o CAD de colocación), en CSV, TXT o Excel: referencia, X, Y, giro, número de parte y paquete.",
+      "Gerber (.gbr, .gbx, .gdo, .art): forma exacta de los pads; ePM-AOI lo combina con el archivo de posiciones.",
+      "CAD completo en ODB++ o CAD inteligente (Allegro o Mentor): pads, pines y paquetes en un solo archivo; reemplaza al par Gerber más posiciones.",
+      "Lista de materiales (BOM) en Excel o CSV.",
+      "Tarjeta buena conocida y tarjeta sin componentes, para validar el programa y ver los pads vacíos."
+     ]
+    },
+    {
+     "kind": "text",
+     "text": "Flujo de creación: en ePM-AOI se importa el Gerber, se ajustan giro, tamaño y origen, se carga el CAD, se empatan las posiciones con el Gerber, se generan pines de máscara, huellas y fiduciales y se exporta el .kypcb. En AOIGUI se abre el .kypcb, se guarda como .kyjob y se continúa con fiduciales, captura de imágenes, paquetes, preajustes, condiciones, inspección y ajuste."
+    },
+    {
+     "kind": "warning",
+     "text": "El origen (0,0) y los giros del archivo de posiciones deben coincidir con el Gerber. Si el origen está corrido, todo el programa queda corrido; si la convención de giro no coincide, los componentes salen girados 90° o 180°. Revisa esto primero."
+    }
+   ],
+   "keyPoints": [
+    "Pide posiciones, Gerber o ODB++, BOM y tarjeta buena antes de empezar.",
+    "El origen y los giros son lo primero que se verifica.",
+    "ePM-AOI exporta .kypcb; AOIGUI lo convierte en .kyjob.",
+    "Koh Young reporta cerca de 70% menos tiempo de programación con KAP."
+   ]
+  },
+  {
+   "id": "m2-l3",
+   "title": "Fiduciales, paquetes y preajustes",
+   "animation": "conveyor_fiducial",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "Los fiduciales son marcas de cobre que la máquina busca para saber dónde quedó la tarjeta. Con dos o tres marcas conocidas calcula cuánto está corrida o girada y acomoda el programa. Para enseñar una marca: entra a Teaching, menú Fiducial, centra el recuadro (ROI) sobre la marca, oprime TEST, fija la calificación mínima (Min. Score, en %) y oprime Apply. Activa Show Threshold para ver la imagen binaria que usa la máquina. Al final, Save."
+    },
+    {
+     "kind": "text",
+     "text": "Registrar un paquete es decirle a la máquina el tipo de componente, el tamaño de su cuerpo y de sus terminales y su posición. Un paquete (por ejemplo 0402, SOT-23 o QFP-100) guarda dimensiones, ventanas y tolerancias; todos los componentes con ese paquete comparten la plantilla."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Modo para encontrar el cuerpo: Two Terminal Chip (resistores y capacitores chip), Full 3D Adaptive (por defecto; SOT, SOIC, QFN, BGA, diodos, QFP), Full 3D Fixed (para cuerpos escalonados, electrolíticos, cristales, MELF, LED).",
+      "Punta de terminal: modos Auto, Semi Auto o CAD Define. Revisa en 2D y 3D que la punta quede donde debe.",
+      "Ctrl + D (Set CAD) ajusta solo el cuerpo; el espesor de terminal lo capturas tú.",
+      "Register All Chips registra de golpe los chips cuyo nombre contenga un texto dado."
+     ]
+    },
+    {
+     "kind": "tip",
+     "text": "Casi todas las ventanas de terminal salen de la punta. Si la punta está mal, el error se repite en todo el paquete."
+    }
+   ],
+   "keyPoints": [
+    "Los fiduciales alinean toda la tarjeta; se califican con Min. Score en %.",
+    "El paquete es la referencia estándar de la inspección: todo se mide contra él.",
+    "Primero se extrae bien el cuerpo, luego la punta de la terminal, luego las ventanas.",
+    "Cada cambio necesita Apply y al final Save."
+   ]
+  },
+  {
+   "id": "m2-l4",
+   "title": "Inspecciones y tolerancias con criterio",
+   "animation": "solder_joint",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "AOIGUI tiene 9 inspecciones: Missing (siempre activa; si da NG, las demás de ese componente no se hacen), Dimension, Pad Overhang, Coplanarity, Upside-down, OCV/OCR, Polarity, Solder Fillet, Bridge y Foreign Material, y Absence."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Pad Overhang en modo IPC: salida lateral de hasta 50% (o 25%, o un valor manual) del ancho de terminal o del pad, el que sea menor.",
+      "Solder Fillet con Solder Feature: ancho mínimo de unión 75% del ancho CAD de terminal y altura mínima 25% de su espesor, criterio de clase 3 de IPC-A-610 para chips.",
+      "Coplanaridad de cuerpo en modo Cross, con ventanas a unos 350 µm de la orilla del cuerpo.",
+      "Polarity: Bar, Box, Chamfer, Corner, Dimple o Circle."
+     ]
+    },
+    {
+     "kind": "text",
+     "text": "Los 5 pasos de Koh Young para bajar falsos llamados: revisa que el cuerpo se extraiga bien; captura el espesor correcto de la terminal; revisa que la punta se mida bien; revisa que cada ventana esté donde debe; solo entonces ajusta la tolerancia. Ajusta el paquete, no un solo componente, y usa la condición por defecto o Copy y Paste Condition."
+    },
+    {
+     "kind": "warning",
+     "text": "Los valores del manual son ejemplos de entrenamiento. Confirma los límites en tu edición de IPC-A-610 y con el cliente; ajústalos a tu producto."
+    }
+   ],
+   "keyPoints": [
+    "Las tolerancias se fijan por paquete, no por componente individual.",
+    "Primero el contorno del cuerpo y la punta, luego la tolerancia (requisito).",
+    "El límite va entre la campana de tarjetas buenas y los defectos reales, sin pasar del criterio de la norma.",
+    "Después de abrir una tolerancia, valida con una tarjeta que tenga el defecto real."
+   ]
+  },
+  {
+   "id": "m2-l5",
+   "title": "Validar con defectos sembrados y funciones avanzadas",
+   "animation": "defect_gallery",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "Un programa no está listo hasta que demuestra que detecta. Prepara una tarjeta con defectos puestos a propósito y documenta que la máquina marcó cada uno con el tipo correcto: componente faltante, girado 180°, desplazado, tombstone, pin levantado, puente, soldadura insuficiente y componente equivocado. Repite la prueba cuando cambie la biblioteca de paquetes o la versión del software."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Bad Mark: excluye arreglos de panel marcados como malos; se configura en Teaching > Bad Mark con luz, umbral y área mínima.",
+      "User Badmark: tú decides qué arreglos no se inspeccionan.",
+      "Job Tag Set: un programa para variantes; hasta 10 juegos.",
+      "Pairing: mide distancia y ángulo entre dos componentes o entre un componente y una referencia.",
+      "Auto-Tuning: sugiere tolerancias de chips; los valores sugeridos salen en azul y Rollback los regresa.",
+      "WFMI: busca material extraño en toda la tarjeta; requiere GPU con CUDA (mínimo GTX 980)."
+     ]
+    },
+    {
+     "kind": "warning",
+     "text": "Bad Mark, User Badmark y Job Tag Set quitan componentes de la inspección. Un arreglo mal marcado o un juego equivocado deja salir tarjetas sin revisar. Úsalos con autorización de ingeniería y revisa la primera tarjeta de cada variante."
+    }
+   ],
+   "keyPoints": [
+    "Valida con defectos sembrados: faltante, girado, desplazado, tombstone, pin levantado, puente, insuficiente y equivocado.",
+    "Cada programa lleva versión, fecha, autor y motivo del cambio.",
+    "Permisos por nivel: operador revisa, técnico ajusta ventanas, ingeniero cambia tolerancias y biblioteca.",
+    "Auto Verification valida brillo, PZT y exactitud de altura de forma periódica."
+   ]
+  }
+ ],
+ "order": 2,
+ "exam": [
+  {
+   "type": "mc",
+   "q": "¿Qué hace ePM-AOI?",
+   "options": [
+    "Convierte el Gerber y el archivo de posiciones (o un ODB++) en un archivo .kypcb.",
+    "Convierte el .kyjob en un reporte de KSMART.",
+    "Guarda las imágenes CBI de un falso llamado.",
+    "Convierte la BOM en archivos .plx."
+   ],
+   "correct": 0,
+   "explain": "El .kypcb no tiene condiciones de inspección; esas se agregan en AOIGUI.",
+   "section": "1.4 y 2.3"
+  },
+  {
+   "type": "mc",
+   "q": "Antes de ajustar cualquier otra cosa de un programa nuevo, ¿qué revisas primero?",
+   "options": [
+    "Que el origen (0,0) y los giros del archivo de posiciones coincidan con el Gerber.",
+    "Las tolerancias de polaridad.",
+    "El nombre del operador del turno.",
+    "El tiempo de ciclo."
+   ],
+   "correct": 0,
+   "explain": "Si el origen o los giros están mal, todo el programa queda corrido o girado.",
+   "section": "2.2"
+  },
+  {
+   "type": "mc",
+   "q": "En Koh Young, ¿qué es un paquete?",
+   "options": [
+    "La plantilla de un tipo de componente: dimensiones, ventanas y tolerancias que comparten todos los iguales.",
+    "El archivo de un panel completo.",
+    "Una caja de refacciones.",
+    "El reporte de una inspección."
+   ],
+   "correct": 0,
+   "explain": "Ajustar el paquete corrige a todos los componentes que lo usan.",
+   "section": "2.3"
+  },
+  {
+   "type": "mc",
+   "q": "Al registrar un paquete, ¿qué hace Ctrl + D (Set CAD)?",
+   "options": [
+    "Ajusta solo el cuerpo; el espesor de la terminal lo tienes que poner tú.",
+    "Ajusta cuerpo y terminales completos.",
+    "Borra el paquete.",
+    "Exporta el .kypcb."
+   ],
+   "correct": 0,
+   "explain": "Olvidar el espesor de terminal es una causa común de falsos llamados.",
+   "section": "2.3"
+  },
+  {
+   "type": "mc",
+   "q": "En los 5 pasos de Koh Young para bajar falsos llamados, ¿cuál es el último?",
+   "options": [
+    "Ajustar la tolerancia (el rango del spec).",
+    "Revisar que el cuerpo se extraiga bien.",
+    "Capturar el espesor correcto de la terminal.",
+    "Revisar que la punta de la terminal se mida bien."
+   ],
+   "correct": 0,
+   "explain": "La tolerancia se toca solo después de los cuatro pasos anteriores.",
+   "section": "2.5"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué inspección de AOIGUI siempre está activa y, si da NG, ya no se hacen las demás de ese componente?",
+   "options": [
+    "Missing",
+    "Polarity",
+    "OCV / OCR",
+    "Bridge"
+   ],
+   "correct": 0,
+   "explain": "Si el componente falta, no tiene caso medir lo demás.",
+   "section": "2.4"
+  },
+  {
+   "type": "tf",
+   "q": "Si R15 da falsos llamados, lo correcto es abrir la tolerancia solo de R15.",
+   "answer": false,
+   "explain": "Se ajusta el paquete; si no, el problema regresa en los demás componentes iguales.",
+   "section": "2.5"
+  },
+  {
+   "type": "tf",
+   "q": "Después de abrir una tolerancia, se pasa una tarjeta con ese defecto real para confirmar que todavía se detecta.",
+   "answer": true,
+   "explain": "Cada cambio de tolerancia se valida con un defecto real.",
+   "section": "2.5"
+  },
+  {
+   "type": "tf",
+   "q": "Clasificar llamados rápido y sin ver la tarjeta es la causa número uno de escapes.",
+   "answer": true,
+   "explain": "Marcar \"falso\" un defecto real borra el trabajo de toda la máquina.",
+   "section": "2.1"
+  },
+  {
+   "type": "case",
+   "q": "Terminaste un programa nuevo y la tarjeta buena pasa sin llamados. ¿Ya lo puedes liberar?",
+   "options": [
+    "No: falta pasar una tarjeta con defectos sembrados y documentar que cada uno sale con su tipo.",
+    "Sí, si la tarjeta buena pasó sin llamados.",
+    "Sí, si el tiempo de ciclo es bueno.",
+    "No: primero hay que borrar los fiduciales."
+   ],
+   "correct": 0,
+   "explain": "Un programa no está listo hasta que demuestra que detecta.",
+   "section": "2.6"
+  }
+ ]
+}

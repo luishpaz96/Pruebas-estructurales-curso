@@ -1,0 +1,21 @@
+[
+ {"id":"mt-spi-diario","machine":"spi","title":"Diario del SPI Koh Young: limpieza de pasta y verificación","frequency":"diario",
+  "safety":["Máquina en IDLE sin tarjeta y paro de emergencia oprimido para meter las manos.","La pasta tiene plomo o fundentes: guantes y lavado de manos.","No uses aire comprimido sobre ópticas."],
+  "steps":[
+   {"part":"emergency_stop","action":"toggle","text":"Oprime el paro de emergencia."},
+   {"part":"belt","action":"clean","text":"Limpia el mismo día cualquier mancha de pasta en bandas, rieles y clamps."},
+   {"part":"conveyor","action":"inspect","text":"Revisa soportes de la tarjeta: el pandeo genera falsos llamados por zona."},
+   {"part":"pneumatic","action":"measure","text":"Verifica la presión de aire."},
+   {"part":"calibration_target","action":"measure","text":"Corre la verificación con el pilar de 120 µm para confirmar la altura."}
+  ]},
+ {"id":"mt-spi-semestral","machine":"spi","title":"Semestral SPI: mecánica, óptica y calibración KYCal","frequency":"semestral",
+  "safety":["Respalda KYConfig y la carpeta de jobs antes de calibrar.","LOTO aplicado.","Sólo personal capacitado calibra."],
+  "steps":[
+   {"part":"emergency_stop","action":"toggle","text":"Oprime el paro de emergencia y aplica LOTO."},
+   {"part":"gantry","action":"lubricate","text":"Engrasa guías y husillos igual que en el AOI Koh Young."},
+   {"part":"camera","action":"clean","text":"Limpia los vidrios del cabezal: vidrios sucios dan imagen 3D con ruido o huecos."},
+   {"part":"projector","action":"calibrate","text":"Calibra la iluminación: visibilidad de 0.7 o más."},
+   {"part":"calibration_target","action":"calibrate","text":"Calibra la altura y verifica con el pilar de 120 µm."},
+   {"part":"pcb","action":"measure","text":"Repite una tarjeta conocida y compara; en revisiones periódicas haz GR&R."}
+  ]}
+]

@@ -1,0 +1,264 @@
+{
+ "id": "m5",
+ "brand": "v5",
+ "machine": "aoi_v510",
+ "title": "Módulo 5. De qué se compone un AOI ViTrox V510",
+ "summary": "Partes del AOI 3D ViTrox V510, torre de luces, medición PSP con cuatro proyectores, planos de imagen 2D y 3D, ciclo del transportador, seguridad, software y lector de código de barras Keyence SR2000.",
+ "lessons": [
+  {
+   "id": "m5-l1",
+   "title": "La máquina y su torre de luces",
+   "animation": "machine_tour",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "El V510 tiene por fuera torre de luces, panel de control, monitor, teclado, trackball, paros de emergencia, carcasa y bahía de la PC. Por dentro están la mesa XY (gantry), la cabeza de imagen y el transportador."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Panel de control: MAINT. SWITCH (modo de mantenimiento, con puerta abierta), LANE INSP/PASS (bypass del riel 1), START con luz RUN, ES RESET, AWA IN/OUT (ajuste automático de ancho) y PLC RESET.",
+      "Torre de luces: roja fija = la tarjeta falló; roja parpadeando = error del PLC; ámbar parpadeando = ajuste de ancho; ámbar fija = esperando tarjeta; verde fija = inspección en curso; todas encendidas = paro de emergencia."
+     ]
+    },
+    {
+     "kind": "warning",
+     "text": "Los colores del V510 no significan lo mismo que en el Koh Young. Aprende la tabla de la máquina que tienes enfrente."
+    }
+   ],
+   "keyPoints": [
+    "La cubierta frontal tiene interlock: si se abre, el gantry se detiene.",
+    "AWA ajusta solo el ancho del transportador a la tarjeta.",
+    "En el V510 la ámbar fija es «esperando tarjeta» y la roja fija es «la tarjeta falló».",
+    "El paro de emergencia es de botón con retención: se libera girándolo."
+   ]
+  },
+  {
+   "id": "m5-l2",
+   "title": "Medir en 3D con PSP y planos de imagen",
+   "animation": "moire_fringes",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "El V510 usa PSP (perfilometría por desplazamiento de fase) con 4 proyectores que generan el patrón de franjas como imagen. No tiene rejilla ni motor PZT. Cada proyector pinta franjas desde un ángulo, la cámara toma una foto, el proyector cambia la fase y se repite; cada píxel ve su brillo subir y bajar y de esa onda sale la altura. El proceso se repite con franjas cada vez más finas: las gruesas dan la altura aproximada y las finas la precisión."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Precisión de altura de ±2 µm en el 3D.",
+      "Compensación de pandeo de hasta ±5 mm, porque la altura se mide respecto a la superficie de la tarjeta.",
+      "Plano de imagen Angle 1: anillos rojos a 60 y 70 grados, para localizar componentes.",
+      "Angle 2: verde a 45 grados, para uniones y materia extraña con 3D.",
+      "Angle 3: anillo rojo a 90 grados, para uniones de chips y evitar el brillo del filete.",
+      "Angle 4: azul a 45 grados, otra vista cuando las demás no dan contraste."
+     ]
+    },
+    {
+     "kind": "tip",
+     "text": "Al programar, elige el plano de imagen con más contraste para cada componente. Para patas de filete, las combinaciones Angle 2+3 o el mínimo de los cuatro ángulos ayudan a evitar falsos por flux."
+    }
+   ],
+   "keyPoints": [
+    "Cuatro proyectores evitan que la sombra de un componente alto deje sin medir al vecino.",
+    "Un plano de imagen es una foto 2D con una iluminación específica.",
+    "La cámara es monocromática; el color se arma encendiendo luces de distinto color, una a la vez.",
+    "PSP con franjas cada vez más finas da altura gruesa y luego precisa."
+   ]
+  },
+  {
+   "id": "m5-l3",
+   "title": "Por qué 2D y 3D juntos y funciones de altura",
+   "animation": "defect_gallery",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "Ninguna tecnología es perfecta sola. El 2D ve bien desalineados, volteados, puentes y texto; el 3D mide faltantes, pin levantado, coplanaridad, tombstone y soldadura insuficiente. Juntas dan el mejor resultado en casi todos los defectos."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Pin levantado con RANSAC: el software arma un plano virtual con las patas y mide cuánto se separa cada una; no le afectan el color ni el pandeo.",
+      "Componente agrietado: una grieta deja el cuerpo desnivelado y sale como falla de coplanaridad.",
+      "Lectura de texto (OCR, OCV) y códigos de barras: el 2D es el que lo resuelve."
+     ]
+    },
+    {
+     "kind": "tip",
+     "text": "Un 01005 de canto (billboard) se distingue en el 3D a 20 µm por píxel."
+    }
+   ],
+   "keyPoints": [
+    "2D + 3D es la combinación recomendada por ViTrox para casi todos los defectos.",
+    "El 3D mide pin levantado y coplanaridad; el 2D lee polaridad y texto.",
+    "RANSAC mide el pin levantado respecto a un plano virtual de las patas."
+   ]
+  },
+  {
+   "id": "m5-l4",
+   "title": "Transportador, ciclo de tarjeta y SMEMA",
+   "animation": "conveyor_fiducial",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "El transportador es totalmente eléctrico: 2 motores para el ajuste de ancho (AWA), 2 para la banda y 2 para la sujeción; un riel fijo y uno ajustable. El ciclo es: pide tarjeta (READY de la máquina anterior), entra y el sensor de entrada enciende la banda, el sensor en posición baja la velocidad, se detiene en los topes, los sujetadores la suben desde abajo e inspecciona, al terminar los sujetadores bajan y la tarjeta sale cuando la máquina siguiente está READY."
+    },
+    {
+     "kind": "text",
+     "text": "SMEMA: las señales READY entre máquinas viajan por un conector SMEMA de 14 pines según IPC-9851. Son dos señales: máquina no ocupada y tarjeta disponible. Al pasar la tarjeta avisa si es buena o si falló."
+    },
+    {
+     "kind": "warning",
+     "text": "El gantry queda deshabilitado con la cubierta abierta, con un paro de emergencia oprimido y si se va la luz. Para meter la mano, abre la cubierta."
+    }
+   ],
+   "keyPoints": [
+    "Ciclo: pedir, entrar, frenar, sujetar e inspeccionar, soltar, salir.",
+    "El conector SMEMA de 14 pines sigue IPC-9851.",
+    "Los motores del transportador ajustan ancho, banda y sujeción sin aire en el V510i estándar."
+   ]
+  },
+  {
+   "id": "m5-l5",
+   "title": "Seguridad, encendido y software del V510",
+   "animation": "intro_line",
+   "blocks": [
+    {
+     "kind": "bullets",
+     "items": [
+      "Nunca intentes anular el paro de emergencia (EMO).",
+      "Revisa una vez al mes que el interruptor de la puerta frontal detenga la máquina al abrirla.",
+      "Quítate anillos, relojes y pulseras; recoge ropa suelta y pelo largo.",
+      "Aleja los dedos de las bandas del transportador: rozan y queman.",
+      "Si cambias la pila de la tarjeta madre de la PC, usa el mismo tipo.",
+      "Encendido: saca tarjetas, cierra la puerta, revisa paros, enciende el interruptor principal, gira START, usa ES RESET y PLC RESET si hay error y enciende primero el UPS si existe."
+     ]
+    },
+    {
+     "kind": "text",
+     "text": "Software: Smart GUI (software V510, corre en Windows con GPU NVIDIA) para producción, fiduciales, algoritmos y calibración; VAYO Accelerator convierte CAD y BOM en archivos del V510; AI Smart Programming asigna algoritmos con licencia; NOLP permite programar fuera de línea en red; VVTS revisa llamados; V-Tile une las imágenes de la tarjeta completa."
+    }
+   ],
+   "keyPoints": [
+    "No operes con puertas o paneles abiertos, flojos o rotos.",
+    "Antes de cerrar la cubierta confirma que nadie tenga los dedos adentro.",
+    "Smart GUI es el software de la máquina; VAYO prepara los archivos desde el CAD.",
+    "Los archivos de programa van a C:\\CPI\\cad."
+   ]
+  }
+ ],
+ "order": 5,
+ "exam": [
+  {
+   "type": "mc",
+   "q": "¿Cómo mide alturas el ViTrox V510?",
+   "options": [
+    "Con PSP: 4 proyectores generan franjas como imagen y la cámara mide su desplazamiento de fase.",
+    "Con moiré: una rejilla de vidrio que mueve un PZT.",
+    "Con rayos X.",
+    "Con un láser de triangulación."
+   ],
+   "correct": 0,
+   "explain": "La rejilla con PZT es del Koh Young; el V510 no tiene rejilla ni PZT.",
+   "section": "5.1 y 5.5"
+  },
+  {
+   "type": "mc",
+   "q": "En el V510, ¿qué significa la luz ámbar fija de la torre?",
+   "options": [
+    "Esperando tarjeta.",
+    "La tarjeta falló la inspección.",
+    "Error del PLC.",
+    "Paro de emergencia."
+   ],
+   "correct": 0,
+   "explain": "En el Koh Young el amarillo significa otra cosa: buscando origen.",
+   "section": "5.3"
+  },
+  {
+   "type": "mc",
+   "q": "En el software del V510, ¿qué es un plano de imagen (Angle 1, 2, 3 o 4)?",
+   "options": [
+    "Una foto 2D tomada con cierta iluminación (color y ángulo) que se usa para inspeccionar.",
+    "Una rebanada de rayos X.",
+    "Un nivel de usuario del software.",
+    "La altura a la que se pone el jig."
+   ],
+   "correct": 0,
+   "explain": "Al programar eliges el plano con más contraste para cada cosa.",
+   "section": "5.5"
+  },
+  {
+   "type": "mc",
+   "q": "¿Con qué se mueven los ejes del gantry del V510?",
+   "options": [
+    "Con motores lineales y un encoder magnético.",
+    "Con servomotores y husillo de bolas.",
+    "Con motores a pasos y bandas.",
+    "Con cilindros neumáticos."
+   ],
+   "correct": 0,
+   "explain": "El husillo de bolas y las guías LM son del Koh Young.",
+   "section": "5.4"
+  },
+  {
+   "type": "mc",
+   "q": "¿A qué carpeta se copian los archivos del CAD (.plx y demás) para empezar un programa del V510?",
+   "options": [
+    "C:\\CPI\\cad",
+    "C:\\cpi\\fringe",
+    "C:\\cpi\\log",
+    "C:\\Kohyoung\\Language"
+   ],
+   "correct": 0,
+   "explain": "C:\\cpi\\fringe guarda datos de calibración y C:\\cpi\\log los registros.",
+   "section": "5.11"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué es lo primero al encender el V510?",
+   "options": [
+    "Sacar las tarjetas, cerrar la puerta frontal y revisar que ningún paro de emergencia esté oprimido.",
+    "Encender la PC.",
+    "Abrir Smart GUI.",
+    "Hacer la calibración 3D."
+   ],
+   "correct": 0,
+   "explain": "Después: interruptor principal, llave START, resets si hace falta, UPS y PC.",
+   "section": "5.9"
+  },
+  {
+   "type": "tf",
+   "q": "El V510 combina imágenes 2D y mediciones 3D porque cada una cubre lo que la otra no ve bien.",
+   "answer": true,
+   "explain": "Por ejemplo, el 2D lee texto y el 3D mide pin levantado y coplanaridad.",
+   "section": "5.6"
+  },
+  {
+   "type": "tf",
+   "q": "En el V510 los colores de la torre significan lo mismo que en el Koh Young.",
+   "answer": false,
+   "explain": "Siempre aprende la tabla de la máquina que tienes enfrente.",
+   "section": "5.3"
+  },
+  {
+   "type": "tf",
+   "q": "Los datos de C:\\cpi\\fringe se pueden borrar para liberar espacio en disco.",
+   "answer": false,
+   "explain": "Son los datos de calibración 3D. No se editan ni se borran.",
+   "section": "5.11"
+  },
+  {
+   "type": "case",
+   "q": "Un compañero que viene de Koh Young te pide abrir KYCal en el V510 para calibrarlo. ¿Qué le respondes?",
+   "options": [
+    "KYCal es de Koh Young; el V510 se calibra con Lighting Setup y la calibración 3D de Smart GUI.",
+    "Que lo abra desde Smart GUI.",
+    "Que use AOIGUI en su lugar.",
+    "Que el V510 no se calibra nunca."
+   ],
+   "correct": 0,
+   "explain": "Es la confusión de marcas más común: cada marca tiene sus propias herramientas.",
+   "section": "5.1 y 7.4"
+  }
+ ]
+}

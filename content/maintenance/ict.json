@@ -1,0 +1,22 @@
+[
+ {"id":"mt-ict-diario","machine":"ict","title":"Diario del ICT HP3070: fixture y vacío","frequency":"diario",
+  "safety":["Nunca metas las manos entre la tarjeta y el fixture con el vacío activo.","No energices una tarjeta que falló cortos o Polarity Check.","Pulsera antiestática conectada."],
+  "steps":[
+   {"part":"emergency_stop","action":"toggle","text":"Deja el sistema en paro antes de revisar el fixture."},
+   {"part":"probes","action":"inspect","text":"Busca puntas dobladas, gastadas o sucias en la cama de agujas."},
+   {"part":"probes","action":"clean","text":"Limpia las puntas con cepillo antiestático (sin solventes que dejen residuo)."},
+   {"part":"vacuum","action":"measure","text":"Verifica el vacío: la tarjeta debe bajar completa y sin fugas en el sello."},
+   {"part":"fixture","action":"inspect","text":"Revisa pines de guía (tooling) y que la tarjeta asiente en su lugar."},
+   {"part":"pcb","action":"measure","text":"Corre la tarjeta conocida buena (KGB): debe pasar estable."}
+  ]},
+ {"id":"mt-ict-mensual","machine":"ict","title":"Mensual del ICT: limpieza general, vacío y ventilación","frequency":"mensual",
+  "safety":["Apaga el sistema antes de abrir bahías.","Alcohol sólo para manchas; limpieza general con trapo húmedo.","Registra cada punta cambiada."],
+  "steps":[
+   {"part":"emergency_stop","action":"toggle","text":"Apaga y bloquea el equipo."},
+   {"part":"pc_ups","action":"clean","text":"Limpia chasis, monitor, teclado y bahía con trapo húmedo."},
+   {"part":"vacuum","action":"clean","text":"Abre y limpia por dentro las válvulas de vacío (se llenan de polvo)."},
+   {"part":"filter","action":"clean","text":"Limpia filtros: el polvo en las MPU hace que el equipo se apague solo."},
+   {"part":"fan","action":"inspect","text":"Comprueba que los ventiladores de las MPU giren libres."},
+   {"part":"probes","action":"replace","text":"Cambia las puntas que fallaron contacto según el registro de find pins."}
+  ]}
+]

@@ -1,0 +1,123 @@
+{
+ "id": "m18",
+ "order": 18,
+ "brand": "spi",
+ "machine": null,
+ "title": "Módulo 18. Afinar, analizar y mantener el SPI (Koh Young)",
+ "summary": "",
+ "lessons": [],
+ "exam": [
+  {
+   "type": "mc",
+   "q": "Una tarjeta tiene 1 mm de pandeo hacia arriba. Sin compensar, ¿cómo sale el volumen?",
+   "options": [
+    "Cerca de 105 %.",
+    "Exacto, 100 %.",
+    "Cerca de 50 %.",
+    "Sale como puente."
+   ],
+   "correct": 0,
+   "explain": "Con 1 mm hacia abajo sale cerca de 95 %.",
+   "section": "18.1"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué hace el Z-tracking?",
+   "options": [
+    "Calcula el pandeo del siguiente FOV y mueve el eje Z para compensarlo.",
+    "Corrige el color de la tarjeta.",
+    "Busca material extraño.",
+    "Ordena los defectos del peor al mejor."
+   ],
+   "correct": 0,
+   "explain": "Usa proyección de varias frecuencias y no requiere hardware extra.",
+   "section": "18.1"
+  },
+  {
+   "type": "mc",
+   "q": "¿Para qué sirve PMCW?",
+   "options": [
+    "Busca el mejor brillo 3D para el color de cada tarjeta y lo guarda en el job.",
+    "Calibra la altura con el pilar de 120 µm.",
+    "Respalda los resultados.",
+    "Controla el botón PASS."
+   ],
+   "correct": 0,
+   "explain": "Se ejecuta con la primera tarjeta.",
+   "section": "18.1"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué hace Worst First Failure?",
+   "options": [
+    "Muestra primero los defectos más graves, según la prioridad que pongas.",
+    "Detiene la máquina con el primer defecto.",
+    "Borra los defectos repetidos.",
+    "Manda el peor defecto a la impresora."
+   ],
+   "correct": 0,
+   "explain": "Ayuda cuando hay muchos llamados en una tarjeta.",
+   "section": "18.2"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué pilar se usa para la calibración de altura del SPI?",
+   "options": [
+    "120 µm.",
+    "500 µm.",
+    "4,000 µm.",
+    "5,000 µm."
+   ],
+   "correct": 0,
+   "explain": "El de 500 µm es el del AOI.",
+   "section": "18.5"
+  },
+  {
+   "type": "mc",
+   "q": "El volumen de los pads chicos baja tarjeta tras tarjeta y se recupera al limpiar el stencil. ¿Causa probable?",
+   "options": [
+    "Aberturas tapadas: falta limpieza o la frecuencia es baja.",
+    "Calibración de cámara.",
+    "Pandeo de la tarjeta.",
+    "Espesor equivocado en el job."
+   ],
+   "correct": 0,
+   "explain": "Revisa tipo y frecuencia de limpieza y la pasta en el stencil.",
+   "section": "18.4"
+  },
+  {
+   "type": "tf",
+   "q": "La primera vez que usas Cp y Cpk en MRT, el coeficiente de sigma viene en 1 y lo normal es cambiarlo a 3.",
+   "answer": true,
+   "explain": "Si no lo cambias, el Cpk sale mal calculado.",
+   "section": "18.3"
+  },
+  {
+   "type": "tf",
+   "q": "Con muestras de 1 tarjeta, el rango móvil (MR) de la gráfica MRT siempre sale en cero.",
+   "answer": true,
+   "explain": "Se necesitan al menos 2 tarjetas por muestra.",
+   "section": "18.3"
+  },
+  {
+   "type": "tf",
+   "q": "Si un solo programa da falsos llamados, lo correcto es cambiar los Vision Parameter de la máquina.",
+   "answer": false,
+   "explain": "Esos valores afectan a todos los programas; se corrige el programa.",
+   "section": "18.7"
+  },
+  {
+   "type": "case",
+   "q": "Desde ayer, todos los modelos salen con volúmenes 10 % más altos. ¿Qué revisas primero?",
+   "options": [
+    "La calibración de altura con el pilar de 120 µm y la verificación de la máquina, porque el cambio es en todos los programas.",
+    "Bajo el máximo de volumen de cada programa.",
+    "Vuelvo a hacer los Gerber.",
+    "Cambio el stencil de cada modelo."
+   ],
+   "correct": 0,
+   "explain": "Si cambia todo, la causa está en la máquina, no en un programa.",
+   "section": "18.5 y 18.7"
+  }
+ ]
+}

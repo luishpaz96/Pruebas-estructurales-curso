@@ -1,0 +1,123 @@
+{
+ "id": "m16",
+ "order": 16,
+ "brand": "spi",
+ "machine": null,
+ "title": "Módulo 16. Qué es el SPI Koh Young, cómo mide y de qué se compone",
+ "summary": "",
+ "lessons": [],
+ "exam": [
+  {
+   "type": "mc",
+   "q": "¿Dónde va el SPI en la línea SMT?",
+   "options": [
+    "Justo después de la impresora de pasta, antes de las colocadoras.",
+    "Después del horno, antes del AOI.",
+    "Al final de la línea, junto al ICT.",
+    "Antes de la impresora."
+   ],
+   "correct": 0,
+   "explain": "Ahí el defecto es barato de corregir: se lava la tarjeta y se reimprime.",
+   "section": "16.1"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué es el 100 % de volumen en el SPI?",
+   "options": [
+    "El área de la abertura del stencil por el espesor del stencil.",
+    "El promedio de las primeras 5 tarjetas.",
+    "El área del pad de cobre por la altura del componente.",
+    "Lo máximo que cabe en el pad sin hacer puente."
+   ],
+   "correct": 0,
+   "explain": "Por eso el espesor del stencil en el programa debe ser el real.",
+   "section": "16.2"
+  },
+  {
+   "type": "mc",
+   "q": "Abertura de 200 × 200 µm y stencil de 120 µm. El SPI mide 4,000,000 µm³. ¿Qué volumen reporta?",
+   "options": [
+    "Cerca de 83 %.",
+    "100 %.",
+    "120 %.",
+    "67 %."
+   ],
+   "correct": 0,
+   "explain": "4,000,000 / 4,800,000 = 83.3 %.",
+   "section": "16.2"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué mueve la rejilla (grating) en pasos finos para medir la altura?",
+   "options": [
+    "El actuador PZT.",
+    "El eje Z del gantry.",
+    "El clamp del conveyor.",
+    "El motor del squeegee."
+   ],
+   "correct": 0,
+   "explain": "En cada paso la cámara toma una foto de las franjas.",
+   "section": "16.2"
+  },
+  {
+   "type": "mc",
+   "q": "¿Qué controla la red G_NET del KY8030?",
+   "options": [
+    "El movimiento del gantry, del conveyor y de las bandas.",
+    "La conexión con el MES de la planta.",
+    "La iluminación RGB.",
+    "Los respaldos en la red."
+   ],
+   "correct": 0,
+   "explain": "E_NET maneja la cuarta etapa y el ancho del conveyor.",
+   "section": "16.3"
+  },
+  {
+   "type": "mc",
+   "q": "La torre tiene encendidos el amarillo y el verde. ¿En qué estado está la máquina?",
+   "options": [
+    "Idle: lista y esperando tarjeta.",
+    "Error con alarma.",
+    "Homing.",
+    "Emergencia."
+   ],
+   "correct": 0,
+   "explain": "Solo amarillo es homing; las tres luces son emergencia.",
+   "section": "16.4"
+  },
+  {
+   "type": "tf",
+   "q": "Un píxel más chico da más detalle y además hace la inspección más rápida.",
+   "answer": false,
+   "explain": "Da más detalle, pero cada FOV cubre menos tarjeta y la inspección tarda más.",
+   "section": "16.2"
+  },
+  {
+   "type": "tf",
+   "q": "Si en el programa pones un espesor de stencil menor que el real, un depósito con poca pasta puede salir cerca de 100 %.",
+   "answer": true,
+   "explain": "El 100 % baja junto con el espesor y esconde la falta de pasta.",
+   "section": "16.2"
+  },
+  {
+   "type": "tf",
+   "q": "Solo una cuenta de Supervisor puede cerrar el programa KY-3030.",
+   "answer": true,
+   "explain": "Se cierra con la máquina en Idle, antes de apagar Windows.",
+   "section": "16.5"
+  },
+  {
+   "type": "case",
+   "q": "La PC del SPI se congeló y te autorizan a seguir produciendo mientras llega soporte. ¿Qué haces?",
+   "options": [
+    "Bypass por hardware: apago el voltaje de control, giro el interruptor del conveyor, enciendo el control y dejo registro de las tarjetas sin inspeccionar.",
+    "Abro las puertas con la máquina en marcha y paso las tarjetas a mano.",
+    "Puenteo los sensores de puerta.",
+    "Apago el UPS para reiniciar todo."
+   ],
+   "correct": 0,
+   "explain": "El bypass por hardware deja la máquina como transportador; esas tarjetas salen sin revisar.",
+   "section": "16.5"
+  }
+ ]
+}

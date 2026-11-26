@@ -1,0 +1,119 @@
+[
+ {
+  "id": "pr-spi-create",
+  "machine": "spi",
+  "kind": "create",
+  "title": "Del Gerber de pasta a la inspección en el SPI",
+  "scenario": "Crearás el job del SPI para PRACTICA-01 con el Gerber de pasta (PRACTICA01-F_Paste.gtp).",
+  "steps": [
+   {
+    "prompt": "¿Qué capa de Gerber necesitas para el SPI?",
+    "options": [
+     "La de pasta (apertura del stencil)",
+     "La de serigrafía",
+     "La de barrenos",
+     "La de máscara inferior"
+    ],
+    "correct": 0,
+    "feedback": "El SPI compara cada depósito contra la apertura del stencil."
+   },
+   {
+    "prompt": "¿Qué dato del stencil es crítico capturar?",
+    "options": [
+     "El espesor (Mask Thickness)",
+     "El color",
+     "El proveedor del squeegee",
+     "El número de serie"
+    ],
+    "correct": 0,
+    "feedback": "Con el espesor equivocado todos los volúmenes salen altos o bajos."
+   },
+   {
+    "prompt": "Para la base de altura en tarjetas HASL, ¿qué usas?",
+    "options": [
+     "BBT con tolerancias por grupo",
+     "Nada",
+     "GBBT siempre",
+     "La altura del cuerpo del componente"
+    ],
+    "correct": 0,
+    "feedback": "El acabado HASL varía de tarjeta a tarjeta."
+   }
+  ],
+  "params": [
+   {
+    "name": "Volumen mínimo",
+    "unit": "%",
+    "min": 20,
+    "max": 100,
+    "start": 88,
+    "targetMin": 55,
+    "targetMax": 70,
+    "hint": "Muy alto marca depósitos buenos; muy bajo deja pasar insuficientes.",
+    "lowEffect": "escape"
+   }
+  ]
+ },
+ {
+  "id": "pr-spi-debug-low",
+  "machine": "spi",
+  "kind": "debug",
+  "title": "Volumen bajo en pads chicos que empeora",
+  "scenario": "El volumen de los pads del QFP baja de 95% a 60% en 20 impresiones.",
+  "steps": [
+   {
+    "prompt": "¿Causa probable?",
+    "options": [
+     "Aberturas del stencil tapadas o pasta seca",
+     "Calibración del SPI",
+     "Gerber equivocado",
+     "Pandeo"
+    ],
+    "correct": 0,
+    "feedback": "Empeora con cada impresión: es la impresora."
+   },
+   {
+    "prompt": "¿Qué corriges?",
+    "options": [
+     "Frecuencia y tipo de limpieza del stencil, cantidad y vida de la pasta",
+     "Bajar el volumen mínimo",
+     "Recalibrar altura",
+     "Cambiar el SPI"
+    ],
+    "correct": 0,
+    "feedback": "El SPI detectó bien; se corrige el proceso de impresión."
+   }
+  ]
+ },
+ {
+  "id": "pr-spi-debug-zone",
+  "machine": "spi",
+  "kind": "debug",
+  "title": "Falsos llamados en una sola zona",
+  "scenario": "Sólo los depósitos de la esquina izquierda marcan volumen alto en todas las tarjetas.",
+  "steps": [
+   {
+    "prompt": "¿Qué revisas?",
+    "options": [
+     "Pandeo y soporte de la tarjeta con Warpage Viewer y Z-tracking",
+     "Espesor del stencil",
+     "Pasta seca",
+     "Cambio de Gerber"
+    ],
+    "correct": 0,
+    "feedback": "Una sola zona indica pandeo o soporte."
+   },
+   {
+    "prompt": "Con 1 mm de pandeo hacia arriba, ¿cuánto lee el volumen?",
+    "options": [
+     "Cerca de 105%",
+     "95%",
+     "50%",
+     "200%"
+    ],
+    "correct": 0,
+    "feedback": "Según el manual Nivel 1: 1 mm arriba ≈ 105%, 2 mm ≈ 110%."
+   }
+  ]
+ }
+]
