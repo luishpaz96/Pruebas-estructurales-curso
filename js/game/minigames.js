@@ -3,6 +3,7 @@ import { esc, shuffle } from '../fx.js';
 import { prep } from '../exams.js';
 import { course, answer } from '../store.js';
 import { sfx } from './audio.js';
+import { drawCase } from './defects.js';
 
 // ---------------- Revisión de NG (AOI / AXI) ----------------
 const AOI_CASES = [
@@ -28,62 +29,6 @@ const AXI_CASES = [
   { call: 'Abierto', real: false, draw: 'xvia', why: 'El punto claro es una vía bajo la bola: requiere subtipo aparte.' },
 ];
 
-function drawCase(cv, kind) {
-  const x = cv.getContext('2d'), W = cv.width, H = cv.height;
-  const axi = kind.startsWith('x');
-  if (axi) {
-    x.fillStyle = '#bfbfbf'; x.fillRect(0, 0, W, H);
-    const g = x.createRadialGradient(W / 2, H / 2, 10, W / 2, H / 2, W * .7); g.addColorStop(0, 'rgba(255,255,255,.15)'); g.addColorStop(1, 'rgba(0,0,0,.25)'); x.fillStyle = g; x.fillRect(0, 0, W, H);
-    const n = 6, p = 34, ox = W / 2 - p * 2.5, oy = H / 2 - p * 2.5;
-    for (let i = 0; i < n; i++) for (let j = 0; j < n; j++) {
-      const cx = ox + i * p, cy = oy + j * p; let r = 12, col = '#2a2a2a';
-      if (kind === 'xmissing' && i === 3 && j === 2) continue;
-      if (kind === 'xhip' && i === 2 && j === 3) { r = 8; col = '#5a5a5a'; }
-      x.fillStyle = col; x.beginPath(); x.arc(cx, cy, r, 0, 7); x.fill();
-      if (kind === 'xvoidbig' && i === 1 && j === 1) { x.fillStyle = '#9a9a9a'; x.beginPath(); x.arc(cx + 2, cy - 1, 7.5, 0, 7); x.fill(); }
-      if (kind === 'xvoidsmall' && (i + j) % 7 === 3) { x.fillStyle = '#8a8a8a'; x.beginPath(); x.arc(cx + 3, cy, 2.5, 0, 7); x.fill(); }
-      if (kind === 'xvia' && i === 4 && j === 4) { x.fillStyle = '#d0d0d0'; x.beginPath(); x.arc(cx, cy, 3, 0, 7); x.fill(); }
-    }
-    if (kind === 'xbridge') { x.fillStyle = '#2a2a2a'; x.fillRect(ox + 2 * p, oy + 4 * p - 6, p, 12); }
-    if (kind === 'xshadow') { x.fillStyle = 'rgba(60,60,60,.35)'; x.fillRect(ox + 1.6 * p, oy + 3.6 * p, p * 1.6, 18); }
-    x.strokeStyle = '#ffb020'; x.lineWidth = 2; x.strokeRect(6, 6, W - 12, H - 12);
-    return;
-  }
-  // AOI: vista superior en color
-  x.fillStyle = '#1d5e34'; x.fillRect(0, 0, W, H);
-  for (let i = 0; i < 40; i++) { x.fillStyle = 'rgba(255,255,255,.03)'; x.fillRect(Math.random() * W, Math.random() * H, 30, 2); }
-  const pad = (px, py, w, h, paste = true) => { x.fillStyle = '#c9a74a'; x.fillRect(px, py, w, h); if (paste) { x.fillStyle = '#b7bcc2'; x.fillRect(px + 3, py + 3, w - 6, h - 6); } };
-  const fillet = (px, py, w, h, k = 1) => { const g = x.createLinearGradient(px, py, px + w, py); g.addColorStop(0, '#f2f4f6'); g.addColorStop(1, '#8d949b'); x.fillStyle = g; x.globalAlpha = .9; x.fillRect(px, py + h * (1 - k) / 2, w, h * k); x.globalAlpha = 1; };
-  const cx = W / 2, cy = H / 2;
-  if (['missing', 'shift', 'tomb', 'insuf', 'shiftok', 'glare', 'shadow'].includes(kind)) {
-    x.fillStyle = '#e8e8e8'; x.font = '12px sans-serif'; x.fillText('C12', cx - 10, cy - 46);
-    pad(cx - 70, cy - 25, 40, 50, kind !== 'missing'); pad(cx + 30, cy - 25, 40, 50, kind !== 'missing');
-    if (kind === 'missing') { pad(cx - 70, cy - 25, 40, 50, true); pad(cx + 30, cy - 25, 40, 50, true); return; }
-    let dx = 0, dy = 0; if (kind === 'shift') dy = 34; if (kind === 'shiftok') dy = 8;
-    if (kind === 'tomb') { x.fillStyle = 'rgba(0,0,0,.35)'; x.fillRect(cx + 20, cy - 22, 50, 44); x.fillStyle = '#c4945e'; x.fillRect(cx + 30, cy - 22, 30, 44); x.fillStyle = '#d9dde1'; x.fillRect(cx + 30, cy - 22, 30, 10); return; }
-    x.fillStyle = '#c4945e'; x.fillRect(cx - 55 + dx, cy - 20 + dy, 110, 40);
-    x.fillStyle = '#d9dde1'; x.fillRect(cx - 55 + dx, cy - 20 + dy, 22, 40); x.fillRect(cx + 33 + dx, cy - 20 + dy, 22, 40);
-    const k = kind === 'insuf' ? .25 : 1; fillet(cx - 75, cy - 20 + dy, 20, 40, k); fillet(cx + 55, cy - 20 + dy, 20, 40, k);
-    if (kind === 'glare') { const g = x.createRadialGradient(cx, cy, 2, cx, cy, 45); g.addColorStop(0, 'rgba(255,255,255,1)'); g.addColorStop(1, 'rgba(255,255,255,0)'); x.fillStyle = g; x.fillRect(cx - 60, cy - 50, 120, 100); }
-    if (kind === 'shadow') { x.fillStyle = 'rgba(0,0,0,.45)'; x.fillRect(cx + 10, cy - 60, 90, 120); x.fillStyle = '#3a2f22'; x.fillRect(cx + 80, cy - 70, 60, 140); }
-    return;
-  }
-  if (['bridge', 'silk'].includes(kind)) {
-    x.fillStyle = '#23272c'; x.fillRect(cx - 60, cy - 90, 120, 70);
-    for (let i = 0; i < 7; i++) { const px = cx - 54 + i * 18; pad(px, cy - 18, 10, 40); x.fillStyle = '#c9ced4'; x.fillRect(px + 1, cy - 22, 8, 30); fillet(px, cy + 4, 10, 14); }
-    if (kind === 'bridge') { x.fillStyle = '#dfe3e7'; x.fillRect(cx - 54 + 3 * 18 + 6, cy - 2, 16, 16); }
-    if (kind === 'silk') { x.fillStyle = '#f2f2f2'; x.fillRect(cx - 54 + 3 * 18 + 9, cy + 28, 12, 3); x.fillRect(cx - 54 + 3 * 18 + 9, cy - 5, 2, 36); x.globalAlpha = .1; }
-    x.globalAlpha = 1; return;
-  }
-  if (['polbad', 'polok'].includes(kind)) {
-    pad(cx - 80, cy - 22, 36, 44); pad(cx + 44, cy - 22, 36, 44);
-    x.fillStyle = '#f2f2f2'; x.fillRect(cx - 100, cy - 40, 6, 80); // marca de cátodo en serigrafía (izquierda)
-    x.fillStyle = '#222'; x.fillRect(cx - 60, cy - 26, 120, 52);
-    x.fillStyle = kind === 'polok' ? '#9a9a9a' : '#e0e0e0'; x.fillRect(kind === 'polbad' ? cx + 40 : cx - 56, cy - 26, 14, 52);
-    fillet(cx - 82, cy - 22, 18, 44); fillet(cx + 64, cy - 22, 18, 44);
-  }
-}
-
 export function review(el, { machine = 'aoi', count = 6 }, done) {
   const pool = machine === 'axi' ? AXI_CASES : machine === 'mix' ? AOI_CASES.concat(AXI_CASES) : AOI_CASES;
   const items = shuffle(Array.from({ length: count }, (_, i) => pool[(i * 5 + Math.floor(Math.random() * pool.length)) % pool.length]));
@@ -94,7 +39,7 @@ export function review(el, { machine = 'aoi', count = 6 }, done) {
     const c = items[i];
     el.innerHTML = `<div class="mg-review"><div class="row"><span class="tag">${c.draw.startsWith('x') ? 'AXI · corte de bolas' : 'AOI · imagen 2D/3D'}</span><span class="mut">Tarjeta ${i + 1} de ${items.length}</span><span class="sp"></span><b>${ok} ✓</b></div>
       <h3 style="margin:10px 0">Llamado de la máquina: <span style="color:var(--warn)">${esc(c.call)}</span></h3>
-      <canvas id="rv" width="360" height="240" style="width:100%;max-width:520px;border-radius:10px;display:block;margin:0 auto;image-rendering:auto"></canvas>
+      <canvas id="rv" width="780" height="400" style="width:100%;max-width:900px;border-radius:10px;display:block;margin:0 auto;image-rendering:auto"></canvas>
       <div class="bar" style="margin:10px 0"><i id="tbar" style="width:100%;background:var(--warn)"></i></div>
       <div class="row" style="justify-content:center"><button class="btn" id="bOK" style="border-color:var(--ok);min-width:150px">✓ Falso llamado (pasa)</button><button class="btn" id="bNG" style="border-color:var(--bad);min-width:150px">✕ Defecto real (NG)</button></div>
       <p class="mut" style="text-align:center;margin-top:6px">Teclas: A = falso llamado · D = defecto real</p><div id="rfb"></div></div>`;
