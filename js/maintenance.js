@@ -2,6 +2,7 @@
 import { createStage, THREE } from './stage.js';
 import { buildMachine, animateMachine, highlight, pick, PART_NAMES, ACTION_NAMES } from './machines.js';
 import { buildReal } from './models.js';
+import { addInterior, INNER } from './interior.js';
 import { esc, sfx, toast, dialog, confetti, shuffle } from './fx.js';
 import { state, save, addXP, course } from './store.js';
 
@@ -11,13 +12,36 @@ export function runMaintenance(root, proc, onExit, onResult) {
   const mach = course.machines.find(m => m.id === proc.machine) || { model: 'aoi', color: '#3d8bff', name: '' };
   root.innerHTML = `<div class="row"><button class="btn ghost" id="mxBack">← Taller</button><span class="tag" style="color:${mach.color}">${esc(mach.name)}</span><span class="tag">${esc(proc.frequency || '')}</span></div>
   <h1 style="margin-top:10px">${esc(proc.title)}</h1>
-  <div class="split"><div><div class="stage" id="mxStage"><div class="cap" id="mxCap"></div><div class="ctrl"><button class="btn" id="mxReset">Centrar vista</button></div></div>
+  <div class="split"><div><div class="stage" id="mxStage"><div class="cap" id="mxCap"></div><div class="ctrl"><button class="btn" id="mxReset">Centrar vista</button><button class="btn" id="mxGhost" hidden>👁 Ver por dentro</button><button class="btn" id="mxExp" hidden>🔍 Explorar piezas</button></div><div class="mxinfo" id="mxInfo" hidden></div></div>
   <p class="mut" style="margin-top:8px">Gira con un dedo o el mouse, acerca con dos dedos o la rueda. Pasa el cursor para ver el nombre de cada pieza.</p></div>
   <div class="card" id="mxPanel"></div></div>`;
   root.querySelector('#mxBack').onclick = onExit;
   const st = createStage(root.querySelector('#mxStage'), { cam: [4.4, 3.4, 5.2], target: [0, 1.3, 0] });
   const m = mach.model3d ? buildReal(mach.model3d, mach.color) : buildMachine(mach.model || 'aoi', mach.color); st.scene.add(m.group);
   st.onFrame(t => animateMachine(m, t, mach.model));
+  // Interior: cubiertas transparentes, piezas internas y (en el ICT) tarjetas que se sacan
+  const inner = mach.model3d ? addInterior(mach.model3d, m) : null;
+  const nameOf = (part, obj) => obj?.userData?.card?.userData.info.label || PART_NAMES[part] || INNER[part]?.name || part;
+  let exploring = false;
+  const info = root.querySelector('#mxInfo'), gB = root.querySelector('#mxGhost'), eB = root.querySelector('#mxExp');
+  if (inner) {
+    gB.hidden = eB.hidden = false; st.onFrame((t, dt) => inner.update(dt));
+    const setG = on => { inner.setGhost(on); gB.textContent = on ? '🧱 Poner cubiertas' : '👁 Ver por dentro'; gB.classList.toggle('pri', on);
+      if (mach.model3d === 'hp3070') ['fixture', 'door', 'pcb', 'probes'].forEach(k => { if (m.parts[k]) m.parts[k].visible = !on; }); };
+    gB.onclick = () => { sfx('click'); setG(!inner.isGhost()); };
+    eB.onclick = () => { exploring = !exploring; eB.classList.toggle('pri', exploring); sfx('click'); if (exploring && !inner.isGhost()) setG(true);
+      info.hidden = !exploring; info.innerHTML = exploring ? `<b>Modo exploración</b><p>Haz clic en cualquier pieza interna para ver qué es y qué se revisa en el mantenimiento.${inner.cards.length ? ' En el ICT, haz clic en una tarjeta del testhead para sacarla e inspeccionarla.' : ''}</p>` : ''; };
+  }
+  function explore(h) {
+    const id = h.part, card = h.obj?.userData?.card || (h.obj && (() => { let o = h.obj; while (o && !o.userData.card) o = o.parent; return o?.userData.card; })());
+    const d = INNER[id] || { name: PART_NAMES[id] || id, desc: 'Pieza de mantenimiento: búscala en los pasos del procedimiento.', check: '' };
+    let extra = '';
+    if (card) { const out = inner.toggleCard(card); sfx(out ? 'open' : 'click'); const ci = card.userData.info;
+      extra = out ? `<div class="mxcard"><img alt="${ci.label}" src="${ci.tex.userData.url()}"></div><p class="mut">Módulo ${ci.module}, ranura ${ci.slot}. Vuelve a hacer clic en la tarjeta para meterla.</p>` : '<p class="mut">Tarjeta instalada de nuevo en su ranura.</p>'; }
+    else { sfx('click'); if (h.obj) { highlight(h.obj, true, 0xffb020); setTimeout(() => highlight(h.obj, false), 900); } }
+    info.hidden = false; info.innerHTML = `<div class="row"><b>${esc(card ? card.userData.info.label : d.name)}</b><span class="sp"></span><button class="btn ghost" id="mxIx">✕</button></div><p>${esc(d.desc)}</p>${d.check ? `<p><b>En el mantenimiento:</b> ${esc(d.check)}</p>` : ''}${extra}`;
+    info.querySelector('#mxIx').onclick = () => { info.hidden = true; };
+  }
   root.querySelector('#mxReset').onclick = () => { st.camera.position.set(4.4, 3.4, 5.2); st.controls.target.set(0, 1.3, 0); };
   const cap = root.querySelector('#mxCap'), panel = root.querySelector('#mxPanel');
   const steps = proc.steps || [];
@@ -43,13 +67,14 @@ export function runMaintenance(root, proc, onExit, onResult) {
     const h = pick(st, ev, m.group);
     const obj = h ? m.parts[h.part] : null;
     if (hover !== obj) { if (hover && hover !== chosenObj()) highlight(hover, false); hover = obj; if (hover) highlight(hover, true, 0x3d8bff); }
-    if (h) { const r = canvas.getBoundingClientRect(); tip.style.display = ''; tip.textContent = PART_NAMES[h.part] || h.part; tip.style.left = (ev.clientX - r.left) + 'px'; tip.style.top = (ev.clientY - r.top) + 'px'; } else tip.style.display = 'none';
+    if (h) { const r = canvas.getBoundingClientRect(); tip.style.display = ''; tip.textContent = nameOf(h.part, h.obj); tip.style.left = (ev.clientX - r.left) + 'px'; tip.style.top = (ev.clientY - r.top) + 'px'; } else tip.style.display = 'none';
   });
   let down = null;
   canvas.addEventListener('pointerdown', ev => { down = [ev.clientX, ev.clientY]; });
   canvas.addEventListener('pointerup', ev => {
     if (!down || Math.hypot(ev.clientX - down[0], ev.clientY - down[1]) > 6) return; // fue un arrastre
-    const h = pick(st, ev, m.group); if (!h || i < 0 || i >= steps.length) return;
+    const h = pick(st, ev, m.group); if (h && exploring) return explore(h);
+    if (!h || i < 0 || i >= steps.length) return;
     selectPart(h.part);
   });
   const chosenObj = () => chosen ? m.parts[chosen] : null;

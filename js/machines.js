@@ -141,9 +141,12 @@ export function animateMachine(m, t, kind) {
 // Resaltado de pieza (emisivo)
 export function highlight(obj, on, color = 0x3d8bff) {
   obj?.traverse(c => {
-    if (!c.material || c.material.isMeshBasicMaterial) return;
-    if (on) { if (c.userData._em === undefined) { c.userData._em = c.material.emissive?.getHex() ?? 0; c.userData._ei = c.material.emissiveIntensity; c.material = c.material.clone(); } c.material.emissive?.setHex(color); c.material.emissiveIntensity = .6; }
-    else if (c.userData._em !== undefined) { c.material.emissive?.setHex(c.userData._em); c.material.emissiveIntensity = c.userData._ei; }
+    if (!c.material) return; const arr = Array.isArray(c.material);
+    const ms = [].concat(c.material); if (ms.every(m => m.isMeshBasicMaterial)) return;
+    if (on) {
+      if (c.userData._em === undefined) { c.userData._em = ms.map(m => m.emissive?.getHex() ?? 0); c.userData._ei = ms.map(m => m.emissiveIntensity); const cl = ms.map(m => m.clone()); c.material = arr ? cl : cl[0]; }
+      [].concat(c.material).forEach(m => { m.emissive?.setHex(color); m.emissiveIntensity = .6; });
+    } else if (c.userData._em !== undefined) [].concat(c.material).forEach((m, i) => { m.emissive?.setHex(c.userData._em[i]); m.emissiveIntensity = c.userData._ei[i]; });
   });
 }
 
@@ -153,6 +156,7 @@ export function pick(st, ev, root) {
   const v = new THREE.Vector2(((ev.clientX - r.left) / r.width) * 2 - 1, -((ev.clientY - r.top) / r.height) * 2 + 1);
   const rc = new THREE.Raycaster(); rc.setFromCamera(v, st.camera);
   const hits = rc.intersectObject(root, true);
-  for (const h of hits) { let o = h.object; while (o && !o.userData.part) o = o.parent; if (o) return { part: o.userData.part, obj: o }; }
+  const shown = o => { for (; o; o = o.parent) if (!o.visible) return false; return true; };
+  for (const h of hits) { if (h.object.userData.ghost || !shown(h.object)) continue; let o = h.object; while (o && !o.userData.part) o = o.parent; if (o) return { part: o.userData.part, obj: o }; }
   return null;
 }

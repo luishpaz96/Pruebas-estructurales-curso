@@ -262,3 +262,7 @@ main:has(.game){max-width:none;padding-bottom:0}
 .gcam{position:absolute;right:10px;bottom:140px;z-index:4;display:flex;gap:4px;background:rgba(10,14,18,.82);border:1px solid var(--line);border-radius:10px;padding:4px}
 .gcam .btn{min-height:36px;padding:4px 10px;font-size:15px}
 @media (pointer:coarse),(max-width:700px){.gcam{bottom:auto;top:118px;right:8px}.gcam .btn{min-height:40px;padding:4px 8px}}
+.mxinfo{position:absolute;right:10px;top:10px;z-index:3;max-width:min(360px,calc(100% - 20px));max-height:calc(100% - 110px);overflow:auto;background:rgba(12,16,20,.92);border:1px solid var(--line);border-radius:10px;padding:10px 12px;font-size:14px}
+.mxinfo p{margin:6px 0}.mxcard img{width:100%;border-radius:6px;border:1px solid #3a4652;image-rendering:auto}
+#mxStage .ctrl{flex-wrap:wrap}
+#mxStage{min-height:min(560px,70vh)}.mxinfo{max-width:min(300px,calc(100% - 20px))}
