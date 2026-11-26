@@ -1,0 +1,16 @@
+{
+ "_info": "Línea SMT a escala real para el juego de Unreal. Medidas en mm: width = ancho en el sentido del transportador, depth = fondo, height = alto total. 'approx': true marca medidas que no vienen de un manual del proyecto. 'template' elige el modelo 3D: loader | printer | spi | pnp | reflow | aoi | axi | ict | unloader. Las estaciones con inline=false se colocan en x,y (mm) del otro lado del pasillo.",
+ "stations": [
+  {"id":"loader","name":"Cargador de magazines","template":"loader","width":1060,"depth":820,"height":1250,"conveyorHeight":900,"approx":true,"gapAfter":300,"color":"#c9ced4","accent":"#5c6b7a"},
+  {"id":"printer","name":"Impresora de pasta","template":"printer","width":1220,"depth":1500,"height":1500,"conveyorHeight":900,"approx":true,"color":"#d7dbe0","accent":"#5c6b7a"},
+  {"id":"spi","name":"SPI 3D Koh Young KY8030","template":"spi","machine":"spi","width":1000,"depth":1215,"height":1630,"conveyorHeight":900,"approx":true,"color":"#e6e8eb"},
+  {"id":"pnp1","name":"Colocadora 1 (chips)","template":"pnp","width":1280,"depth":1700,"height":1450,"conveyorHeight":900,"approx":true,"gapAfter":200,"color":"#e3e5e8","accent":"#5c6b7a"},
+  {"id":"pnp2","name":"Colocadora 2 (pitch fino)","template":"pnp","width":1280,"depth":1700,"height":1450,"conveyorHeight":900,"approx":true,"color":"#e3e5e8","accent":"#5c6b7a"},
+  {"id":"reflow","name":"Horno de reflujo (10 zonas)","template":"reflow","width":5300,"depth":1400,"height":1500,"conveyorHeight":900,"approx":true,"color":"#cfd3d8","accent":"#c0392b"},
+  {"id":"aoi_ky","name":"AOI 3D Koh Young Zenith","template":"aoi","machine":"aoi_ky","width":1000,"depth":1340,"height":1600,"conveyorHeight":900,"approx":true,"color":"#e9ebee"},
+  {"id":"aoi_v510","name":"AOI 3D ViTrox V510i Optimus","template":"aoi","machine":"aoi_v510","width":1060,"depth":1353,"height":2111,"conveyorHeight":900,"source":"3 - 3D AOI - Brochure Specs ViTrox V510 3D.pdf, pág. 2 (transporte 875-965 mm, ~830 kg)","color":"#eef0f2"},
+  {"id":"axi_v810","name":"AXI 3D ViTrox V810 S2","template":"axi","machine":"axi_v810","width":1520,"depth":1940,"height":1890,"conveyorHeight":900,"source":"00 Overview.pdf, pág. 8 (transporte 823-980 mm, ~3300 kg)","color":"#eceef0"},
+  {"id":"unloader","name":"Descargador de magazines","template":"loader","width":1060,"depth":820,"height":1250,"conveyorHeight":900,"approx":true,"color":"#c9ced4","accent":"#5c6b7a"},
+  {"id":"ict","name":"ICT Keysight i3070 (HP3070)","template":"ict","machine":"ict","width":1450,"depth":1250,"height":1650,"conveyorHeight":950,"approx":true,"inline":false,"x":12500,"y":-7300,"color":"#d9dde2"}
+ ]
+}

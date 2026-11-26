@@ -1,0 +1,22 @@
+{
+	"FileVersion": 3,
+	"EngineAssociation": "5.4",
+	"Category": "",
+	"Description": "Academia de Inspección: juego de carrera para técnicos de pruebas AOI, AXI, ICT y SPI.",
+	"Modules": [
+		{
+			"Name": "AcademiaInspeccion",
+			"Type": "Runtime",
+			"LoadingPhase": "Default",
+			"AdditionalDependencies": [ "Engine" ]
+		}
+	],
+	"Plugins": [
+		{ "Name": "ModelingToolsEditorMode", "Enabled": false, "TargetAllowList": [ "Editor" ] }
+	],
+	"PreBuildSteps": {
+		"Win64": [
+			"powershell -NoProfile -ExecutionPolicy Bypass -File \"$(ProjectDir)\\Tools\\SyncContent.ps1\""
+		]
+	}
+}

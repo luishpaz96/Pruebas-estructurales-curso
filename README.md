@@ -13,6 +13,10 @@ App web interactiva para el curso de pruebas estructurales: AOI 3D Koh Young Zen
   - **Prácticas de creación y debug** por máquina, con decisiones paso a paso y ajuste de parámetros en vivo.
 - **Exámenes autocalificados**: 22 exámenes de módulo y un examen final. Las opciones se barajan, hay temporizador opcional y una revisión con la respuesta correcta, su explicación y la sección del curso. También hay un banco de repaso con las preguntas falladas.
 
+## Versión nativa para Windows (Unreal Engine 5, C++)
+
+En [`unreal/`](unreal/README.md) está el port del juego a Unreal Engine 5 en C++. Incluye el modo historia (técnico de nuevo ingreso, de la capacitación al día a día), la línea SMT en 3D a escala real, el software simulado de cada máquina, el mantenimiento sobre el modelo 3D y los exámenes. Lee el mismo contenido de `content/`, y además usa `content/line.json` (medidas de la línea) y `content/career/` (misiones de la historia).
+
 ## Cómo abrirla
 
 Sirve la carpeta con cualquier servidor estático (los módulos ES no cargan desde `file://`):
