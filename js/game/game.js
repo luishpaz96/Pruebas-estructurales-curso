@@ -65,24 +65,76 @@ export function gameScreen(view) {
   function cleanup() { removeEventListener('keydown', kd); removeEventListener('keyup', ku); stopMusic(); }
   addEventListener('hashchange', cleanup, { once: true });
   const ray = new THREE.Raycaster(), v2 = new THREE.Vector2();
-  st.renderer.domElement.addEventListener('pointerdown', ev => {
-    if (R.paused) return; const r = st.renderer.domElement.getBoundingClientRect();
-    v2.set(((ev.clientX - r.left) / r.width) * 2 - 1, -((ev.clientY - r.top) / r.height) * 2 + 1); ray.setFromCamera(v2, st.camera);
-    const h = ray.intersectObject(W.floor)[0]; if (h) target = h.point.clone();
-    // si tocó cerca de una estación, camina hacia ella
-    for (const s of Object.values(W.stations)) if (h && h.point.distanceTo(s.pos) < 3.5) target = s.pos.clone();
+  // ---------------- Cámara: seguir (con giro y zoom), libre y alertas ----------------
+  const CAM = { mode: 'follow', yaw: 0, pitch: .74, dist: 17.5, peek: 0, look: new THREE.Vector3(), free: false };
+  const CAM_NAMES = { follow: '🎥 Seguir', free: '🕊 Libre', alert: '🚨 Alertas' };
+  const dom = st.renderer.domElement; dom.style.touchAction = 'none';
+  const pts = new Map(); let drag = null, pinch0 = 0;
+  const toFloor = ev => { const r = dom.getBoundingClientRect(); v2.set(((ev.clientX - r.left) / r.width) * 2 - 1, -((ev.clientY - r.top) / r.height) * 2 + 1); ray.setFromCamera(v2, st.camera); return ray.intersectObject(W.floor)[0]; };
+  dom.addEventListener('pointerdown', ev => { pts.set(ev.pointerId, { x: ev.clientX, y: ev.clientY }); drag = { x: ev.clientX, y: ev.clientY, moved: 0, btn: ev.button, t: performance.now() }; if (pts.size === 2) { const [a, b] = [...pts.values()]; pinch0 = Math.hypot(a.x - b.x, a.y - b.y); } });
+  dom.addEventListener('pointermove', ev => {
+    if (!pts.has(ev.pointerId)) return; const prev = pts.get(ev.pointerId); const dx = ev.clientX - prev.x, dy = ev.clientY - prev.y; pts.set(ev.pointerId, { x: ev.clientX, y: ev.clientY });
+    if (drag) drag.moved += Math.abs(dx) + Math.abs(dy);
+    if (CAM.mode === 'free') return; // OrbitControls se encarga
+    if (pts.size === 2) { const [a, b] = [...pts.values()]; const d = Math.hypot(a.x - b.x, a.y - b.y); if (pinch0) CAM.dist = Math.min(34, Math.max(6, CAM.dist * pinch0 / d)); pinch0 = d; return; }
+    if (drag && drag.moved > 6) { CAM.yaw -= dx * .006; CAM.pitch = Math.min(1.35, Math.max(.25, CAM.pitch + dy * .004)); }
   });
+  const up = ev => { const was = drag; pts.delete(ev.pointerId); if (pts.size < 2) pinch0 = 0; drag = null;
+    if (!was || was.moved > 6 || was.btn !== 0 || R.paused || pts.size) return;
+    const h = toFloor(ev); if (!h) return; target = h.point.clone();
+    for (const s of Object.values(W.stations)) if (h.point.distanceTo(s.pos) < 3.5) target = s.pos.clone(); };
+  dom.addEventListener('pointerup', up); dom.addEventListener('pointercancel', ev => { pts.delete(ev.pointerId); drag = null; });
+  dom.addEventListener('contextmenu', ev => ev.preventDefault());
   $('#gAct').onclick = () => interact();
-  st.renderer.domElement.addEventListener('wheel', ev => { camDist = Math.min(1.8, Math.max(.55, camDist + Math.sign(ev.deltaY) * .08)); ev.preventDefault(); }, { passive: false });
-  let camDist = 1;
+  dom.addEventListener('wheel', ev => { if (CAM.mode === 'free') return; CAM.dist = Math.min(34, Math.max(6, CAM.dist * (ev.deltaY > 0 ? 1.1 : .9))); ev.preventDefault(); }, { passive: false });
+  // Punto que requiere atención: alarma > misión > cola de NG
+  function attention() {
+    const inc = R.incidents[0]; if (inc && W.stations[inc.station]) return { pos: W.stations[inc.station].pos, why: inc.title };
+    const ms = missionStations(); if (ms.length) { const p = player.g.position; const s = ms.map(id => W.stations[id]).filter(Boolean).sort((a, b) => a.pos.distanceTo(p) - b.pos.distanceTo(p))[0]; if (s) return { pos: s.pos, why: R.mission?.title || '' }; }
+    for (const id of ['aoi', 'axi']) if (R.queue[id] >= 3) return { pos: W.stations[id].pos, why: `Cola de NG en ${id.toUpperCase()}` };
+    return null;
+  }
+  function setCam(mode) {
+    CAM.mode = mode; const c = st.controls; c.enabled = mode === 'free';
+    if (mode === 'free') { c.target.copy(CAM.look); c.minDistance = 4; c.maxDistance = 60; c.maxPolarAngle = Math.PI * .47; c.enablePan = true; c.screenSpacePanning = false; }
+    const b = $('#gCamM'); if (b) b.textContent = CAM_NAMES[mode];
+    radio(mode === 'follow' ? 'Cámara: sigue a tu personaje. Arrastra para girar, rueda o pellizco para acercar.' : mode === 'free' ? 'Cámara libre: arrastra para girar, clic derecho o dos dedos para mover, WASD para desplazarte. C cambia de modo.' : 'Cámara de alertas: encuadra lo que necesita tu atención.');
+  }
+  const camBar = document.createElement('div'); camBar.className = 'gcam';
+  camBar.innerHTML = `<button class="btn" id="gCamM" title="Cambiar modo de cámara (C)">${CAM_NAMES.follow}</button><button class="btn ghost" id="gCamL" title="Girar a la izquierda (Q)">⟲</button><button class="btn ghost" id="gCamR" title="Girar a la derecha (R)">⟳</button><button class="btn ghost" id="gCamF" title="Ver lo que requiere atención (F)">👁</button><button class="btn ghost" id="gCamH" title="Volver a tu personaje (H)">⌂</button>`;
+  $('#game').appendChild(camBar);
+  const cycle = () => setCam({ follow: 'free', free: 'alert', alert: 'follow' }[CAM.mode]);
+  const peek = () => { const a = attention(); if (!a) return radio('Nada pendiente por ahora.'); CAM.peek = 3.2; CAM.peekPos = a.pos.clone(); radio('Mira: ' + a.why); };
+  const home = () => { if (CAM.mode === 'free') setCam('follow'); CAM.yaw = 0; CAM.pitch = .74; CAM.dist = 17.5; CAM.peek = 0; };
+  $('#gCamM').onclick = cycle; $('#gCamL').onclick = () => CAM.yaw += Math.PI / 4; $('#gCamR').onclick = () => CAM.yaw -= Math.PI / 4; $('#gCamF').onclick = peek; $('#gCamH').onclick = home;
+  addEventListener('keydown', ev => { if (!$('#game') || R.paused || ev.target.closest?.('input,select,textarea')) return; const k = ev.key.toLowerCase();
+    if (k === 'c') cycle(); else if (k === 'f') peek(); else if (k === 'h') home(); else if (k === 'q') CAM.yaw += Math.PI / 8; else if (k === 'r') CAM.yaw -= Math.PI / 8; });
+  // Clic en el minimapa: mira ese punto (en modo libre mueve la cámara ahí)
+  $('#gMap').addEventListener('click', ev => { const c = ev.currentTarget, r = c.getBoundingClientRect(); const x = (ev.clientX - r.left) / r.width * 104 - 50, z = (ev.clientY - r.top) / r.height * 52 - 24;
+    if (CAM.mode !== 'free') setCam('free'); const d = new THREE.Vector3(x, 0, z).sub(st.controls.target); st.controls.target.add(d); st.camera.position.add(d); });
+  function updateCam(dt) {
+    const p = player.g.position, c = st.controls;
+    if (CAM.mode === 'free') {
+      // WASD desplaza la cámara en el plano del piso
+      let mx = 0, mz = 0; if (keys.w || keys.arrowup) mz -= 1; if (keys.s || keys.arrowdown) mz += 1; if (keys.a || keys.arrowleft) mx -= 1; if (keys.d || keys.arrowright) mx += 1;
+      if (mx || mz) { const f = new THREE.Vector3(); st.camera.getWorldDirection(f); f.y = 0; f.normalize(); const rgt = new THREE.Vector3(-f.z, 0, f.x); const mv = f.multiplyScalar(-mz).add(rgt.multiplyScalar(mx)).multiplyScalar((keys.shift ? 30 : 16) * dt); c.target.add(mv); st.camera.position.add(mv); }
+      CAM.look.copy(c.target); return;
+    }
+    let look = new THREE.Vector3(p.x, 1.5, p.z), dist = CAM.dist;
+    if (CAM.peek > 0) { CAM.peek -= dt; look = CAM.peekPos.clone().setY(1.5); }
+    else if (CAM.mode === 'alert') { const a = attention(); if (a) { const gap = a.pos.distanceTo(p); look.lerp(a.pos.clone().setY(1.5), .5); dist = Math.max(CAM.dist, gap * 1.05 + 8); } }
+    CAM.look.lerp(look, Math.min(1, dt * 4));
+    const off = new THREE.Vector3(Math.sin(CAM.yaw) * Math.cos(CAM.pitch), Math.sin(CAM.pitch), Math.cos(CAM.yaw) * Math.cos(CAM.pitch)).multiplyScalar(dist);
+    st.camera.position.lerp(CAM.look.clone().add(off), Math.min(1, dt * 5)); c.target.copy(CAM.look);
+  }
 
   // ---------------- Movimiento y cámara ----------------
   let stepT = 0;
-  const camOff = new THREE.Vector3(0, 12, 13);
   st.onFrame((t, dt) => {
     const p = player.g.position; let mx = 0, mz = 0;
     if (!R.paused) {
-      if (keys.w || keys.arrowup) mz -= 1; if (keys.s || keys.arrowdown) mz += 1; if (keys.a || keys.arrowleft) mx -= 1; if (keys.d || keys.arrowright) mx += 1;
+      if (CAM.mode !== 'free') { let ix = 0, iz = 0; if (keys.w || keys.arrowup) iz -= 1; if (keys.s || keys.arrowdown) iz += 1; if (keys.a || keys.arrowleft) ix -= 1; if (keys.d || keys.arrowright) ix += 1;
+        const yw = CAM.yaw; mx = ix * Math.cos(yw) + iz * Math.sin(yw); mz = -ix * Math.sin(yw) + iz * Math.cos(yw); }
       if (mx || mz) target = null;
       if (target) { const d = target.clone().sub(p); d.y = 0; if (d.length() < .3) target = null; else { mx = d.x; mz = d.z; } }
     }
@@ -97,7 +149,7 @@ export function gameScreen(view) {
     player.walk(dt, moving);
     life.update(t, dt, { player: p, andon: R.kpi && { state: R.lineStop ? 'stop' : 'run', reason: R.stopReason, goal: Math.round(R.t / 4.5), produced: R.kpi.produced, fpy: fpy(), aoi: R.queue.aoi, axi: R.queue.axi, clock: fmtClock() } });
     // Cámara en tercera persona
-    const want = p.clone().add(camOff.clone().multiplyScalar(camDist)); st.camera.position.lerp(want, .08); st.camera.lookAt(p.x, p.y + 1.5, p.z);
+    updateCam(dt);
     // Balizas animadas
     for (const b of Object.values(beacons)) if (b.g.visible) { b.sp.position.y = 6.2 + Math.sin(t * 3) * .3; b.ring.scale.setScalar(1 + (t * .8 % 1) * .4); }
     if (!R.running || R.paused) return;

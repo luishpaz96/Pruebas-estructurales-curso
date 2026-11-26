@@ -1,19 +1,21 @@
 // Modelos 3D basados en las máquinas reales (proporciones de las fotos y fichas técnicas del material del curso).
 // Escala: 1 unidad = 0.5 m. Transporte en el eje X (izquierda → derecha), frente de la máquina hacia +Z.
 // Sin logotipos: sólo placas con texto genérico. Cada pieza lleva userData.part para el taller de mantenimiento.
-import { THREE, box, cyl, at, mat, pcb } from './stage.js';
+import { THREE, box as sbox, rbox, cyl, at, mat, pcb } from './stage.js';
+// Las piezas grandes llevan aristas redondeadas, como las cubiertas reales
+const box = (w, h, d, m, o) => Math.min(w, h, d) >= .18 ? rbox(w, h, d, m, Math.min(.07, Math.min(w, h, d) * .2), o) : sbox(w, h, d, m, o);
 
 const tag = (o, part) => { o.traverse(c => { c.userData.part = part; }); return o; };
 const M = {
-  white: () => mat(0xeef0f2, { roughness: .35, metalness: .1 }),
-  offwhite: () => mat(0xe2e2dc, { roughness: .4 }),
+  white: () => new THREE.MeshPhysicalMaterial({ color: 0xeef0f2, roughness: .32, metalness: .05, clearcoat: .5, clearcoatRoughness: .25 }),
+  offwhite: () => new THREE.MeshPhysicalMaterial({ color: 0xe4e3dc, roughness: .38, metalness: .05, clearcoat: .35, clearcoatRoughness: .3 }),
   lgrey: () => mat(0xc7ccd1, { roughness: .45, metalness: .2 }),
   grey: () => mat(0x8d949b, { roughness: .45, metalness: .3 }),
   charcoal: () => mat(0x2b2f33, { roughness: .5, metalness: .2 }),
   black: () => mat(0x111315, { roughness: .4 }),
   navy: () => mat(0x1f2f4f, { roughness: .45, metalness: .2 }),
   steel: () => mat(0xaab1b8, { roughness: .25, metalness: .85 }),
-  glass: () => new THREE.MeshStandardMaterial({ color: 0x0a0e12, roughness: .05, metalness: .3, transparent: true, opacity: .55 }),
+  glass: () => new THREE.MeshPhysicalMaterial({ color: 0x0d1418, roughness: .04, metalness: .1, transparent: true, opacity: .42, clearcoat: 1, envMapIntensity: 1.6 }),
 };
 
 function label(text, w = 1, h = .22, color = '#30363d', bg = null, font = 600) {
@@ -44,9 +46,53 @@ function workstation(kind, armLen = .9) {
   g.add(at(box(armLen, .06, .1, M.steel()), -armLen / 2 - .3, .3, 0));
   return g;
 }
+// ---- Detalles que hacen que una cubierta se vea "de fábrica" ----
+// Rejilla de ventilación (persianas)
+function louvers(w, h, n = 8, color = 0x22262a) { const g = new THREE.Group(); g.add(sbox(w, h, .012, mat(0x15181b))); for (let i = 0; i < n; i++) g.add(at(sbox(w * .92, h / n * .45, .03, mat(color, { roughness: .6 })), 0, -h / 2 + (i + .5) * h / n, .012)); return g; }
+// Línea de unión entre paneles
+const seam = (len, vertical = true) => sbox(vertical ? .012 : len, vertical ? len : .012, .012, mat(0x1a1d20));
+// Tornillos en las esquinas de un panel
+function screws(w, h) { const g = new THREE.Group(); [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([a, b]) => { const s = cyl(.018, .018, .012, M.steel(), 10); s.rotation.x = Math.PI / 2; g.add(at(s, a * (w / 2 - .06), b * (h / 2 - .06), 0)); }); return g; }
+// Manija empotrada
+function handle(len = .3, vertical = true) { const g = new THREE.Group(); g.add(sbox(vertical ? .05 : len, vertical ? len : .05, .03, mat(0x1a1d20))); const b = sbox(vertical ? .03 : len * .9, vertical ? len * .9 : .03, .05, M.steel()); b.position.z = .03; g.add(b); return g; }
+// Ventanilla lateral para el transportador con cortina y conector SMEMA
+function convPort(side, y, D) { const g = new THREE.Group(); g.add(sbox(.06, .36, 1.1, mat(0x202428))); for (let i = 0; i < 10; i++) g.add(at(sbox(.02, .3, .09, mat(0x111, { roughness: .9 })), side * .03, 0, -.45 + i * .1));
+  const cab = cyl(.025, .025, .5, mat(0x222), 8); cab.rotation.z = Math.PI / 2; g.add(at(cab, side * .25, -.35, .35)); g.position.set(0, y, 0); return g; }
+// Placa de identificación genérica (sin marcas) y etiquetas de seguridad
+function nameplate(text, w = .5) { const p = label(text, w, w * .22, '#d8dee4', '#2b3137'); return p; }
+function warnTag(sym = '⚡') { return label(sym, .1, .1, '#111', '#ffd43b', 800); }
+// Recorre los costados de un gabinete: costuras, persianas y tornillos
+function dressCabinet(G, W, H, D, y0 = .25, opts = {}) {
+  for (const s of [-1, 1]) {
+    const x = s * (W / 2 + .004);
+    for (const f of [-.33, .33]) { const sm = seam(H - y0 - .2); sm.rotation.y = Math.PI / 2; G.add(at(sm, x, y0 + (H - y0) / 2, f * D)); }
+    const lv = louvers(D * .4, .32, 7); lv.rotation.y = s * Math.PI / 2; G.add(at(lv, x + s * .005, y0 + .45, -D * .12));
+    const sc = screws(D * .9, H - y0 - .1); sc.rotation.y = s * Math.PI / 2; G.add(at(sc, x + s * .005, y0 + (H - y0) / 2, 0));
+  }
+  // Rodapié negro
+  G.add(at(sbox(W - .02, .14, D - .02, M.black()), 0, y0 + .07, 0));
+  if (opts.top !== false) { const lip = sbox(W + .02, .04, D + .02, mat(0x30363c, { roughness: .4, metalness: .4 })); G.add(at(lip, 0, H - .02, 0)); }
+}
+// Lo que se ve por la ventana: interior iluminado con rieles, tarjeta y cabezal
+function windowView(w, h, kind = 'aoi') {
+  const c = document.createElement('canvas'); c.width = 512; c.height = Math.round(512 * h / w); const x = c.getContext('2d'); const H = c.height;
+  const gr = x.createLinearGradient(0, 0, 0, H); gr.addColorStop(0, '#dfe9f2'); gr.addColorStop(.5, '#8a96a2'); gr.addColorStop(1, '#2a3138'); x.fillStyle = gr; x.fillRect(0, 0, 512, H);
+  x.fillStyle = '#5d666f'; x.fillRect(0, H * .12, 512, H * .06); // viga del gantry
+  x.fillStyle = '#2b2f33'; x.fillRect(200, H * .16, 90, H * .34); x.fillStyle = '#111'; x.fillRect(222, H * .48, 46, H * .1);
+  x.strokeStyle = kind === 'spi' ? '#a77bff' : '#bfe3ff'; x.lineWidth = 6; x.beginPath(); x.ellipse(245, H * .6, 50, 10, 0, 0, 7); x.stroke();
+  x.fillStyle = '#9aa3ab'; x.fillRect(0, H * .74, 512, 10); x.fillRect(0, H * .86, 512, 10); // rieles
+  x.fillStyle = '#1f6b3a'; x.fillRect(110, H * .72, 240, H * .16); x.fillStyle = '#c9a74a'; for (let i = 0; i < 18; i++) x.fillRect(120 + (i * 37) % 220, H * .74 + (i * 13) % (H * .1), 10, 5);
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace;
+  return new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({ map: t }));
+}
+// Luz interior que se ve a través de la ventana
+function interiorGlow(G, w, d, y, color = 0xdff2ff) { const p = new THREE.Mesh(new THREE.PlaneGeometry(w, d), new THREE.MeshBasicMaterial({ color, transparent: true, opacity: .9 })); p.rotation.x = Math.PI / 2; p.position.y = y; G.add(p); return p; }
+
 function towerLight(h = 1.0) {
   const g = new THREE.Group(); g.add(at(cyl(.03, .03, h, M.steel()), 0, h / 2, 0));
-  const lamps = [0xff3b30, 0xffb020, 0x36d07f].map((c, i) => { const l = at(cyl(.075, .075, .16, mat(c, { emissive: c, emissiveIntensity: i === 2 ? 1 : .08, transparent: true, opacity: .92 })), 0, h + .12 + (2 - i) * .17, 0); g.add(l); return l; });
+  const lamps = [0xff3b30, 0xffb020, 0x36d07f].map((c, i) => { const l = at(cyl(.075, .075, .15, new THREE.MeshPhysicalMaterial({ color: c, emissive: c, emissiveIntensity: i === 2 ? 1 : .08, transparent: true, opacity: .88, roughness: .15, clearcoat: 1 }), 20), 0, h + .12 + (2 - i) * .17, 0); g.add(l);
+    g.add(at(cyl(.08, .08, .018, M.lgrey(), 20), 0, h + .12 + (2 - i) * .17 - .085, 0)); return l; });
+  g.add(at(cyl(.06, .07, .08, M.charcoal(), 16), 0, h + .02, 0));
   g.add(at(cyl(.075, .075, .05, M.charcoal()), 0, h + .62, 0));
   return { g, lamps };
 }
@@ -109,6 +155,10 @@ function zenith(P, color) {
   [-1, 1].forEach(s => G.add(at(box(.04, .3, 1.0, M.black()), s * (W / 2 + .001), conv, 0)));
   const il = at(box(.1, .1, .06, mat(0xffd43b)), W / 2 - .3, H - .2, D / 2 + .03); G.add(tag(il, 'interlock')); P.interlock = il;
   G.add(inspectionInterior(P, W, D, conv, 'ky', color));
+  dressCabinet(G, W, H, D); G.add(at(windowView(W - .45, .9), .12, H - .55, D / 2 + .006));
+  { const lv = louvers(.9, .3, 6); G.add(at(lv, .12, .55, D / 2 + .035)); G.add(at(handle(.5, false), .12, 1.6, D / 2 + .05)); G.add(at(screws(W - .4, 1.45), .12, 1.0, D / 2 + .035));
+    G.add(at(nameplate('3D AOI · ZENITH', .55), .12, 1.32, D / 2 + .036)); G.add(at(warnTag('⚡'), .6, 1.32, D / 2 + .036));
+    [-1, 1].forEach(sd => G.add(at(convPort(sd, conv, D), sd * (W / 2 + .03), 0, 0))); }
   // Monitor al frente derecho
   const ws = workstation('aoi', .5); ws.position.set(.55, 2.05, D / 2 + .55); G.add(ws);
   const tl = towerLight(.9); tl.g.position.set(W / 2 - .25, H, -D / 2 + .35); G.add(tag(tl.g, 'tower_light')); P.tower_light = tl.g; P.lamps = tl.lamps;
@@ -129,7 +179,7 @@ function back(G, P, W, D, y = .9) {
 function v510(P, color) {
   const G = new THREE.Group(); const W = 2.12, D = 2.7, H = 3.1, conv = 1.8; // V510: 1060 × 1353 × 2111 mm (con torre)
   feet(G, W, D);
-  const body = at(box(W, H - .25, D, M.white()), 0, .25 + (H - .25) / 2, 0); G.add(body);
+  const body = at(rbox(W, H - .25, D, M.white(), .22), 0, .25 + (H - .25) / 2, 0); G.add(body);
   G.add(at(box(W - .02, .08, D - .02, M.offwhite()), 0, H + .0, 0)); // techo redondeado (aprox.)
   G.add(at(box(.36, H - .3, .06, M.black()), -W / 2 + .18, .25 + (H - .3) / 2, D / 2 + .01)); // franja negra vertical
   const pl = label('3D AOI', .7, .16, '#e8eef4'); pl.rotation.z = Math.PI / 2; pl.position.set(-W / 2 + .18, 1.1, D / 2 + .05); G.add(pl);
@@ -144,6 +194,9 @@ function v510(P, color) {
   [-1, 1].forEach(s => G.add(at(box(.04, .28, .9, M.black()), s * (W / 2 + .001), conv, 0)));
   const il = at(box(.1, .1, .06, mat(0xffd43b)), W / 2 - .3, 2.4, D / 2 + .03); G.add(tag(il, 'interlock')); P.interlock = il;
   G.add(inspectionInterior(P, W, D, conv, 'aoi', color));
+  dressCabinet(G, W, H, D, .25, { top: false }); G.add(at(windowView(1.28, .82), .15, 2.0, D / 2 + .012));
+  { G.add(at(louvers(1.1, .28, 6), .15, .5, D / 2 + .04)); G.add(at(handle(.6, false), .15, 1.38, D / 2 + .06)); G.add(at(screws(1.45, 1.2), .15, .85, D / 2 + .045));
+    G.add(at(nameplate('OPTIMUS 3D · V510', .6), .15, 1.2, D / 2 + .046)); [-1, 1].forEach(sd => G.add(at(convPort(sd, conv, D), sd * (W / 2 + .03), 0, 0))); }
   const ws = workstation('aoi', .9); ws.position.set(-W / 2 - .5, 1.75, D / 2 + .1); ws.rotation.y = .25; G.add(ws);
   const tl = towerLight(1.4); tl.g.position.set(-.3, H, -D / 2 + .3); G.add(tag(tl.g, 'tower_light')); P.tower_light = tl.g; P.lamps = tl.lamps;
   back(G, P, W, D);
@@ -182,6 +235,11 @@ function v810(P, color) {
   const gan = at(box(W - .6, .1, .14, M.grey()), 0, conv - .3, 0); G.add(tag(gan, 'gantry')); P.gantry = gan;
   const cal = at(box(.4, .03, .3, M.steel()), W / 2 - .7, conv - .1, -.8); G.add(tag(cal, 'calibration_target')); P.calibration_target = cal;
   const aw = at(box(.16, .2, .16, M.charcoal()), W / 2 - .3, conv - .3, .7); G.add(tag(aw, 'rail_width')); P.rail_width = aw;
+  dressCabinet(G, W, H, D, ped);
+  { [-.62, .62].forEach(x => { G.add(at(screws(1.1, 1.6), -.2 + x, ped + 1.2, D / 2 + .045)); }); G.add(at(louvers(1.4, .3, 6), -.2, ped + .2, D / 2 + .04));
+    const lcd = new THREE.Group(); lcd.add(sbox(.5, .3, .04, M.black())); const sc = new THREE.Mesh(new THREE.PlaneGeometry(.44, .24), new THREE.MeshBasicMaterial({ color: 0x0f3a5a })); sc.position.z = .022; lcd.add(sc); lcd.add(at(label('X-RAY OFF', .4, .08, '#7fe3ff'), 0, .04, .025)); lcd.add(at(label('READY', .4, .08, '#36d07f'), 0, -.05, .025)); G.add(at(lcd, W / 2 - .5, ped + 1.6, D / 2 + .05));
+    G.add(at(nameplate('3D AXI · V810 S2', .6), .55, ped + 2.05, D / 2 + .05)); G.add(at(warnTag('☢'), W / 2 - .5, ped + 1.25, D / 2 + .05)); G.add(at(warnTag('☢'), -W / 2 - .01, ped + 1.6, 0).rotateY(-Math.PI / 2)); G.add(at(warnTag('☢'), W / 2 + .01, ped + 1.6, 0).rotateY(Math.PI / 2));
+    const xl = at(cyl(.06, .06, .1, new THREE.MeshPhysicalMaterial({ color: 0xffb020, emissive: 0xffb020, emissiveIntensity: .25, transparent: true, opacity: .9 })), -.2, H + .05, D / 2 - .3); G.add(xl); P.xrayLamp = xl; }
   // Estación de trabajo a la izquierda (monitor en poste)
   const ws = workstation('axi', .2); ws.position.set(-W / 2 - .5, 1.6, D / 2 - .2); G.add(ws);
   G.add(at(cyl(.05, .05, 1.6, M.charcoal()), -W / 2 - .5, .8, D / 2 - .3));
@@ -213,6 +271,10 @@ function hp3070(P, color) {
   const lid = new THREE.Group(); lid.position.set(0, 2.15, -.6);
   const frame = at(box(1.6, .06, 1.25, M.steel()), 0, 0, .62); lid.add(frame); for (let i = 0; i < 6; i++) lid.add(at(box(.03, .05, 1.2, M.charcoal()), -.7 + i * .28, .03, .62));
   lid.rotation.x = -1.1; G.add(tag(lid, 'door')); P.door = lid;
+  { G.add(at(louvers(1.6, .5, 8, 0x16223a), 0, .95, D / 2 - .14)); [-1, 1].forEach(sd => { G.add(at(screws(.4, 1.5), sd * (W / 2 - .3), 1.08, D / 2 - .12)); const cy = new THREE.Group(); cy.add(cyl(.05, .05, .5, M.steel(), 14)); cy.add(at(cyl(.02, .02, .4, M.steel(), 8), 0, .4, 0)); cy.rotation.x = -.5; G.add(at(cy, sd * .85, 2.2, -.55)); });
+    const plate = new THREE.Mesh(new THREE.PlaneGeometry(1.42, 1.02), (() => { const c = document.createElement('canvas'); c.width = 256; c.height = 184; const x = c.getContext('2d'); x.fillStyle = '#e6dcc0'; x.fillRect(0, 0, 256, 184); x.fillStyle = '#8a7a50'; for (let i = 0; i < 260; i++) { x.beginPath(); x.arc(8 + (i * 37) % 240, 8 + (i * 53) % 168, 1.6, 0, 7); x.fill(); } x.strokeStyle = '#6b5a35'; x.lineWidth = 3; x.strokeRect(20, 16, 216, 152); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return new THREE.MeshStandardMaterial({ map: t, roughness: .7 }); })());
+    plate.rotation.x = -Math.PI / 2; plate.position.y = .102; P.fixture.add(plate);
+    G.add(at(nameplate('TESTHEAD · 3070 S3', .6), -.4, 1.72, D / 2 - .12)); G.add(at(warnTag('⚡'), .25, 1.72, D / 2 - .12)); }
   const vac = at(cyl(.15, .15, .4, M.grey()), W / 2 - .35, .5, -.6); G.add(tag(vac, 'vacuum')); P.vacuum = vac;
   const es = estop(); es.position.set(-.9, 1.7, D / 2 - .1); G.add(tag(es, 'emergency_stop')); P.emergency_stop = es; P.mush = es.userData.mush;
   const il = at(box(.1, .1, .06, mat(0xffd43b)), .9, 1.98, D / 2 - .05); G.add(tag(il, 'interlock')); P.interlock = il;
@@ -243,12 +305,15 @@ function ky8030(P, color) {
   [[2.35, 0x36d07f], [2.22, 0xd62828], [2.0, 0x777777]].forEach(([y, c]) => G.add(at(cyl(.04, .04, .04, mat(c, { emissive: c, emissiveIntensity: .4 })), -W / 2 + .15, y, D / 2 + .08).rotateX(Math.PI / 2)));
   G.add(at(box(.18, .22, .06, mat(0xd62828)), -W / 2 + .15, 1.7, D / 2 + .07)); // interruptor principal
   const door = new THREE.Group(); door.position.set(.12, 2.85, D / 2 + .03);
-  door.add(at(box(1.35, .85, .04, M.black()), 0, -.45, 0)); const sl = label('3D SPI', .45, .12, '#cfd6dd'); sl.position.set(-.35, -.18, .03); door.add(sl);
+  door.add(at(box(1.35, .85, .04, M.glass()), 0, -.45, 0)); door.add(at(sbox(1.45, .06, .06, M.black()), 0, -.03, 0)); const sl = label('3D SPI', .45, .12, '#cfd6dd'); sl.position.set(-.35, -.18, .03); door.add(sl);
   G.add(tag(door, 'door')); P.door = door;
   G.add(at(box(W - .45, .04, .06, M.steel()), .12, 1.88, D / 2 + .03));
   [-1, 1].forEach(s => G.add(at(box(.04, .28, .9, M.black()), s * (W / 2 + .001), conv, 0)));
   const il = at(box(.1, .1, .06, mat(0xffd43b)), W / 2 - .3, 2.85, D / 2 + .03); G.add(tag(il, 'interlock')); P.interlock = il;
   G.add(inspectionInterior(P, W, D, conv, 'spi', color));
+  dressCabinet(G, W, H, D); G.add(at(windowView(1.3, .8, 'spi'), .12, 2.4, D / 2 + .012));
+  { G.add(at(louvers(1.0, .3, 6), .12, .55, D / 2 + .05)); G.add(at(handle(.5, false), .12, 1.65, D / 2 + .06)); G.add(at(screws(W - .55, 1.5), .12, 1.05, D / 2 + .05));
+    G.add(at(nameplate('3D SPI · KY8030', .55), .12, 1.4, D / 2 + .052)); [-1, 1].forEach(sd => G.add(at(convPort(sd, conv, D), sd * (W / 2 + .03), 0, 0))); }
   const ws = workstation('spi', .3); ws.position.set(W / 2 + .45, 1.95, D / 2 - .1); ws.rotation.y = -.1; G.add(ws);
   const tl = towerLight(.9); tl.g.position.set(W / 2 - .3, H, -.2); G.add(tag(tl.g, 'tower_light')); P.tower_light = tl.g; P.lamps = tl.lamps;
   back(G, P, W, D);
