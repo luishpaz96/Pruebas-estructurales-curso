@@ -58,28 +58,54 @@ export function loadBoard(src) {
   return b;
 }
 
-function swShell(title, mode, tbButtons) {
-  return `<div class="sw" style="--acc:${MODES[mode].color}">
-  <div class="mb"><span>Archivo</span><span>Programa</span><span>Librería</span><span>Inspección</span><span>Herramientas</span><span>Ayuda</span><span class="sp"></span><span>${esc(title)}</span></div>
+// Apariencia de cada software real (referencia: capturas del curso). Sólo cambia el "cromo" de la ventana;
+// el flujo de trabajo (importar, alinear, librería, umbrales, inspeccionar) es el mismo para todas.
+export const SKINS = {
+  aoigui: { title: 'AOIGUI · Koh Young Zenith', menu: ['File', 'View', 'Job', 'Tools', 'Option', 'Help'], tabs: ['Production', 'Programming', 'Teaching'], on: 1,
+    info: () => `<table class="skstat"><tr><th>Pass Rate</th><th>Produced Qty</th><th>Good</th><th>False Call</th><th>NG</th></tr><tr><td id="skPR">—</td><td id="skQ">0</td><td id="skG">0</td><td id="skF">0</td><td id="skN">0</td></tr></table><div class="sklot"><span>Lot: <b>LOT-0001</b></span><span>Operator: <b>TEC</b></span><span>Lane 1 ● Lane 2 ○</span></div>`,
+    foot: j => `<span>Job: ${esc(j)}</span><span>Lane1: Ready</span><span>Lane2: —</span><span class="sp"></span><span class="skidle">Idle</span>` },
+  smartgui: { title: 'Smart GUI · ViTrox V510', menu: ['Program', 'Edit', 'View', 'Library', 'System', 'Help'], tabs: ['TRAINER', 'EDITOR'], on: 1,
+    info: () => `<div class="skready">READY</div><div class="sktools">${['INSPECT', 'VISIT ALL', 'NEXT', 'PLANE', 'MASK', 'SKIP', 'MODIFY', 'SAVE'].map(t => `<button data-skt="${t}">${t}</button>`).join('')}</div><div class="sklist">${['Locator', 'Body', 'Warpage', 'Joint', 'Polarity', 'OCV'].map(t => `<span>${t}</span>`).join('')}</div>`,
+    foot: j => `<span>${esc(j)}</span><span>Geometry · Location</span><span class="sp"></span><span>Online</span>` },
+  v810: { title: 'AXI System v810', menu: ['File', 'Edit', 'View', 'Tools', 'Window', 'Help'], side: ['Main', 'Recipes', 'Production', 'Options', 'Services', 'Virtual Live'], sideOn: 1,
+    info: () => `<div class="sklot"><span>System: <b>v810 S2</b></span><span>X-ray: <b>OFF</b></span><span>Interlocks: <b>OK</b></span><span>Panel: <b>—</b></span></div>`,
+    foot: j => `<span>Recipe: ${esc(j)}</span><span>Mode: Development</span><span class="sp"></span><span>Status: Ready</span>` },
+  btbasic: { title: 'BT-BASIC · /var/hp3070/boards/practica01', menu: ['File', 'Edit', 'Run', 'Debug', 'Board', 'Window', 'Help'], term: true,
+    info: () => `<div class="sklot"><span>Board: <b>practica01</b></span><span>Fixture: <b>FX-PR01</b></span><span>Vacuum: <b>off</b></span><span>Testhead: <b>1</b></span></div>`,
+    foot: j => `<span>testplan: ${esc(j)}</span><span>Module 0-3</span><span class="sp"></span><span>BT-BASIC ready</span>` },
+  kyspi: { title: 'Koh Young SPI · CEditor', menu: ['File', 'Edit', 'View', 'Pad', 'Tools', 'Help'], tabs: ['CEditor', 'ePM-SPI', '3D Inspector'], on: 0,
+    info: () => `<table class="skstat"><tr><th>Volume</th><th>Area</th><th>Height</th><th>Offset</th><th>Bridge</th></tr><tr><td>70–150 %</td><td>70–150 %</td><td>60–150 µm</td><td>±50 µm</td><td>On</td></tr></table>`,
+    foot: j => `<span>Job: ${esc(j)}</span><span>Lane 1</span><span class="sp"></span><span class="skidle">Idle</span>` }
+};
+export const skinFor = (mode, machine) => machine === 'aoi_v510' ? 'smartgui' : ({ aoi: 'aoigui', axi: 'v810', ict: 'btbasic', spi: 'kyspi' })[mode] || 'aoigui';
+function swShell(title, mode, tbButtons, skin = skinFor(mode)) {
+  const K = SKINS[skin];
+  return `<div class="sw sk-${skin}" style="--acc:${MODES[mode].color}">
+  <div class="sktitle"><span class="skico"></span><span>${esc(K.title)} — ${esc(title)}</span><span class="sp"></span><span class="skwin">▁ ▢ ✕</span></div>
+  <div class="mb">${K.menu.map(m => `<span>${m}</span>`).join('')}</div>
+  ${K.tabs ? `<div class="sktabs">${K.tabs.map((t, i) => `<span class="${i === K.on ? 'on' : ''}">${t}</span>`).join('')}</div>` : ''}
+  <div class="skinfo">${K.info()}</div>
   <div class="tb">${tbButtons}</div>
-  <div class="body"><div class="tree" id="swTree"></div><div class="view" id="swView"></div><div class="props" id="swProps"></div></div>
-  <div class="log" id="swLog" aria-live="polite"></div>
-  <div class="status" id="swStatus"><span>Listo</span></div></div>`;
+  <div class="body${K.side ? ' hasside' : ''}">${K.side ? `<div class="skside">${K.side.map((t, i) => `<span class="${i === K.sideOn ? 'on' : ''}">${t}</span>`).join('')}</div>` : ''}<div class="tree" id="swTree"></div><div class="view" id="swView"></div><div class="props" id="swProps"></div></div>
+  <div class="log${K.term ? ' term' : ''}" id="swLog" aria-live="polite">${K.term ? '<div>BT-BASIC Rev 09.xx  (c) — simulador del curso</div>' : ''}</div>
+  <div class="status" id="swStatus"><span>Listo</span></div><div class="skfoot">${K.foot(title)}</div></div>`;
 }
 function logger(el) { return (msg, cls = '') => { const d = document.createElement('div'); if (cls) d.className = cls; d.textContent = `[${new Date().toLocaleTimeString()}] ${msg}`; el.appendChild(d); el.scrollTop = el.scrollHeight; }; }
 
 // ---------------------- Práctica guiada: Crea tu programa ----------------------
-export function createProgram(root, mode = 'aoi') {
+export function createProgram(root, mode = 'aoi', opts = {}) {
   const M = MODES[mode];
   const src = course.boards[0];
   const tabs = ['Importar', 'Alinear', 'Librería', 'Umbrales', 'Inspeccionar'];
   root.innerHTML = `<div class="row" style="margin-bottom:10px"><h2 style="margin:0">Crea tu programa · ${esc(M.name)}</h2><span class="sp"></span>
     <label class="mut">Máquina <select id="cpMode" class="btn">${Object.entries(MODES).map(([k, v]) => `<option value="${k}" ${k === mode ? 'selected' : ''}>${esc(v.name)}</option>`).join('')}</select></label></div>
     <p class="mut">Tarjeta ${esc(src?.name || '')}. Usa los archivos Gerber, Excellon, centroides e IPC-D-356 incluidos o carga los tuyos en Importar.</p>
-    ${swShell('Nuevo programa: PRACTICA01_' + mode.toUpperCase(), mode, tabs.map((t, i) => `<button data-tab="${i}">${i + 1}. ${t}</button>`).join(''))}`;
-  root.querySelector('#cpMode').onchange = e => createProgram(root, e.target.value);
+    ${swShell('PRACTICA01_' + mode.toUpperCase(), mode, tabs.map((t, i) => `<button data-tab="${i}">${i + 1}. ${t}</button>`).join(''))}`;
+  root.querySelector('#cpMode').onchange = e => createProgram(root, e.target.value, opts);
+  if (opts.lockMode) root.querySelector('#cpMode').disabled = true;
   const tree = root.querySelector('#swTree'), view = root.querySelector('#swView'), props = root.querySelector('#swProps'), status = root.querySelector('#swStatus');
   const log = logger(root.querySelector('#swLog'));
+  root.querySelectorAll('[data-skt]').forEach(b => b.onclick = () => log(`${b.dataset.skt}: usa los pasos numerados de abajo para esta práctica.`, 'w'));
   const P = { b: null, fids: [], lib: {}, params: Object.fromEntries(M.params.map(p => [p.k, p.v])), tab: 0, done: new Set(), layers: Object.fromEntries(M.layers.map(l => [l, true])) };
   P.layers.ref = false;
 
@@ -219,15 +245,17 @@ export function createProgram(root, mode = 'aoi') {
       draw(Object.keys(r.ng).map(ref => { const c = P.b.comps.find(x => x.ref === ref); return c ? `<circle cx="${c.x}" cy="${c.y}" r="2.8" fill="none" stroke="${r.ng[ref] === 'falso' ? '#ffb020' : '#ff5a5f'}" stroke-width=".45"/>` : ''; }).join(''));
       const good = r.escapes === 0 && r.falses <= 3;
       log(`Resultado: ${r.caught} defectos detectados, ${r.falses} falsos llamados, ${r.escapes} escapes.`, good ? 'o' : 'w');
+      const sk = id => root.querySelector(id); if (sk('#skQ')) { const ng = r.caught + r.falses; sk('#skQ').textContent = 50; sk('#skG').textContent = 50 - ng; sk('#skF').textContent = r.falses; sk('#skN').textContent = r.caught; sk('#skPR').textContent = Math.round((50 - ng) / 50 * 1000) / 10 + ' %'; }
       const S = state(); const id = 'crea-tu-programa' + (mode === 'aoi' ? '' : '-' + mode);
       if (good) {
         sfx('badge'); confetti();
         if (!S.prac[id]) { S.prac[id] = { best: 100, at: Date.now() }; if (mode !== 'aoi') S.prac['crea-tu-programa'] = S.prac['crea-tu-programa'] || { best: 100 }; addXP(250, 'por un programa sin escapes'); }
-        dialog('Programa liberado a producción', `<p>Cero escapes y ${r.falses} falsos llamados. Tu programa ${esc(M.name)} está listo.</p>`);
+        dialog('Programa liberado a producción', `<p>Cero escapes y ${r.falses} falsos llamados. Tu programa ${esc(M.name)} está listo.</p>`).then(() => opts.onResult && opts.onResult({ good: true, falses: r.falses, escapes: r.escapes }));
       } else {
         sfx('bad');
         const tips = []; if (r.escapes) tips.push('Hay escapes: revisa que cada encapsulado tenga el algoritmo correcto y afloja menos los umbrales.'); if (r.falses > 3) tips.push('Demasiados falsos llamados: el umbral está muy estricto o el algoritmo no corresponde.');
         dialog('Todavía no', `<p>${tips.map(esc).join('<br>')}</p>`);
+        opts.onAttempt && opts.onAttempt({ good: false, falses: r.falses, escapes: r.escapes });
       }
     };
     step();
@@ -241,12 +269,12 @@ function svgPoint(svg, ev, H) {
 }
 
 // ---------------------- Reproductor de prácticas definidas en content/practices ----------------------
-export function playPractice(root, pr, onDone) {
+export function playPractice(root, pr, onDone, backLabel = 'Volver al simulador') {
   const machine = course.machines.find(m => m.id === pr.machine) || { color: '#3d8bff', name: '' };
   const mode = { aoi_ky: 'aoi', aoi_v510: 'aoi', spi: 'spi', axi_v810: 'axi', ict: 'ict' }[pr.machine] || 'aoi';
   root.innerHTML = `<div class="row"><span class="tag" style="color:${machine.color}">${esc(machine.name)}</span><span class="tag">${pr.kind === 'debug' ? 'Debug' : 'Creación'}</span></div>
     <h2 style="margin:8px 0">${esc(pr.title)}</h2><p>${esc(pr.scenario)}</p>
-    ${swShell(pr.title, mode, '<button class="on">Programa</button><button>Resultados</button><button>Historial</button>')}`;
+    ${swShell(pr.title, mode, '<button class="on">Programa</button><button>Resultados</button><button>Historial</button>', skinFor(mode, pr.machine))}`;
   root.querySelector('.sw').style.setProperty('--acc', machine.color);
   const tree = root.querySelector('#swTree'), view = root.querySelector('#swView'), props = root.querySelector('#swProps'), log = logger(root.querySelector('#swLog'));
   const b = course.boards[0] ? loadBoard(course.boards[0]) : null;
@@ -298,8 +326,8 @@ export function playPractice(root, pr, onDone) {
     S.prac[pr.id] = { best: Math.max(prev, pct), at: Date.now() }; save();
     if (!prev) addXP(80 + Math.round(pct), 'por completar la práctica'); else if (pct > prev) addXP(20, 'por mejorar tu marca');
     if (pct === 100) confetti();
-    props.innerHTML = `<b>Práctica terminada</b><div class="score ${pct >= 70 ? 'pass' : 'fail'}">${pct}%</div><p>${mistakes} errores.</p><button class="btn pri" id="back">Volver al simulador</button>`;
-    props.querySelector('#back').onclick = () => onDone && onDone();
+    props.innerHTML = `<b>Práctica terminada</b><div class="score ${pct >= 70 ? 'pass' : 'fail'}">${pct}%</div><p>${mistakes} errores.</p><button class="btn pri" id="back">${esc(backLabel)}</button>`;
+    props.querySelector('#back').onclick = () => onDone && onDone(pct);
     log('Programa validado y guardado.', 'o');
   }
   renderStep();

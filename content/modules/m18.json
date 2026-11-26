@@ -5,7 +5,113 @@
  "machine": null,
  "title": "Módulo 18. Afinar, analizar y mantener el SPI (Koh Young)",
  "summary": "",
- "lessons": [],
+ "lessons": [
+  {
+   "id": "m18-l1",
+   "title": "Compensar pandeo, color y material extraño",
+   "animation": "spi_paste_volume",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "Pandeo: si la tarjeta está más arriba o más abajo de su plano ideal, la cámara ve los depósitos más grandes o más chicos. Según el manual Nivel 1, con 1 mm hacia abajo el volumen sale en 95 %; con 1 mm hacia arriba, en 105 %; con 2 mm, en 110 %."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Z-tracking: calcula el pandeo del siguiente FOV y mueve el eje Z. No requiere hardware extra; revisa el resultado con Warpage Viewer.",
+      "Pad Referencing: corrige encogimientos o estiramientos locales con círculos y esquinas del cobre. Necesita luz IR RGB y el KSMART Warp Kit, que se compra aparte.",
+      "PMCW: busca el mejor brillo 3D para el color de cada tarjeta y lo guarda en el job. Se ejecuta con la primera tarjeta.",
+      "Material extraño (FMI): busca basura con la imagen a color. Se enseña con una tarjeta limpia. Error 3242: falta la enseñanza o no coincide. Error 3243: tarjeta de video o driver."
+     ]
+    },
+    {
+     "kind": "tip",
+     "text": "Si la tarjeta se encoge o estira y además tiene relieve, el manual recomienda usar juntos Pad Referencing, Z-tracking y GBBT."
+    }
+   ],
+   "keyPoints": [
+    "1 mm de pandeo puede cambiar el volumen en cerca de 5 %.",
+    "Z-tracking compensa el pandeo moviendo el eje Z.",
+    "PMCW ajusta el brillo al color de cada tarjeta.",
+    "Error 3242 se corrige enseñando de nuevo el material extraño."
+   ]
+  },
+  {
+   "id": "m18-l2",
+   "title": "Analizar con SPC Plus y corregir la impresora",
+   "animation": "process_flow",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "El SPI no arregla nada: te dice qué está pasando y dónde. El patrón te dice la causa probable en la impresora."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Volumen bajo en pads chicos que empeora con cada impresión: aberturas tapadas o pasta seca. Revisa la limpieza del stencil y la vida de la pasta.",
+      "Toda la tarjeta movida al mismo lado: alineación de la impresora, fiduciales y offset de impresión.",
+      "El offset crece hacia un extremo: escala. Revisa el stencil, la temperatura de la tarjeta y la corrección de escala.",
+      "Puentes o manchas: pasta debajo del stencil, mal sellado o separación incorrecta.",
+      "Picos (oreja de perro): la pasta se jala al separar. Revisa velocidad y distancia de separación.",
+      "Ida y vuelta distintas: presión, velocidad y desgaste de cada squeegee."
+     ]
+    },
+    {
+     "kind": "text",
+     "text": "En SPC Plus, el rango móvil (MR) de MRT necesita al menos 2 tarjetas por muestra; con muestra de 1, MR sale siempre en cero. En el primer uso de Cp y Cpk, el coeficiente de sigma viene en 1; lo normal es cambiarlo a 3."
+    },
+    {
+     "kind": "warning",
+     "text": "Si la primera tarjeta de un paro sale mal, la pasta se secó en el stencil: haz el amasado (knead) y la limpieza después del tiempo muerto."
+    }
+   ],
+   "keyPoints": [
+    "El patrón del defecto indica la causa probable en la impresora.",
+    "Separa los datos por dirección de impresión.",
+    "MRT necesita al menos 2 tarjetas por muestra.",
+    "En Cp y Cpk cambia el sigma de 1 a 3 antes de usarlos."
+   ]
+  },
+  {
+   "id": "m18-l3",
+   "title": "Calibrar, respaldar y diagnosticar el SPI",
+   "animation": "machine_tour",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "El SPI se calibra con KYCal, igual que el AOI Koh Young, pero con valores propios del SPI. La calibración la hace personal capacitado y siempre con respaldo previo de KYConfig."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Cámara: distorsión radial menor a 0.05 % y ángulo menor a 0.02°. Después de mover o cambiar la cámara o la lente.",
+      "Iluminación: visibilidad promedio de 0.7 o más; prueba del PZT entre 98 y 102.",
+      "Altura: pilar de 120 µm (el AOI usa el de 500 µm). Si la altura mide raro, y cada 6 meses.",
+      "Respaldo automático: KYConfig > Auto Result BackUp. Respalda KYConfig y la carpeta de jobs antes de calibrar, actualizar o cambiar la PC."
+     ]
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Pestaña Diagnosis: I/O, Conveyor/SMEMA y Comm. History.",
+      "Volúmenes altos o bajos en todas las tarjetas: revisa Mask Thickness, el proveedor de BBT y la calibración de altura.",
+      "Falsos en una sola zona: pandeo o soporte; usa Warpage Viewer y Z-tracking.",
+      "Máquina en emergencia (las tres luces): revisa la causa, libera el paro, haz reset del interlock y homing."
+     ]
+    },
+    {
+     "kind": "warning",
+     "text": "Los valores de Configuration > Vision Parameter cambian cómo mide la máquina para todos los programas. Consulta a ingeniería antes de tocarlos. Si un solo programa falla, corrige el programa, no la máquina."
+    }
+   ],
+   "keyPoints": [
+    "Calibra la altura con el pilar de 120 µm, no con el de 500 µm.",
+    "Respalda KYConfig antes de calibrar o actualizar.",
+    "Diagnostica por la pestaña Diagnosis (I/O, SMEMA, historial).",
+    "Vision Parameter afecta a todos los programas."
+   ]
+  }
+ ],
  "exam": [
   {
    "type": "mc",

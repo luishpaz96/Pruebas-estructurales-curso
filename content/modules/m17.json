@@ -5,7 +5,121 @@
  "machine": null,
  "title": "Módulo 17. Creación de programas en el SPI (Koh Young)",
  "summary": "",
- "lessons": [],
+ "lessons": [
+  {
+   "id": "m17-l1",
+   "title": "Del Gerber al job: los cuatro programas",
+   "animation": "process_flow",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "Un programa de SPI es un mapa de la tarjeta con todos los pads que llevan pasta, y para cada pad dice cuánta pasta debe tener y cuánto se le permite variar. El SPI usa cuatro programas en secuencia."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "ePM-SPI: convierte el Gerber del stencil (y el CAD) en pads y exporta el archivo .pad.",
+      "CEditor: convierte los pads en un job (.mdb) con fiduciales, condiciones y tolerancias.",
+      "SPI GUI (KY-3030, 3D Inspector): carga el job, hace las enseñanzas e inspecciona.",
+      "SPC Plus: estadística, revisión de defectos y gráficas de control."
+     ]
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Gerber del stencil (capa de pasta). No uses la capa de cobre: esa es para el AOI (ePM-AOI).",
+      "CAD de colocación: referencia (CRD), X, Y, rotación y número de parte. Sin CAD el programa funciona, pero los defectos no dicen qué componente es.",
+      "Espesor real del stencil en µm: es la referencia del 100 % de altura y volumen.",
+      "Fiduciales: dos corrigen X, Y y giro; tres en L también corrigen escala, estiramiento y torcedura."
+     ]
+    },
+    {
+     "kind": "warning",
+     "text": "ePM-SPI y ePM-AOI son programas distintos y sus archivos no se mezclan. Ojo con los nombres parecidos."
+    }
+   ],
+   "keyPoints": [
+    "Para el SPI usa el Gerber de pasta, no el de cobre.",
+    "ePM-SPI genera el .pad; CEditor genera el job .mdb.",
+    "El espesor del stencil en CEditor es la referencia de altura y volumen.",
+    "Dos fiduciales corrigen X, Y y giro; tres en L agregan escala y torcedura."
+   ]
+  },
+  {
+   "id": "m17-l2",
+   "title": "Tolerancias: Error, Warning y tipos de defecto",
+   "animation": "spi_paste_volume",
+   "blocks": [
+    {
+     "kind": "bullets",
+     "items": [
+      "Bien: volumen cerca del 100 %.",
+      "Insuficiente: volumen o área bajo el mínimo.",
+      "Excesivo: volumen o altura sobre el máximo.",
+      "Desplazado: offset en X o Y contra el pad.",
+      "Puente: pasta entre pads por encima del límite de altura.",
+      "Pico (oreja de perro): altura máxima menos altura promedio.",
+      "Mancha (smear), bolitas (requieren luz RGB) y coplanaridad de BGA o CSP."
+     ]
+    },
+    {
+     "kind": "text",
+     "text": "Cada tolerancia tiene dos niveles. Un Error marca la tarjeta como mala y detiene la máquina al terminar esa tarjeta. Un Warning solo avisa: es la alerta temprana de que el proceso se está moviendo. Los valores de fábrica son un punto de partida; ingeniería de procesos los define y los valida con datos."
+    },
+    {
+     "kind": "tip",
+     "text": "Ejemplo de forma: altura máxima 300 µm y promedio 120 µm dan un balance de 300 − 120 = 180 µm, que ya es defecto de forma con la tolerancia de fábrica de 180 µm."
+    },
+    {
+     "kind": "warning",
+     "text": "Si un pad da falsos llamados, revisa primero el plano base, el ROI extendido y el BBT. Aflojar la tolerancia es lo último."
+    }
+   ],
+   "keyPoints": [
+    "Error detiene la máquina; Warning solo avisa.",
+    "Los valores de fábrica no son una recomendación: los define ingeniería.",
+    "Corre al menos 20 o 30 tarjetas buenas antes de apretar o aflojar.",
+    "Pads pequeños: agrúpalos con la Size Library y dales su propia tolerancia."
+   ]
+  },
+  {
+   "id": "m17-l3",
+   "title": "Enseñanzas, primera tarjeta y liberación",
+   "animation": "defect_gallery",
+   "blocks": [
+    {
+     "kind": "bullets",
+     "items": [
+      "Fiduciales: si la máquina no reconoce uno, enséñalo en Fiducial Tool. La puntuación mínima recomendada es 80.",
+      "BBT (tarjeta virgen): mide una tarjeta sin pasta y resta su altura, para que el volumen sea solo pasta.",
+      "GBBT: BBT geométrico, más preciso con mucho relieve. Nunca con acabado HASL; con HASL solo BBT.",
+      "Multi-vendor: un BBT por cada fabricante de PCB.",
+      "Bad Mark: los arreglos marcados como malos no se inspeccionan."
+     ]
+    },
+    {
+     "kind": "text",
+     "text": "Primera tarjeta y liberación: entra como Supervisor, carga el job e inspecciona una tarjeta buena. Los fiduciales deben pasar y los volúmenes salir cerca de 100 %. Revisa cada llamado en el Defect Viewer: ¿defecto real o problema del programa? Corrige en CEditor y vuelve a inspeccionar."
+    },
+    {
+     "kind": "tip",
+     "text": "Prueba con defectos conocidos: una tarjeta con un depósito limpiado con un hisopo, o con pasta de más, debe salir NG."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Guarda el job, deja registro del cambio y cambia el usuario a Operator antes de producir."
+     ]
+    }
+   ],
+   "keyPoints": [
+    "Enseña el fiducial con puntuación de 80 o más.",
+    "BBT resta la altura de la tarjeta virgen; GBBT no se usa con HASL.",
+    "Cada llamado se revisa: defecto real o problema del programa.",
+    "Libera solo después de probar con defectos conocidos."
+   ]
+  }
+ ],
  "exam": [
   {
    "type": "mc",

@@ -1,0 +1,12 @@
+{
+  "name": "academia-inspeccion",
+  "productName": "Academia de Inspeccion",
+  "version": "1.0.0",
+  "description": "Juego de capacitacion AOI, AXI, ICT y SPI",
+  "main": "main.js",
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "@electron/packager": "^20.3.0",
+    "electron": "^38.8.6"
+  }
+}

@@ -5,7 +5,129 @@
  "machine": null,
  "title": "Módulo 0. Fundamentos desde cero",
  "summary": "",
- "lessons": [],
+ "lessons": [
+  {
+   "id": "m0-l1",
+   "title": "Qué es una tarjeta y qué revisa cada máquina",
+   "animation": "intro_line",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "Una tarjeta electrónica (PCB) es una placa, normalmente verde, con pistas de cobre. Cada componente se suelda a un pad: una zona de cobre expuesto donde se suelda una terminal. La unión ya solidificada entre terminal y pad se llama unión o junta, y el borde inclinado que se ve es el filete."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Pasta de soldadura: mezcla gris de bolitas de metal y flux. Se imprime sobre los pads y se derrite en el horno.",
+      "Flux (fundente): química que limpia el óxido del metal para que la soldadura se pegue.",
+      "Chip y gullwing (QFP, SOIC): la unión se ve desde arriba; la revisa el AOI.",
+      "QFN, LGA y BGA: la unión queda debajo del componente; la revisa el AXI.",
+      "THT (pin pasante): la soldadura queda dentro del barril; se revisa en parte con AOI y AXI."
+     ]
+    },
+    {
+     "kind": "tip",
+     "text": "Antes de revisar una unión, pregúntate si se ve desde arriba. Esa respuesta decide qué máquina la puede revisar."
+    }
+   ],
+   "keyPoints": [
+    "Pad, terminal, pasta, filete y unión son las palabras base del curso.",
+    "Unión visible (chip, gullwing): AOI.",
+    "Unión oculta (BGA, QFN, LGA): AXI.",
+    "El AOI y el AXI miran la forma; el ICT mide valores eléctricos."
+   ]
+  },
+  {
+   "id": "m0-l2",
+   "title": "La línea SMT en orden y los defectos que vas a buscar",
+   "animation": "process_flow",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "SMT significa tecnología de montaje superficial. Una línea típica tiene estas estaciones, en este orden: impresora de pasta, SPI, colocadora (pick & place), AOI antes del horno (opcional), horno de reflujo, AOI después del horno, AXI y al final ICT o prueba funcional."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Impresora: deposita pasta sobre los pads con un stencil (lámina con aberturas).",
+      "SPI: mide en 3D cuánta pasta quedó en cada pad.",
+      "Colocadora: pone cada componente sobre la pasta.",
+      "Horno: derrite la pasta y forma las uniones.",
+      "AOI, AXI, ICT y prueba funcional: revisan la tarjeta ya soldada."
+     ]
+    },
+    {
+     "kind": "text",
+     "text": "Defectos que vas a reconocer de inmediato:"
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Componente faltante o equivocado, desplazamiento y rotación, polaridad invertida (AOI).",
+      "Tombstone (lápida) y pin levantado (AOI 3D).",
+      "Puente: AOI si es visible; AXI si está bajo BGA o QFN.",
+      "Open en BGA y head-in-pillow (AXI 3D).",
+      "Vacíos y llenado de barril en THT (AXI)."
+     ]
+    },
+    {
+     "kind": "tip",
+     "text": "Los defectos de altura (tombstone, pin levantado) se detectan mejor con medición 3D. El AXI es más lento que el AOI, por eso se usa sobre todo en productos de alta confiabilidad o solo en componentes con uniones ocultas."
+    }
+   ],
+   "keyPoints": [
+    "Orden de la línea: impresión, SPI, colocación, horno, inspección y prueba.",
+    "Reconocer un faltante, un desplazado o un tombstone es la base del trabajo.",
+    "Open en BGA y head-in-pillow se ven mejor con AXI 3D.",
+    "El tamaño que cuenta como defecto lo define IPC-A-610 (módulo 21)."
+   ]
+  },
+  {
+   "id": "m0-l3",
+   "title": "Falso llamado, escape y seguridad básica",
+   "animation": "safety_radiation",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "Piensa en una alarma de humo. Si suena cuando solo tostaste pan, es un falso llamado: molesta y quita tiempo. Si no suena cuando hay fuego, es un escape: el error más grave, porque el defecto llega al cliente."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Llamado verdadero: la máquina marcó un defecto y sí era defecto.",
+      "Falso llamado: la máquina marcó un defecto y la tarjeta estaba bien.",
+      "Escape: la máquina dejó pasar un defecto real.",
+      "Tiempo de ciclo: segundos por tarjeta; debe ser menor que el takt de la línea.",
+      "Los falsos llamados se miden en PPM (partes por millón)."
+     ]
+    },
+    {
+     "kind": "text",
+     "text": "Unidades que vas a leer: 1 mm = 1000 µm. Las alturas de los AOI se dan en µm. 10 kΩ = 10 000 Ω. 1 µF = 1000 nF = 1 000 000 pF."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "ESD: usa pulsera antiestática conectada y toma las tarjetas por las orillas.",
+      "LOTO: antes de meter las manos, apaga, quita la llave y pon tu candado y tu etiqueta en el interruptor principal.",
+      "Partes en movimiento: no metas las manos con la máquina en automático ni puentees puertas.",
+      "Rayos X: solo el AXI ViTrox V810 los usa. Los AOI Koh Young y V510 usan luz."
+     ]
+    },
+    {
+     "kind": "warning",
+     "text": "Con LOTO, nadie puede encender la máquina mientras trabajas. Oprimir el paro de emergencia no lo sustituye."
+    }
+   ],
+   "keyPoints": [
+    "Falso llamado molesta; escape es el error más grave.",
+    "Un milímetro son 1000 µm; un µF son 1000 nF.",
+    "LOTO antes de meter las manos a una máquina.",
+    "ESD: pulsera conectada y tarjetas por las orillas.",
+    "Solo el AXI usa rayos X."
+   ]
+  }
+ ],
  "exam": [
   {
    "type": "mc",

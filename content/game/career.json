@@ -1,0 +1,692 @@
+{
+ "_info": "Modo historia. 'chapters' agrupa los días. Cada día tiene misiones en una estación (aoi, aoi2, axi, ict, spi, prod, quality, mentor). Tipos: talk, lesson, notify, tour, review, alarm, npi, maint, practice, quiz, sequence. En 'intro' y 'debrief' cada línea puede ser texto (habla el mentor) o {\"who\": \"prod|quality|mentor\", \"text\": \"...\"}.",
+ "mentor": {
+  "name": "Ing. Marco Salinas",
+  "role": "Ingeniero de pruebas · tu mentor",
+  "greeting": "Bienvenido al área de pruebas. Aquí nada sale de la línea sin pasar por nuestros ojos: AOI, AXI e ICT. Yo te voy a enseñar, pero el que va a resolver eres tú."
+ },
+ "days": [
+  {
+   "id": "t1",
+   "chapter": "c1",
+   "title": "Día 1 · Bienvenida al área de pruebas",
+   "shift": 300,
+   "ngRate": 0.03,
+   "incidents": 0,
+   "intro": [
+    "Bienvenido. Soy Marco, el ingeniero de pruebas. Las próximas semanas te voy a capacitar.",
+    "Primero lo básico: qué hace un técnico de pruebas, qué es un falso llamado, qué es un escape y por qué nos importa.",
+    {
+     "who": "prod",
+     "text": "Hola, soy Laura, supervisora de manufactura. Cuando necesites parar una máquina, me avisas a mí primero. ¡Bienvenido!"
+    }
+   ],
+   "missions": [
+    {
+     "id": "t1-l0",
+     "type": "lesson",
+     "station": "mentor",
+     "title": "Clase: fundamentos de inspección",
+     "lesson": "m0-l1",
+     "xp": 60
+    },
+    {
+     "id": "t1-tour",
+     "type": "tour",
+     "station": "mentor",
+     "title": "Recorre las estaciones de prueba",
+     "stations": [
+      "spi",
+      "aoi",
+      "axi",
+      "ict"
+     ],
+     "notes": {
+      "spi": "SPI: mide volumen, área y altura de la pasta antes de colocar componentes. El 60 a 70% de los defectos SMT nacen en la impresión.",
+      "aoi": "AOI 3D: presencia, polaridad, desplazamiento y soldadura visible. Mide altura con franjas proyectadas.",
+      "axi": "AXI: rayos X 3D por laminografía. Ve lo que el AOI no puede: bolas de BGA, QFN, voids. Ojo con la seguridad radiológica.",
+      "ict": "ICT: cama de agujas. Prueba eléctricamente cortos, abiertos y valores de componentes."
+     },
+     "xp": 60,
+     "debrief": [
+      "Ya conoces el terreno. Cada máquina ve cosas distintas; juntas cubren casi todo."
+     ]
+    },
+    {
+     "id": "t1-quiz",
+     "type": "quiz",
+     "station": "mentor",
+     "title": "Evaluación: fundamentos",
+     "machines": [
+      "general"
+     ],
+     "count": 5,
+     "xp": 80
+    }
+   ]
+  },
+  {
+   "id": "t2",
+   "chapter": "c1",
+   "title": "Día 2 · Capacitación: SPI y proceso SMT",
+   "shift": 300,
+   "ngRate": 0.03,
+   "incidents": 0,
+   "intro": [
+    "Hoy empezamos por el principio de la línea. La mayoría de los defectos nacen en la impresión de pasta.",
+    "Vamos al SPI. Pon atención a cómo mide volumen, área y altura."
+   ],
+   "missions": [
+    {
+     "id": "t2-l1",
+     "type": "lesson",
+     "station": "spi",
+     "title": "Clase en el SPI: cómo mide la pasta",
+     "lesson": "m16-l1",
+     "xp": 60
+    },
+    {
+     "id": "t2-l2",
+     "type": "lesson",
+     "station": "spi",
+     "title": "Clase: de dónde vienen los defectos",
+     "lesson": "m20-l1",
+     "xp": 60
+    },
+    {
+     "id": "t2-quiz",
+     "type": "quiz",
+     "station": "spi",
+     "title": "Evaluación: SPI",
+     "machines": [
+      "spi"
+     ],
+     "count": 4,
+     "xp": 80
+    }
+   ]
+  },
+  {
+   "id": "t3",
+   "chapter": "c1",
+   "title": "Día 3 · Capacitación: AOI 3D",
+   "shift": 330,
+   "ngRate": 0.04,
+   "incidents": 0,
+   "intro": [
+    "Hoy toca AOI. Vas a conocer la máquina por dentro, cómo mide en 3D y, lo más importante, cómo revisar un NG."
+   ],
+   "missions": [
+    {
+     "id": "t3-l1",
+     "type": "lesson",
+     "station": "aoi",
+     "title": "Clase: el AOI por fuera y por dentro",
+     "lesson": "m1-l1",
+     "xp": 60
+    },
+    {
+     "id": "t3-l2",
+     "type": "lesson",
+     "station": "aoi",
+     "title": "Clase: medición 3D con franjas",
+     "lesson": "m1-l2",
+     "xp": 60
+    },
+    {
+     "id": "t3-l3",
+     "type": "lesson",
+     "station": "aoi",
+     "title": "Clase: falsos llamados y su causa",
+     "lesson": "m4-l4",
+     "xp": 60
+    },
+    {
+     "id": "t3-rev",
+     "type": "review",
+     "station": "aoi",
+     "title": "Práctica guiada: revisa 4 NG",
+     "machine": "aoi",
+     "count": 4,
+     "xp": 80,
+     "briefing": [
+      "Yo estoy a tu lado. Decide: defecto real o falso llamado. Si dudas, compara contra el pad y la serigrafía."
+     ]
+    }
+   ]
+  },
+  {
+   "id": "t4",
+   "chapter": "c1",
+   "title": "Día 4 · Capacitación: AXI y seguridad radiológica",
+   "shift": 330,
+   "ngRate": 0.04,
+   "incidents": 0,
+   "intro": [
+    "El AXI ve lo que el AOI no puede, pero trabaja con rayos X. Primero seguridad, luego imagen."
+   ],
+   "missions": [
+    {
+     "id": "t4-l1",
+     "type": "lesson",
+     "station": "axi",
+     "title": "Clase: seguridad radiológica",
+     "lesson": "m10-l1",
+     "xp": 60
+    },
+    {
+     "id": "t4-l2",
+     "type": "lesson",
+     "station": "axi",
+     "title": "Clase: cómo se forma la imagen",
+     "lesson": "m8-l1",
+     "xp": 60
+    },
+    {
+     "id": "t4-l3",
+     "type": "lesson",
+     "station": "axi",
+     "title": "Clase: rebanadas de un BGA",
+     "lesson": "m8-l2",
+     "xp": 60
+    },
+    {
+     "id": "t4-quiz",
+     "type": "quiz",
+     "station": "axi",
+     "title": "Evaluación: seguridad en el AXI",
+     "machines": [
+      "axi_v810"
+     ],
+     "count": 4,
+     "focus": "seguridad|radiación|interlock|fuga|dosímetro|ALARA",
+     "xp": 80
+    },
+    {
+     "id": "t4-rev",
+     "type": "review",
+     "station": "axi",
+     "title": "Práctica guiada: revisa 4 NG en el AXI",
+     "machine": "axi",
+     "count": 4,
+     "xp": 80
+    }
+   ]
+  },
+  {
+   "id": "t5",
+   "chapter": "c1",
+   "title": "Día 5 · Capacitación: ICT y certificación de nuevo ingreso",
+   "shift": 330,
+   "ngRate": 0.04,
+   "incidents": 0,
+   "intro": [
+    "Último día de capacitación. ICT: la prueba eléctrica. Después, tu evaluación de nuevo ingreso."
+   ],
+   "missions": [
+    {
+     "id": "t5-l1",
+     "type": "lesson",
+     "station": "ict",
+     "title": "Clase: qué es el ICT",
+     "lesson": "m12-l1",
+     "xp": 60
+    },
+    {
+     "id": "t5-l2",
+     "type": "lesson",
+     "station": "ict",
+     "title": "Clase: el orden de las pruebas",
+     "lesson": "m13-l1",
+     "xp": 60
+    },
+    {
+     "id": "t5-l3",
+     "type": "lesson",
+     "station": "ict",
+     "title": "Clase: contacto, cortos y abiertos",
+     "lesson": "m13-l2",
+     "xp": 60
+    },
+    {
+     "id": "t5-quiz",
+     "type": "quiz",
+     "station": "mentor",
+     "title": "Evaluación de nuevo ingreso",
+     "machines": [
+      "general",
+      "aoi_ky",
+      "axi_v810",
+      "ict",
+      "spi"
+     ],
+     "count": 8,
+     "xp": 150
+    }
+   ],
+   "debrief": [
+    "Pasaste la capacitación. Desde mañana estás en la línea, conmigo de respaldo."
+   ]
+  },
+  {
+   "id": "d2",
+   "title": "Semana 1 · Llega la fecha del mantenimiento",
+   "shift": 360,
+   "ngRate": 0.06,
+   "incidents": 1,
+   "intro": [
+    "Revisé el calendario: hoy vence el mensual del AOI y el diario del ICT.",
+    "Regla de oro: antes de parar una máquina, avisas a manufactura y acuerdan la ventana. Luego LOTO y el procedimiento."
+   ],
+   "missions": [
+    {
+     "id": "w1-notify",
+     "type": "notify",
+     "station": "prod",
+     "title": "Avisa a manufactura del mantenimiento del AOI",
+     "who": "prod",
+     "prompt": "Laura pregunta: ¿qué necesitas?",
+     "options": [
+      "El AOI tiene mantenimiento mensual programado: necesito unos 40 minutos al terminar el lote; dejaré el buffer vacío y aviso al terminar",
+      "Voy a apagar el AOI ahora mismo, ya vengo",
+      "Nada, lo hago en el turno sin decirle a nadie",
+      "Que se salten la inspección AOI hoy"
+     ],
+     "correct": 0,
+     "feedback": "Acordar la ventana evita parar la línea a media corrida y que se acumulen tarjetas sin inspeccionar.",
+     "xp": 40
+    },
+    {
+     "id": "d2-ky",
+     "type": "maint",
+     "station": "aoi",
+     "title": "Mensual del AOI 3D (filtros y seguridad)",
+     "proc": "mt-ky-mensual",
+     "briefing": [
+      "Te acompaño la primera vez. El mensual del AOI: filtros, ventiladores, presión de aire, interlock y bandas. Empieza por el paro de emergencia."
+     ],
+     "xp": 120
+    },
+    {
+     "id": "d2-ict",
+     "type": "maint",
+     "station": "ict",
+     "title": "Diario del ICT: puntas y vacío",
+     "proc": "mt-ict-diario",
+     "briefing": [
+      "En el ICT la mitad de las fallas falsas vienen de puntas sucias o vacío bajo. Revisa la cama de agujas."
+     ],
+     "xp": 120
+    },
+    {
+     "id": "d2-alarm",
+     "type": "alarm",
+     "station": "aoi2",
+     "title": "La línea 2 no recibe tarjetas",
+     "incident": "inc-v5-amber",
+     "xp": 80
+    }
+   ],
+   "chapter": "c2"
+  },
+  {
+   "id": "d3",
+   "title": "Semana 2 · NPI: PRACTICA-01 llega a producción",
+   "shift": 420,
+   "ngRate": 0.07,
+   "incidents": 1,
+   "intro": [
+    "Llegó un NPI: la tarjeta PRACTICA-01. Tenemos los Gerber, los centroides, la BOM y el netlist.",
+    "Hoy creas los programas de SPI y AOI. Importas, alineas con fiduciales, asignas librería, ajustas umbrales y validas con un lote."
+   ],
+   "missions": [
+    {
+     "id": "d3-spi",
+     "type": "npi",
+     "station": "spi",
+     "title": "Programa del SPI desde el Gerber de pasta",
+     "mode": "spi",
+     "briefing": [
+      "El SPI usa la capa de pasta: es la apertura del stencil. Captura bien el espesor del stencil o todos los volúmenes saldrán mal."
+     ],
+     "xp": 200
+    },
+    {
+     "id": "d3-aoi",
+     "type": "npi",
+     "station": "aoi",
+     "title": "Programa del AOI 3D",
+     "mode": "aoi",
+     "briefing": [
+      "Fiduciales en diagonal, cada encapsulado con su algoritmo: chip, polarizado, gullwing, BGA, PTH. Luego umbrales sin escapes."
+     ],
+     "xp": 200
+    },
+    {
+     "id": "d3-create",
+     "type": "practice",
+     "station": "aoi",
+     "title": "Revisión del programa con el ingeniero",
+     "practice": "pr-ky-create-prog",
+     "xp": 100
+    }
+   ],
+   "chapter": "c2"
+  },
+  {
+   "id": "d4",
+   "title": "Semana 2 · NPI: AXI e ICT",
+   "shift": 420,
+   "ngRate": 0.07,
+   "incidents": 1,
+   "intro": [
+    "Seguimos con el NPI. El BGA y los QFN no se ven con AOI: entra el AXI. Y el ICT necesita su testplan y fixture."
+   ],
+   "missions": [
+    {
+     "id": "d4-axi",
+     "type": "npi",
+     "station": "axi",
+     "title": "Receta del AXI (BGA y PTH)",
+     "mode": "axi",
+     "briefing": [
+      "En el AXI asignas tipo de junta: grid array para el BGA, PTH para el conector. Ojo con los límites de diámetro y void."
+     ],
+     "xp": 200
+    },
+    {
+     "id": "d4-bga",
+     "type": "practice",
+     "station": "axi",
+     "title": "Afinar el BGA-64 con el ingeniero",
+     "practice": "pr-v8-create-bga",
+     "xp": 120
+    },
+    {
+     "id": "d4-ict",
+     "type": "npi",
+     "station": "ict",
+     "title": "Testplan del ICT desde el netlist",
+     "mode": "ict",
+     "briefing": [
+      "El netlist IPC-D-356 te dice qué nodo toca cada aguja. Cortos primero, sin energizar. El BGA se prueba con boundary scan."
+     ],
+     "xp": 200
+    }
+   ],
+   "chapter": "c2"
+  },
+  {
+   "id": "d5",
+   "title": "Semana 3 · Cambios de modelo y de fixtura",
+   "shift": 420,
+   "ngRate": 0.08,
+   "incidents": 2,
+   "intro": [
+    "Producción pide cambio de modelo en la línea y cambio de fixtura en el ICT. Un cambio mal hecho arranca con escapes o con la línea parada.",
+    "Hazlo en orden. El orden importa."
+   ],
+   "missions": [
+    {
+     "id": "d5-co-aoi",
+     "type": "sequence",
+     "station": "aoi",
+     "title": "Cambio de modelo en el AOI",
+     "briefing": [
+      "Cambio de modelo: termina el lote, cambia programa, ancho y soportes, y valida con la primera tarjeta antes de liberar."
+     ],
+     "steps": [
+      "Confirmar con producción que salió la última tarjeta del modelo anterior",
+      "Cargar el programa del nuevo modelo y verificar su versión",
+      "Ajustar el ancho del transportador (AWA) a la nueva tarjeta",
+      "Revisar soportes y stopper para el nuevo tamaño",
+      "Correr la primera tarjeta y revisar fiduciales y llamados",
+      "Liberar el modelo y registrar el cambio"
+     ],
+     "distractors": [
+      "Abrir todas las tolerancias para que no haya llamados en el arranque",
+      "Liberar sin correr primera tarjeta porque el programa ya existía"
+     ],
+     "xp": 150
+    },
+    {
+     "id": "w3-notify",
+     "type": "notify",
+     "station": "prod",
+     "title": "Coordina el cambio de fixtura con manufactura",
+     "who": "prod",
+     "prompt": "Laura: ¿cuándo cambiamos la fixtura del ICT?",
+     "options": [
+      "Cuando termine el lote actual: acumulamos el WIP del nuevo modelo mientras cambio y valido con la KGB",
+      "Ahora, aunque falten 30 tarjetas del lote",
+      "Mañana, que hoy no hay tiempo",
+      "Que manufactura cambie la fixtura sola"
+     ],
+     "correct": 0,
+     "feedback": "Terminar el lote evita mezclar modelos y fixturas.",
+     "xp": 40
+    },
+    {
+     "id": "d5-fixture",
+     "type": "sequence",
+     "station": "ict",
+     "title": "Cambio de fixtura en el ICT HP3070",
+     "briefing": [
+      "El cambio de fixtura en el HP3070 tiene su ritual: bajar el vacío, sacar la fixtura con cuidado, verificar la nueva y correr la KGB."
+     ],
+     "steps": [
+      "Terminar el lote y cerrar el testplan en BT-Basic",
+      "Apagar el vacío y liberar el seguro de la fixtura",
+      "Retirar la fixtura y guardarla en su carro, protegiendo las puntas",
+      "Inspeccionar la nueva fixtura: puntas, pines de guía y cableado",
+      "Colocar y asegurar la nueva fixtura sobre el testhead",
+      "Cargar el testplan del nuevo modelo (load board)",
+      "Correr la tarjeta conocida buena (KGB) varias veces y verificar contacto"
+     ],
+     "distractors": [
+      "Energizar la tarjeta antes de probar cortos para ganar tiempo",
+      "Limpiar las puntas con aire comprimido directo y solvente"
+     ],
+     "xp": 160
+    },
+    {
+     "id": "d5-v5",
+     "type": "maint",
+     "station": "aoi2",
+     "title": "Semanal del AOI de la línea 2",
+     "proc": "mt-v5-semanal",
+     "xp": 120
+    }
+   ],
+   "chapter": "c2"
+  },
+  {
+   "id": "d6",
+   "title": "Semana 4 · Debug en producción",
+   "shift": 480,
+   "ngRate": 0.1,
+   "incidents": 2,
+   "intro": [
+    "Hoy es día de debug. Llamados que suben, fallas raras, el ICT con contactos malos.",
+    "El método es siempre el mismo: describe con datos, pregunta qué cambió, repite, aísla y corrige la causa. Nunca abras tolerancias para esconder una máquina que mide mal."
+   ],
+   "missions": [
+    {
+     "id": "d6-tomb",
+     "type": "practice",
+     "station": "aoi",
+     "title": "Tombstone falsos en 0603",
+     "practice": "pr-ky-debug-tomb",
+     "xp": 150
+    },
+    {
+     "id": "d6-open",
+     "type": "practice",
+     "station": "axi",
+     "title": "Open en una zona del AXI",
+     "practice": "pr-v8-debug-open",
+     "xp": 150
+    },
+    {
+     "id": "d6-contact",
+     "type": "practice",
+     "station": "ict",
+     "title": "Muchos nodos fallan contacto",
+     "practice": "pr-ict-debug-contact",
+     "xp": 150
+    },
+    {
+     "id": "d6-review",
+     "type": "review",
+     "station": "axi",
+     "title": "Revisión de NG en el AXI",
+     "machine": "axi",
+     "count": 8,
+     "xp": 150
+    }
+   ],
+   "chapter": "c3"
+  },
+  {
+   "id": "d7",
+   "title": "Semana 5 · Fallas mayores y un escape",
+   "shift": 480,
+   "ngRate": 0.12,
+   "incidents": 3,
+   "intro": [
+    {
+     "who": "quality",
+     "text": "Soy Sofía, de calidad. Ayer el cliente encontró un puente en un QFP que pasó por nuestro AOI. Necesito la causa raíz hoy."
+    },
+    "Tranquilo. Recuerda las cuatro preguntas del escape: ¿se midió y pasó?, ¿no se podía ver?, ¿no se inspeccionó?, ¿el operador lo aceptó?",
+    "Además el AXI tiene rayas en las imágenes y el SPI marca una zona. Día pesado."
+   ],
+   "missions": [
+    {
+     "id": "w5-escape",
+     "type": "notify",
+     "station": "quality",
+     "title": "Investiga el escape con calidad",
+     "who": "quality",
+     "prompt": "Sofía: el QFP U1 tenía un puente y el AOI lo pasó. Revisando la imagen guardada ves que sí se midió, pero la tolerancia del puente estaba al máximo. ¿Qué concluyes?",
+     "options": [
+      "Se midió y pasó: la tolerancia estaba muy abierta. Corrijo el umbral, valido con una tarjeta con el defecto y documento en el 8D",
+      "No se podía ver, es trabajo del AXI",
+      "El operador tuvo la culpa",
+      "Fue un defecto aleatorio, no hay acción"
+     ],
+     "correct": 0,
+     "feedback": "Clasificar el escape lleva a la acción correcta; siempre se valida con el defecto real.",
+     "xp": 80
+    },
+    {
+     "id": "d7-image",
+     "type": "practice",
+     "station": "axi",
+     "title": "Rayas fijas en el AXI",
+     "practice": "pr-v8-debug-image",
+     "xp": 150
+    },
+    {
+     "id": "d7-spi",
+     "type": "practice",
+     "station": "spi",
+     "title": "Falsos en una zona del SPI",
+     "practice": "pr-spi-debug-zone",
+     "xp": 150
+    },
+    {
+     "id": "d7-short",
+     "type": "practice",
+     "station": "ict",
+     "title": "El mismo corto en muchas tarjetas",
+     "practice": "pr-ict-debug-short",
+     "xp": 150
+    },
+    {
+     "id": "d7-leak",
+     "type": "maint",
+     "station": "axi",
+     "title": "Medición de fuga y calibraciones del AXI",
+     "proc": "mt-v8-semestral",
+     "xp": 180
+    }
+   ],
+   "chapter": "c3"
+  },
+  {
+   "id": "d8",
+   "title": "Semana 6 · Auditoría y certificación",
+   "shift": 480,
+   "ngRate": 0.1,
+   "incidents": 3,
+   "intro": [
+    "Viene auditoría. Te van a preguntar de todo: AOI, AXI, ICT, SPI, proceso y defectos IPC-A-610.",
+    "Si apruebas, te certifico como técnico de pruebas."
+   ],
+   "missions": [
+    {
+     "id": "d8-light",
+     "type": "practice",
+     "station": "aoi2",
+     "title": "Falsos en todas las recetas de la línea 2",
+     "practice": "pr-v5-debug-light",
+     "xp": 150
+    },
+    {
+     "id": "d8-review",
+     "type": "review",
+     "station": "aoi",
+     "title": "Revisión rápida de NG bajo presión",
+     "machine": "mix",
+     "count": 10,
+     "xp": 200
+    },
+    {
+     "id": "d8-final",
+     "type": "quiz",
+     "station": "mentor",
+     "title": "Examen de certificación",
+     "final": true,
+     "count": 15,
+     "xp": 400
+    }
+   ],
+   "chapter": "c3"
+  }
+ ],
+ "cast": {
+  "mentor": {
+   "name": "Ing. Marco Salinas",
+   "role": "Ingeniero de pruebas · tu mentor",
+   "color": "#ffb020"
+  },
+  "prod": {
+   "name": "Laura Méndez",
+   "role": "Supervisora de manufactura",
+   "color": "#ff7a45"
+  },
+  "quality": {
+   "name": "Ing. Sofía Treviño",
+   "role": "Ingeniera de calidad",
+   "color": "#36d07f"
+  }
+ },
+ "chapters": [
+  {
+   "id": "c1",
+   "title": "Capítulo 1 · Capacitación de nuevo ingreso",
+   "summary": "Aprendes las bases de cada equipo de pruebas antes de tocar la línea."
+  },
+  {
+   "id": "c2",
+   "title": "Capítulo 2 · Tus primeras semanas en la línea",
+   "summary": "Mantenimientos programados, NPIs y cambios de modelo, siempre con el ingeniero a tu lado."
+  },
+  {
+   "id": "c3",
+   "title": "Capítulo 3 · Técnico responsable",
+   "summary": "Fallas, debug y escapes. Ahora tú decides; el ingeniero sólo revisa."
+  }
+ ]
+}

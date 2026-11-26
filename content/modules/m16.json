@@ -5,7 +5,126 @@
  "machine": null,
  "title": "Módulo 16. Qué es el SPI Koh Young, cómo mide y de qué se compone",
  "summary": "",
- "lessons": [],
+ "lessons": [
+  {
+   "id": "m16-l1",
+   "title": "Dónde va el SPI y cómo mide la pasta",
+   "animation": "spi_paste_volume",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "El SPI (Solder Paste Inspection) va justo después de la impresora, antes de las colocadoras. Mide en 3D cada depósito de pasta. Un depósito malo detectado aquí se corrige lavando la tarjeta y volviendo a imprimir; el mismo problema después del horno ya es una junta que hay que retrabajar."
+    },
+    {
+     "kind": "text",
+     "text": "Mide con franjas de luz: un proyector manda luz blanca a través de una rejilla (grating) y dibuja franjas sobre la tarjeta. Un actuador PZT mueve la rejilla en pasos finos y la cámara toma una foto en cada paso. Donde hay pasta, las franjas se doblan, y con eso se calcula la altura de cada píxel."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Área: píxeles con pasta, por el área de un píxel.",
+      "Altura: promedio de las alturas de esos píxeles.",
+      "Volumen: suma de las alturas por el área de un píxel. Es la medida más importante."
+     ]
+    },
+    {
+     "kind": "tip",
+     "text": "Ejemplo: abertura de 200 × 200 µm y stencil de 120 µm dan un 100 % de 4,800,000 µm³. Si el SPI mide 4,000,000 µm³, el depósito tiene 83.3 %."
+    },
+    {
+     "kind": "warning",
+     "text": "El espesor de stencil que escribes en el programa es la referencia del 100 %. Si el real es 120 µm y pusiste 100 µm, un depósito con poca pasta saldría en 100 % y no lo verías."
+    }
+   ],
+   "keyPoints": [
+    "El SPI va después de la impresora y antes de las colocadoras.",
+    "Volumen = suma de alturas × área de un píxel.",
+    "100 % = área de la abertura × espesor real del stencil.",
+    "Resolución de 10, 15, 20 o 25 µm: un píxel más chico ve más detalle, pero inspecciona más lento."
+   ]
+  },
+  {
+   "id": "m16-l2",
+   "title": "Partes del KY8030 y la torre de luces",
+   "animation": "machine_tour",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "El KY8030 (familia KY8030-2, KY8030-3 y aSPIre) es el SPI 3D de Koh Young. Es otra máquina con otro software que el AOI Koh Young de la parte 1."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Cabezal de medición: cámara, lente y proyectores con rejilla y PZT. Con dos proyectores mide sin sombras (Shadow-Free).",
+      "Iluminación 2D, RGB e IR: imagen a color; RGB e IR para bolitas de soldadura y material extraño.",
+      "Gantry X-Y y eje Z: mueve el cabezal de FOV en FOV; el eje Z sigue el pandeo (Z-tracking).",
+      "Transportador (conveyor): recibe la tarjeta, la detiene con el stopper, la sujeta con el clamp y la saca. Habla SMEMA.",
+      "Control de movimiento: G_NET mueve gantry, conveyor y bandas; E_NET maneja la cuarta etapa y el ancho del conveyor.",
+      "PC con KY-3030 (la GUI del SPI), WinMCS, KYConfig, CEditor y SPC Plus. Además, UPS y regulador de aire con filtro."
+     ]
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Rojo: error. La luz parpadea y suena una alarma.",
+      "Amarillo: homing, buscando su origen.",
+      "Verde: run, inspeccionando.",
+      "Amarillo y verde: idle, lista y esperando tarjeta.",
+      "Rojo, amarillo y verde: emergencia."
+     ]
+    },
+    {
+     "kind": "warning",
+     "text": "Los sensores de puerta detienen la máquina. No los puentees ni les quites sus llaves."
+    }
+   ],
+   "keyPoints": [
+    "G_NET y E_NET son las redes de tarjetas de control por LAN.",
+    "Amarillo y verde juntos: idle, lista para inspeccionar.",
+    "Las tres luces encendidas: emergencia.",
+    "El conveyor usa stopper, clamp y SMEMA."
+   ]
+  },
+  {
+   "id": "m16-l3",
+   "title": "Encender, inspeccionar y apagar el SPI",
+   "animation": "process_flow",
+   "blocks": [
+    {
+     "kind": "bullets",
+     "items": [
+      "Energía principal: interruptor principal (y el breaker MCCB de atrás, si estaba abajo).",
+      "UPS: enciéndelo.",
+      "Computadora: espera a que Windows arranque por completo.",
+      "Voltaje de control: gira el interruptor; se enciende su lámpara verde.",
+      "WinMCS y KY-3030: ejecuta ambos, carga el job y escribe la cantidad a producir.",
+      "Homing: la torre se pone amarilla y tarda unos 3 minutos. Cuando está amarilla y verde, está en idle: presiona Start."
+     ]
+    },
+    {
+     "kind": "text",
+     "text": "Cuando el SPI encuentra un defecto se abre el Defect Viewer. Decides NG (la tarjeta sale), PASS (pasa al siguiente proceso) o SPC (ventana de estadística). Esa decisión queda registrada: tómala con criterio, no para quitar la alarma."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Apagado: sal de KY-3030 con el botón Salir, con la máquina en idle (solo una cuenta Supervisor puede cerrarlo).",
+      "Después apaga Windows, luego el voltaje de control, luego la energía principal y al final el UPS."
+     ]
+    },
+    {
+     "kind": "warning",
+     "text": "Bypass por software (botón Bypass en idle): solo con autorización y con registro, porque esas tarjetas salen sin inspeccionar. Bypass por hardware: solo en emergencia, si la PC o el software no responden. Apaga el voltaje de control, abre la puerta inferior, gira el interruptor del conveyor y vuelve a encender el voltaje de control. La máquina queda solo como transportador."
+    }
+   ],
+   "keyPoints": [
+    "Secuencia de encendido: energía, UPS, Windows, voltaje de control, WinMCS, KY-3030, homing.",
+    "Apaga en orden inverso, saliendo antes de KY-3030 en idle.",
+    "El Defect Viewer registra cada decisión NG, PASS o SPC.",
+    "Ambos bypass dejan tarjetas sin revisar: van con autorización y registro."
+   ]
+  }
+ ],
  "exam": [
   {
    "type": "mc",

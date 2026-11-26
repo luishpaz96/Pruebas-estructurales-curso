@@ -5,7 +5,130 @@
  "machine": null,
  "title": "Módulo 20. Proceso SMT: de dónde vienen los defectos",
  "summary": "",
- "lessons": [],
+ "lessons": [
+  {
+   "id": "m20-l1",
+   "title": "Pasta, flux y stencil: de la pasta al pad",
+   "animation": "process_flow",
+   "blocks": [
+    {
+     "kind": "bullets",
+     "items": [
+      "Pasta: en peso es casi toda metal, pero en volumen es más o menos mitad metal y mitad flux. Por eso un depósito se reduce a la mitad al fundirse.",
+      "SAC305 funde a 217 a 220 °C; Sn63Pb37 a 183 °C; SnBi57.6Ag0.4 a 138 °C.",
+      "Antes de abrir el frasco debe llegar a temperatura ambiente con la tapa cerrada. Si se abre frío, se condensa humedad y después salen bolitas de soldadura.",
+      "Flux: quita el óxido, tapa la superficie y ayuda a que la soldadura moje. Residuo no-clean (el más común), RMA (se recomienda lavar) y soluble en agua (lavado obligatorio)."
+     ]
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Aspect ratio (W ÷ T) de 1.5 o más. Area ratio (L × W) ÷ (2 × (L + W) × T) de 0.66 o más para stencil láser.",
+      "Ejemplo: abertura de 12 × 12 mil en stencil de 5 mil. Aspect ratio 2.4 pasa, pero area ratio 0.60 no pasa. Con stencil de 4 mil, area ratio 0.75 pasa.",
+      "Paso fino: reducir la abertura, nunca sobreimprimir. Sobreimprimir embarra pasta bajo el stencil y hace puentes.",
+      "OSP: la abertura debe cubrir todo el cobre expuesto del pad."
+     ]
+    },
+    {
+     "kind": "tip",
+     "text": "Un stencil escalonado o de electroformado son alternativas cuando el area ratio falla. Confirma la elección con ingeniería de procesos."
+    }
+   ],
+   "keyPoints": [
+    "La pasta pierde cerca de la mitad de su volumen al fundirse.",
+    "Area ratio debe ser de 0.66 o más en stencil láser.",
+    "En paso fino se reduce la abertura; sobreimprimir causa puentes.",
+    "Un frasco de pasta se abre solo cuando ya llegó a temperatura ambiente."
+   ]
+  },
+  {
+   "id": "m20-l2",
+   "title": "Perfil del horno y termopares",
+   "animation": "process_flow",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "El perfil es la receta de temperatura que vive la tarjeta, segundo a segundo. Si sube de golpe hay choque térmico; si se pasa de tiempo, la capa intermetálica (IMC) crece de más y la unión se vuelve frágil. La capa ideal es delgada y continua, de 1 a 2 µm o menos."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Precalentamiento: rampa de 2 a 4 °C/s, casi siempre de 2 a 3 °C/s.",
+      "Remojo (soak): de 100 a 180 °C con estaño y plomo, de 140 a 220 °C sin plomo; de 60 a 120 s.",
+      "Reflujo: pico de 25 a 45 °C arriba del punto de fusión y TAL de 45 a 90 s. El pico lo pone el componente más delicado menos 5 °C; sin plomo, nunca más de 260 °C.",
+      "Enfriamiento: de 4 a 6 °C/s, respetando el límite del cliente y de los componentes."
+     ]
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Termopar tipo K, el más común, con cable calibre 36 y aislante PFA.",
+      "Pégalo con soldadura de alta temperatura (lo más repetible) o cinta de aluminio. La cinta Kapton se puede levantar y entonces mide el aire.",
+      "Nunca tuerzas los cables: el termopar mide donde los dos metales se tocan por primera vez.",
+      "Usa al menos 5 puntos: el componente de más masa y el de menos, orilla y centro, componentes críticos y uno al aire."
+     ]
+    },
+    {
+     "kind": "warning",
+     "text": "El PWI (Process Window Index) dice qué tanto de la ventana usa el perfil. Menos de 100 % es que está dentro; menos de 60 % es lo ideal, porque deja margen."
+    }
+   ],
+   "keyPoints": [
+    "Rampa de 2 a 4 °C/s en precalentamiento.",
+    "TAL de 45 a 90 s y pico 25 a 45 °C arriba de la fusión.",
+    "Nunca tuerzas los termopares.",
+    "PWI menor a 60 % deja margen para variaciones."
+   ]
+  },
+  {
+   "id": "m20-l3",
+   "title": "Paste-in-hole, ola y del defecto a la causa",
+   "animation": "defect_gallery",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "Con paste-in-hole se imprime pasta sobre y dentro del agujero, se inserta el componente y se suelda en el mismo horno que los SMT. Te ahorras la ola, pero tienes que meter suficiente pasta para llenar el barril."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Altura sobre la tarjeta (stand-off): al menos 12 mil.",
+      "Largo de la terminal: de 10 a 30 mil por el otro lado.",
+      "Pin contra hoyo: de 1:1.5 a 1:2.5.",
+      "Anillo (annular ring): de 10 a 12 mil."
+     ]
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Ola: el precalentamiento evita choque térmico (rampa de 1 a 2 °C/s) y seca el flux. Muchos problemas de barril sin llenar se arreglan ahí.",
+      "Punto frío: un pin conectado a planos internos pierde calor y la soldadura deja de subir. Pon un termopar arriba del PTH más crítico.",
+      "Nunca pases la tarjeta dos veces por la ola: puede pasar la prueba funcional, pero falla más en campo."
+     ]
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Poca pasta (SPI): area ratio bajo, aberturas tapadas, limpieza del stencil o pasta caducada.",
+      "Bolita junto a un chip (AOI): falta home base; en la ola, flux mal secado.",
+      "Tombstone (AOI): falta home base o una terminal se calienta antes que la otra.",
+      "Vacíos en BGA o QFN (AXI): remojo corto o perfil RTS, pasta o diseño de abertura.",
+      "Barril sin llenar (AXI, AOI): poco precalentamiento arriba, punto frío o sujetadores que tapan el calor."
+     ]
+    },
+    {
+     "kind": "warning",
+     "text": "Antes de poner un componente pesado en la cara de abajo, divide su peso entre el área soldable de sus terminales y compara con el límite de su tipo. Un BGA de 4 g con 107.5 mm² da 0.037 g/mm², menor que 0.050, y puede ir abajo sin riesgo."
+    }
+   ],
+   "keyPoints": [
+    "Paste-in-hole: el barril debe llenarse con suficiente pasta.",
+    "Stand-off mínimo de 12 mil para que el cuerpo no embarre la pasta.",
+    "Los defectos de la inspección tienen causas de proceso que revisar primero.",
+    "No pases la tarjeta dos veces por la ola."
+   ]
+  }
+ ],
  "exam": [
   {
    "type": "mc",

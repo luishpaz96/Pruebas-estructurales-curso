@@ -5,7 +5,122 @@
  "machine": null,
  "title": "Módulo 15. ICT avanzado: archivos, testplan, BT-Basic y boundary scan",
  "summary": "",
- "lessons": [],
+ "lessons": [
+  {
+   "id": "m15-l1",
+   "title": "Archivos del sistema: licencias, config, bootptab y hosts",
+   "animation": "machine_tour",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "Estos archivos hacen funcionar la máquina. Un error en ellos no falla una prueba: deja parada toda la estación, y en el peor caso hay que recuperar la imagen del controlador."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Licencias (codewords): activan opciones como Testjet, boundary scan o Polarity Check. Están cifradas: si les agregas texto o una línea, la cabeza puede no arrancar.",
+      "Config de la cabeza: hardware de cada banco y módulo, relevadores de vacío, módulo de arranque y fuentes DUT. Debe coincidir con lo instalado.",
+      "bootptab: MAC, IP y máscara de la system card y de cada control card. Se actualiza cada vez que cambias una de esas tarjetas.",
+      "hosts: IP del gateway, de la segunda tarjeta de red y sus alias."
+     ]
+    },
+    {
+     "kind": "text",
+     "text": "Antes de editar cualquier archivo: haz respaldo, que lo cambie solo personal autorizado, cambia una cosa a la vez y deja registro."
+    },
+    {
+     "kind": "tip",
+     "text": "Cambio de modelo: detén con Pause/Break, sal con exit (F8), libera con fixture unlock (F3), cambia el fixture, sujétalo con fixture lock (F2) y corre el testplan. El comando autofile da el número del fixture puesto, para confirmar que es del mismo modelo que el programa."
+    }
+   ],
+   "keyPoints": [
+    "Las licencias están cifradas: no les agregues texto.",
+    "Si cambiaste una control card, actualiza bootptab.",
+    "La config de la cabeza debe coincidir con el hardware.",
+    "autofile confirma que fixture y programa son del mismo modelo."
+   ]
+  },
+  {
+   "id": "m15-l2",
+   "title": "El testplan en BT-Basic y los códigos de estado",
+   "animation": "process_flow",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "El testplan está escrito en BT-Basic, un lenguaje parecido a Visual Basic. No se compila: corre con run. Una vez cargado, la mayoría de las plantas hacen lo mismo: leen el número de serie, preguntan al sistema de trazabilidad si la tarjeta debe estar en ICT, corren las pruebas y reportan PASA o FALLA."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "boardfailed vale 1 si falló cualquier prueba de la tarjeta; dutfailed, si falló la prueba actual.",
+      "A una subrutina se entra solo con call, nunca con goto.",
+      "execute \"comando\" corre un comando del sistema; así se llama al cliente del MES.",
+      "Marca con comentarios el inicio y el fin del código que agregas."
+     ]
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "0 y 1: pasó; falló.",
+      "2, 4 y 10: falló contacto (pins), cortos o precortos.",
+      "6, 7 y 8: falló analógico, fuentes o digital (boundary scan también reporta 8).",
+      "9, 14 y 17: falló funcional, Testjet o cluster analógico.",
+      "19, 22 y 24: boundary scan con Silicon Nails, pines largos o prueba previa a energizar.",
+      "80 y 82: error del programa, o el operador interrumpió (break)."
+     ]
+    },
+    {
+     "kind": "warning",
+     "text": "Estos códigos son los de un archivo de códigos de falla de una planta. Tu planta puede usar otros: búscalos en su testplan antes de interpretar un reporte."
+    }
+   ],
+   "keyPoints": [
+    "El testplan no se compila: corre con run.",
+    "boardfailed indica que alguna prueba de la tarjeta falló.",
+    "Entra a una subrutina con call, nunca con goto.",
+    "Interpreta los códigos de estado con el archivo de tu planta."
+   ]
+  },
+  {
+   "id": "m15-l3",
+   "title": "Pruebas globales, digitales y boundary scan",
+   "animation": "ict_bed_of_nails",
+   "blocks": [
+    {
+     "kind": "bullets",
+     "items": [
+      "learn capacitance on / off: compensación de capacitancia para las pruebas entre las dos sentencias.",
+      "minimum wait: tiempo mínimo entre el estímulo y la lectura, en todas las pruebas analógicas.",
+      "tolerance margin: cambia los límites de todas las pruebas. Útil para estudiar márgenes; peligroso si se deja olvidado.",
+      "ignore digital failures: solo para depurar; nunca en producción."
+     ]
+    },
+    {
+     "kind": "text",
+     "text": "En pruebas digitales, los drivers mandan unos y ceros al componente y los receivers comparan lo que contesta. Cada paso es un vector. Safeguard limita el forzado (backdrive) de las salidas de otros chips. CRC compara la respuesta contra una tarjeta buena (KGB) comprimida."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "IEEE 1149.1, también llamado JTAG. El puerto TAP usa TDI, TDO, TCK, TMS y a veces TRST.",
+      "El fixture solo necesita puntas en esas señales y en los pines que habilitan la cadena.",
+      "Primera prueba: ¿la cadena completa contesta? Si falla, ninguna otra prueba de boundary scan sirve.",
+      "Silicon Nails usa los pines de boundary scan como puntas virtuales para componentes sin boundary scan."
+     ]
+    },
+    {
+     "kind": "warning",
+     "text": "Si la integridad de la cadena falla en muchas tarjetas, revisa primero lo básico: alimentación, contacto de TCK, TMS, TDI y TDO, los pines que deben estar fijos y la versión del archivo BSDL. Si falla en una sola, suele ser un chip dañado o una soldadura abierta."
+    }
+   ],
+   "keyPoints": [
+    "Global: ignore digital failures solo se usa al depurar.",
+    "Un vector es el estado que se manda y el que se espera.",
+    "Boundary scan prueba conexiones sin puntas, con 4 o 5 señales.",
+    "El BSDL debe ser el de la versión exacta del chip."
+   ]
+  }
+ ],
  "exam": [
   {
    "type": "mc",

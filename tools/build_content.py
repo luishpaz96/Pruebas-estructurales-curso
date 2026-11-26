@@ -102,12 +102,34 @@ for bj in sorted(glob.glob(os.path.join(C, 'boards', '*', 'board.json'))):
         else: errors.append(f'boards/{b.get("id")}: falta el archivo {fn}')
     boards.append(b)
 
+# Modo juego: carrera (días y misiones) e incidentes aleatorios
+career = load(os.path.join(C, 'game', 'career.json')) or {'days': []}
+incidents = load(os.path.join(C, 'game', 'incidents.json')) or []
+STATIONS = {'aoi', 'aoi2', 'axi', 'ict', 'spi', 'line', 'mentor', 'prod', 'quality'}
+TYPES = {'talk', 'lesson', 'notify', 'tour', 'review', 'alarm', 'npi', 'maint', 'practice', 'quiz', 'sequence'}
+LESSONS = {l['id'] for m in modules for l in m.get('lessons', [])}
+inc_ids = {i['id'] for i in incidents}
+mids_all = set()
+for d in career.get('days', []):
+    for ms in d.get('missions', []):
+        w = f'game/career.json/{ms.get("id")}'
+        if ms.get('id') in mids_all: errors.append(f'{w}: id de misión repetido')
+        mids_all.add(ms.get('id'))
+        if ms.get('type') not in TYPES: errors.append(f'{w}: tipo {ms.get("type")!r} desconocido')
+        if ms.get('station') not in STATIONS: errors.append(f'{w}: estación {ms.get("station")!r} desconocida')
+        if ms.get('type') == 'maint' and not any(p.get('id') == ms.get('proc') for p in maint): errors.append(f'{w}: no existe el mantenimiento {ms.get("proc")}')
+        if ms.get('type') == 'practice' and not any(p.get('id') == ms.get('practice') for p in pracs): errors.append(f'{w}: no existe la práctica {ms.get("practice")}')
+        if ms.get('type') == 'lesson' and ms.get('lesson') not in LESSONS: warns.append(f'{w}: la lección {ms.get("lesson")} todavía no existe (se mostrará el resumen del módulo)')
+        if ms.get('type') == 'alarm' and ms.get('incident') not in inc_ids: errors.append(f'{w}: no existe el incidente {ms.get("incident")}')
+for i in incidents:
+    if i.get('station') not in STATIONS: errors.append(f'game/incidents.json/{i.get("id")}: estación desconocida')
+
 for w in warns: print('AVISO:', w)
 if errors:
     for e in errors: print('ERROR:', e)
     sys.exit('No se generó content.js: corrige los errores de arriba.')
 
-course = {'machines': machines, 'modules': modules, 'finalExam': final, 'maintenance': maint, 'practices': pracs, 'boards': boards}
+course = {'machines': machines, 'modules': modules, 'finalExam': final, 'maintenance': maint, 'practices': pracs, 'boards': boards, 'game': {'career': career, 'incidents': incidents}}
 os.makedirs(os.path.dirname(OUT), exist_ok=True)
 s = json.dumps(course, ensure_ascii=False, separators=(',', ':')).replace('</', '<\\/')
 with open(OUT, 'w', encoding='utf-8') as f:
@@ -115,4 +137,4 @@ with open(OUT, 'w', encoding='utf-8') as f:
 nl = sum(len(m.get('lessons', [])) for m in modules)
 nq = sum(len(m.get('exam', [])) for m in modules) + len(final.get('questions', []))
 print(f'OK: {len(machines)} máquinas, {len(modules)} módulos, {nl} lecciones, {nq} preguntas, '
-      f'{len(maint)} mantenimientos, {len(pracs)} prácticas, {len(boards)} tarjetas -> {os.path.relpath(OUT, ROOT)} ({len(s)//1024} KB)')
+      f'{len(maint)} mantenimientos, {len(pracs)} prácticas, {len(boards)} tarjetas, {len(career.get("days", []))} días de carrera, {len(incidents)} incidentes -> {os.path.relpath(OUT, ROOT)} ({len(s)//1024} KB)')

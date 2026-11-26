@@ -6,6 +6,7 @@ import { state, save, reset, level, addXP, onChange, modProgress, machineProgres
 import { runExam, quickQuestion } from './exams.js';
 import { runMaintenance } from './maintenance.js';
 import { createProgram, playPractice, MODES } from './simui.js';
+import { gameScreen } from './game/game.js';
 
 const C = course;
 const view = document.getElementById('view');
@@ -21,7 +22,7 @@ onChange(hud);
 
 // ---------- Router ----------
 const routes = {
-  inicio: home, mapa: map, taller: workshop, simulador: simulator, examenes: exams, perfil: profile, ajustes: settings, repaso: review,
+  juego: () => gameScreen(view), inicio: home, mapa: map, taller: workshop, simulador: simulator, examenes: exams, perfil: profile, ajustes: settings, repaso: review,
 };
 function route() {
   disposeAll(); window.__settings = state().settings;
@@ -47,11 +48,11 @@ function home() {
   const next = nextLesson();
   const nb = Object.keys(S.badges).length, nl = Object.keys(S.lessons).length, total = C.modules.reduce((a, m) => a + (m.lessons || []).length, 0);
   view.innerHTML = `<section class="hero">
-    <div><h1>Domina la inspección SMT jugando</h1>
+    <div><h1>Sé el técnico de pruebas de la línea SMT</h1>
     <p>AOI 3D Koh Young y ViTrox, AXI V810, ICT HP3070 y SPI. Aprende con animaciones 3D, practica mantenimientos en la máquina virtual, crea y depura programas con Gerbers reales y certifícate con exámenes que se califican solos.</p>
     <div class="kpis"><div class="kpi"><b>Nv ${L.n}</b><span>${esc(L.name)}</span></div><div class="kpi"><b>${nl}/${total}</b><span>lecciones</span></div><div class="kpi"><b>${nb}</b><span>insignias</span></div></div>
     <div class="bar" title="Progreso al siguiente nivel"><i style="width:${Math.round(L.pct * 100)}%"></i></div><p class="mut" style="margin-top:6px">${S.xp} XP · siguiente nivel en ${Math.max(0, L.to - S.xp)} XP · ${dayStreak()} día(s) seguidos</p>
-    <div class="row">${next ? `<a class="btn pri" href="#leccion-${esc(next.l.id)}">Continuar: ${esc(next.l.title)}</a>` : ''}<a class="btn" href="#mapa">Ver mapa</a></div></div>
+    <div class="row"><a class="btn pri" href="#juego" style="font-size:20px;min-height:52px;background:var(--warn);border-color:var(--warn)">▶ Jugar: Técnico de Pruebas</a>${next ? `<a class="btn" href="#leccion-${esc(next.l.id)}">Continuar lección</a>` : ''}<a class="btn" href="#mapa">Academia</a></div></div>
     <div class="stage" id="homeStage"><div class="cap"></div></div></section>
     <section class="band"><h2>Elige tu modo</h2><div class="grid">
       ${[['mapa', 'Mapa de mundos', 'Módulos por máquina con lecciones animadas en 3D y retos rápidos.', 'book'], ['taller', 'Taller de mantenimiento', 'Mantenimientos paso a paso sobre el modelo 3D de cada máquina.', 'wrench'], ['simulador', 'Simulador de software', 'Crea programas con Gerbers reales y resuelve casos de debug.', 'chip'], ['examenes', 'Exámenes', 'Exámenes por módulo y examen final con calificación automática.', 'check']]
@@ -104,7 +105,7 @@ function lessonView(lid) {
     <div id="qq" style="margin-top:20px"></div>
     <div class="row" style="margin-top:16px">${prev ? `<a class="btn" href="#leccion-${esc(prev.id)}">← ${esc(prev.title)}</a>` : ''}<span class="sp"></span><button class="btn pri" id="done">${S.lessons[l.id] ? 'Lección completada ✓' : 'Marcar como completada +50 XP'}</button>${next ? `<a class="btn" href="#leccion-${esc(next.id)}">${esc(next.title)} →</a>` : `<a class="btn" href="#examen-${esc(m.id)}">Ir al examen →</a>`}</div></div>`;
   const st = createStage(view.querySelector('#lsStage'));
-  mountScene(st, l.animation, { model: mc.model, color: mc.color });
+  mountScene(st, l.animation, { model: mc.model, model3d: mc.model3d, color: mc.color });
   const pp = view.querySelector('#pp'); pp.onclick = () => { st.playing = !st.playing; pp.textContent = st.playing ? '⏸ Pausa' : '▶ Reproducir'; };
   const spb = view.querySelector('#sp'); spb.onclick = () => { st.speed = st.speed === 1 ? 2 : st.speed === 2 ? .5 : 1; spb.textContent = `Velocidad ${st.speed}×`; };
   view.querySelector('#rs').onclick = () => { st.t = 0; };
@@ -152,7 +153,7 @@ function workshop() {
   const st = createStage(view.querySelector('#wsStage'));
   const ms = C.machines.filter(m => m.model !== 'generic');
   let cur = ms[0];
-  const show = mc => { cur = mc; st.scene.children.filter(o => o.userData.isM).forEach(o => st.scene.remove(o)); st.updaters.length = 0; st.clearLabels(); const caps = mountScene(st, 'machine_tour', { model: mc.model, color: mc.color }); st.scene.children.at(-1).userData.isM = true; list(); };
+  const show = mc => { cur = mc; st.scene.children.filter(o => o.userData.isM).forEach(o => st.scene.remove(o)); st.updaters.length = 0; st.clearLabels(); const caps = mountScene(st, 'machine_tour', { model: mc.model, model3d: mc.model3d, color: mc.color }); st.scene.children.at(-1).userData.isM = true; list(); };
   const list = () => {
     const procs = C.maintenance.filter(p => p.machine === cur.id);
     view.querySelector('#wsList').innerHTML = `<div class="row" style="margin-bottom:10px">${ms.map(m => `<button class="btn ${m === cur ? 'pri' : ''}" data-mc="${esc(m.id)}" style="${m === cur ? `background:${m.color};border-color:${m.color}` : ''}">${esc(m.name.replace(/^(AOI 3D|AXI|ICT|SPI 3D) /, '$1 '))}</button>`).join('')}</div>

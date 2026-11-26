@@ -5,7 +5,102 @@
  "machine": null,
  "title": "Módulo 14. Debug, fallas y mantenimiento del ICT",
  "summary": "",
- "lessons": [],
+ "lessons": [
+  {
+   "id": "m14-l1",
+   "title": "Depurar una prueba que falla: el método",
+   "animation": "ict_bed_of_nails",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "Cuando el ICT marca una falla hay tres sospechosos: la tarjeta (el defecto es real), el fixture (una punta sucia, gastada o un cable suelto) o el programa (una prueba inestable o mal ajustada). Tu trabajo es encontrar al culpable con evidencia, no abrir la tolerancia hasta que pase."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Repetir: corre la prueba varias veces. ¿Falla siempre o a veces?",
+      "Comparar: córrela en la KGB. Si también falla ahí, el problema no es la tarjeta.",
+      "Confirmar contacto: revisa puntas y nodos con find pins, la punta guiada o un multímetro fuera del fixture.",
+      "Ver el circuito: con board graphics busca qué hay en paralelo con el componente.",
+      "Ajustar una cosa a la vez: guardas, sensing, en, re, fr, wa o fi.",
+      "Validar, guardar, compilar y registrar qué cambiaste, por qué y con qué evidencia."
+     ]
+    },
+    {
+     "kind": "text",
+     "text": "Para entrar al debug: en BT-Basic, con el testplan cargado, corre load board y luego debug board. Todo cambio en debug vive en memoria: cuando la prueba ya es estable, guarda y compila, o se pierde al recargar."
+    }
+   ],
+   "keyPoints": [
+    "Hay tres sospechosos: tarjeta, fixture y programa.",
+    "Repetir y comparar con la KGB son los primeros dos pasos.",
+    "Cambia una cosa a la vez y registra la evidencia.",
+    "Los cambios en debug se pierden si no guardas y compilas."
+   ]
+  },
+  {
+   "id": "m14-l2",
+   "title": "Síntomas comunes del ICT y qué revisar primero",
+   "animation": "defect_gallery",
+   "blocks": [
+    {
+     "kind": "bullets",
+     "items": [
+      "Muchos nodos fallan contacto: revisa vacío y colocación; limpia o cambia puntas; verifica con find pins.",
+      "El mismo corto en muchas tarjetas: mide la tarjeta fuera del fixture con multímetro. Si está bien, revisa el fixture. Si está mal, avisa a proceso (impresión, AOI).",
+      "Capacitor pequeño mide de más: revisa learn capacitance on/off y la opción comp; valida con pc en debug.",
+      "La lectura brinca en resistencias grandes: agrega wa (espera) o fi (promedio).",
+      "Polarity Check falla en todas: la tarjeta mux es revisión A; Polarity Check necesita mux revisión B.",
+      "Las mediciones fallan durante el día: si la temperatura cambió más de ±5 °C, corre el autoajuste."
+     ]
+    },
+    {
+     "kind": "text",
+     "text": "Falla real o falsa: vuelve a probar la tarjeta una vez. Si pasa, sospecha del contacto y anota el nodo. Busca la tarjeta en el AOI y el AXI: si ellos vieron algo en ese lugar, es casi seguro que es real. Si muchas tarjetas fallan igual y todas están bien, el problema es la prueba o el fixture: va a debug, no a reparación."
+    },
+    {
+     "kind": "warning",
+     "text": "Nunca energices una tarjeta que falló cortos o Polarity Check. Pc es solo para debug; nunca va en producción."
+    }
+   ],
+   "keyPoints": [
+    "Contacto: vacío, colocación, puntas sucias o gastadas.",
+    "Un corto en muchas tarjetas: primero mide sin fixture.",
+    "Autoajuste si la temperatura cambió más de ±5 °C.",
+    "Si todas las tarjetas buenas fallan igual, el problema es la prueba o el fixture."
+   ]
+  },
+  {
+   "id": "m14-l3",
+   "title": "Mantenimiento preventivo, puntas y seguridad del ICT",
+   "animation": "machine_tour",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "Limpia el chasis, monitor, impresora, bahía, teclado y mouse con un trapo húmedo con agua o jabón; alcohol solo para manchas. El polvo se quita con aire comprimido, de preferencia con ionizador, sobre todo en las MPU. Con mucho polvo el equipo se apaga sin motivo aparente."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Diagnóstico del sistema: con el usuario service1 y el fixture de diagnóstico. System Diagnostics > Full Diagnostics dura cerca de 1 hora.",
+      "Autoajuste: corre antes del diagnóstico. Si la temperatura cambió más de ±5 °C, el diagnóstico falla.",
+      "Interfaz BRC: limpiar o cambiar los contactos, cerca de 1,500 por módulo al año.",
+      "Puntas: los fabricantes dan entre 35,000 y 40,000 actuaciones, pero el flux y el polvo las contaminan antes. Lleva el conteo de ciclos del fixture."
+     ]
+    },
+    {
+     "kind": "warning",
+     "text": "Las pruebas con energía aplican voltaje a la tarjeta: no la toques mientras corre. Con unpowered se descargan los capacitores antes de medir."
+    }
+   ],
+   "keyPoints": [
+    "Limpia con aire comprimido, sobre todo las MPU.",
+    "Corre el diagnóstico con service1 y el fixture de diagnóstico.",
+    "El autoajuste va antes del diagnóstico.",
+    "Cambia las puntas gastadas a tiempo, según el conteo de ciclos."
+   ]
+  }
+ ],
  "exam": [
   {
    "type": "mc",

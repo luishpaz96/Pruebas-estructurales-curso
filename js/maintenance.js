@@ -1,12 +1,13 @@
 // Taller de mantenimiento: modelo 3D de la máquina, checklist de seguridad y pasos guiados (clic en pieza + acción).
 import { createStage, THREE } from './stage.js';
 import { buildMachine, animateMachine, highlight, pick, PART_NAMES, ACTION_NAMES } from './machines.js';
+import { buildReal } from './models.js';
 import { esc, sfx, toast, dialog, confetti, shuffle } from './fx.js';
 import { state, save, addXP, course } from './store.js';
 
 const SAFE_FIRST = new Set(['emergency_stop', 'interlock']);
 
-export function runMaintenance(root, proc, onExit) {
+export function runMaintenance(root, proc, onExit, onResult) {
   const mach = course.machines.find(m => m.id === proc.machine) || { model: 'aoi', color: '#3d8bff', name: '' };
   root.innerHTML = `<div class="row"><button class="btn ghost" id="mxBack">← Taller</button><span class="tag" style="color:${mach.color}">${esc(mach.name)}</span><span class="tag">${esc(proc.frequency || '')}</span></div>
   <h1 style="margin-top:10px">${esc(proc.title)}</h1>
@@ -15,7 +16,7 @@ export function runMaintenance(root, proc, onExit) {
   <div class="card" id="mxPanel"></div></div>`;
   root.querySelector('#mxBack').onclick = onExit;
   const st = createStage(root.querySelector('#mxStage'), { cam: [4.4, 3.4, 5.2], target: [0, 1.3, 0] });
-  const m = buildMachine(mach.model || 'aoi', mach.color); st.scene.add(m.group);
+  const m = mach.model3d ? buildReal(mach.model3d, mach.color) : buildMachine(mach.model || 'aoi', mach.color); st.scene.add(m.group);
   st.onFrame(t => animateMachine(m, t, mach.model));
   root.querySelector('#mxReset').onclick = () => { st.camera.position.set(4.4, 3.4, 5.2); st.controls.target.set(0, 1.3, 0); };
   const cap = root.querySelector('#mxCap'), panel = root.querySelector('#mxPanel');
@@ -111,7 +112,8 @@ export function runMaintenance(root, proc, onExit) {
     addXP(prev ? (pct > prev ? 25 : 5) : 60 + pct, 'por el mantenimiento');
     panel.innerHTML = `<h3>Procedimiento terminado</h3><div class="score ${pct >= 70 ? 'pass' : 'fail'}">${pct}</div><p>${errors} errores${safetyFault ? ' y una falta de seguridad' : ''}. ${pct === 100 ? 'Impecable.' : 'Repite para subir tu marca.'}</p>
       <div class="row"><button class="btn pri" id="again">Repetir</button><button class="btn" id="out">Volver al taller</button></div>`;
-    panel.querySelector('#again').onclick = () => runMaintenance(root, proc, onExit);
+    panel.querySelector('#again').onclick = () => { st.dispose(); runMaintenance(root, proc, onExit, onResult); };
+    onResult && onResult(pct, safetyFault);
     panel.querySelector('#out').onclick = onExit;
   }
 

@@ -5,7 +5,106 @@
  "machine": null,
  "title": "Módulo 19. Estrategia, SPC e integración de línea",
  "summary": "",
- "lessons": [],
+ "lessons": [
+  {
+   "id": "m19-l1",
+   "title": "Matriz de cobertura: encontrar los huecos",
+   "animation": "defect_gallery",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "Para cada defecto anota qué estación lo detecta. Así ves los huecos antes de que el cliente los encuentre. Un renglón donde nadie dice Sí es un riesgo: se acepta por escrito o se cubre con otra inspección o prueba."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Poca pasta: solo el SPI.",
+      "Chip faltante o desplazado: AOI lo ve; el ICT ve el faltante, y el desplazado solo si quedó abierto.",
+      "Valor equivocado (1 kΩ en vez de 10 kΩ): solo el ICT.",
+      "Open en BGA: AXI y, en parte, ICT (Testjet, Boundary Scan).",
+      "Head-in-pillow: AXI en parte; ICT de forma intermitente.",
+      "Vacíos en pad térmico: solo AXI.",
+      "Llenado de barril: AXI; el AOI solo ve lo visible."
+     ]
+    },
+    {
+     "kind": "text",
+     "text": "El ICT y el AXI se complementan: el AXI ve la forma de la soldadura oculta pero no el valor eléctrico; el ICT mide el valor, pero no ve una soldadura pobre que todavía conduce."
+    }
+   ],
+   "keyPoints": [
+    "La matriz muestra qué estación detecta cada defecto.",
+    "Un renglón sin ningún Sí es un riesgo que hay que cubrir o aceptar por escrito.",
+    "El AXI y el ICT se complementan; ninguno lo ve todo.",
+    "El ICT no ve el llenado de barril."
+   ]
+  },
+  {
+   "id": "m19-l2",
+   "title": "Lazo cerrado, SPC y comunicación entre máquinas",
+   "animation": "process_flow",
+   "blocks": [
+    {
+     "kind": "bullets",
+     "items": [
+      "SPI a impresora: si el volumen baja, limpia el stencil y revisa presión y alineación. KPO Printer lo automatiza en Koh Young.",
+      "AOI a colocadora: si todos los componentes de una boquilla salen corridos al mismo lado, se corrige la colocadora, no el AOI.",
+      "AXI a horno y stencil: muchos vacíos apuntan al diseño de la abertura, al perfil o a la pasta. HiP apunta al pandeo del componente, al perfil o a la humedad.",
+      "Seguir la tarjeta por número de serie: si un open de BGA coincide con poca pasta en el SPI, el problema está en la impresora."
+     ]
+    },
+    {
+     "kind": "text",
+     "text": "Carta de control: medición en el tiempo con sus límites normales. Cpk: qué tan holgado está el proceso frente a su tolerancia; 1.33 o más es la meta usual, y menos de 1.0 significa que ya se producen defectos. Pareto: barras ordenadas de mayor a menor que dicen en qué problema trabajar primero."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "SMEMA: señales básicas entre máquinas vecinas: tengo tarjeta y estoy lista.",
+      "IPC-HERMES-9852: además pasa datos de la tarjeta, como su identificador y dimensiones.",
+      "IPC-CFX: envía datos de la máquina al sistema de la fábrica.",
+      "MES y trazabilidad: el sistema puede impedir que avance una tarjeta que no pasó inspección."
+     ]
+    }
+   ],
+   "keyPoints": [
+    "La inspección retroalimenta a la máquina que causa el defecto.",
+    "Cpk de 1.33 o más es la meta; menos de 1.0 ya produce defectos.",
+    "El Pareto dice en qué problema trabajar primero.",
+    "HERMES pasa datos de la tarjeta; SMEMA solo señales básicas."
+   ]
+  },
+  {
+   "id": "m19-l3",
+   "title": "Cuándo se puede reducir la inspección",
+   "animation": "process_flow",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "Un AXI que inspecciona todo puede volverse el cuello de botella de la línea. Comprar otro es caro. La otra salida es probar menos, pero solo donde los datos lo permiten. Índice de complejidad: CI = ((componentes + uniones) ÷ 100) × S × M × D. Menos de 50 es complejidad baja; de 50 a 125, media; de 125 o más, alta."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Reducir cobertura: AXI con rendimiento histórico mayor a 80 %, ICT mayor a 95 % y tarjeta de baja complejidad. Quitas del AXI los componentes sin historial de fallas (de 3 a 6 meses de datos) que el ICT prueba bien.",
+      "Muestreo: AXI mayor a 97 % con DPMO menor a 50, ICT y funcional mayores a 98 %, baja complejidad y cumple el AQL.",
+      "AXI con AOI: AXI mayor a 70 %, AOI mayor a 95 %, ICT y funcional mayores a 97 %. AOI al 100 %; el AXI solo en uniones ocultas, gullwing de paso fino y componentes con historial de fallas.",
+      "AXI con SPI: correlación entre SPI y AXI mayor a 80 %, AXI mayor a 70 % e ICT mayor a 90 %. SPI al 100 %."
+     ]
+    },
+    {
+     "kind": "warning",
+     "text": "Cobertura de 100 % en productos nuevos, en paquetes nuevos y en las primeras 5 tarjetas de cada corrida. Revisa los datos de AXI, ICT y funcional antes de quitar algo, y si los rendimientos bajan, regresa al programa original."
+    }
+   ],
+   "keyPoints": [
+    "Reducir o muestrear el AXI solo con datos que lo respalden.",
+    "Cada método tiene umbrales de rendimiento que deben cumplirse.",
+    "En productos nuevos y primeras 5 tarjetas, cobertura de 100 %.",
+    "Si los rendimientos bajan, regresa al programa original."
+   ]
+  }
+ ],
  "exam": [
   {
    "type": "mc",

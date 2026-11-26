@@ -4,17 +4,25 @@ App web interactiva para el curso de pruebas estructurales: AOI 3D Koh Young Zen
 
 ## Qué incluye
 
+- **Modo historia (Jugar)**: un videojuego 3D en la planta, con la línea SMT completa a escala (cargador, impresora, SPI KY8030, colocadoras, horno, AOI Zenith, AXI V810, AOI V510 en la línea 2, ICT HP3070 y banco de reparación). Eres un técnico de pruebas de nuevo ingreso y caminas por la planta con WASD, clic o toque. Lo guían tres personajes: el Ing. Marco Salinas (ingeniero de pruebas y mentor), Laura Méndez (supervisora de manufactura) y la Ing. Sofía Treviño (calidad). Tiene banda sonora y efectos generados en el navegador.
+  - **Capítulo 1 · Capacitación de nuevo ingreso**: clases dentro del juego, frente a cada máquina, con la animación 3D de la lección y una pregunta de comprobación. Luego prácticas guiadas y una evaluación de nuevo ingreso.
+  - **Capítulo 2 · Primeras semanas en la línea**: llega la fecha del mantenimiento, avisas a manufactura, acuerdan la ventana y lo haces con el mentor. También hay NPIs de PRACTICA-01, cambios de modelo y un cambio de fixtura del ICT.
+  - **Capítulo 3 · Técnico responsable**: debug en producción, fallas mayores, un escape investigado con calidad y una auditoría final.
+  - Cada día termina con un reporte de turno: FPY, escapes, tiempo de línea parada y una calificación de S a D. Al aprobar un día se desbloquea el siguiente. También hay un turno libre con alarmas y colas de NG.
 - **Gamificación**: XP, 9 niveles (de Aprendiz a Maestro de línea), insignias (más una de dominio por cada máquina), racha de aciertos, días seguidos, confeti y sonidos.
 - **Mapa de mundos**: un mundo por máquina; cada módulo se desbloquea al aprobar el anterior o terminar sus lecciones. En Ajustes hay un modo libre para instructores.
 - **Lecciones con animación 3D** (Three.js): 12 animaciones procedurales: línea SMT, franjas moiré/PSP, laminografía de rayos X, cama de agujas ICT, tipos de junta, calibración, fiduciales y transportador, volumen de pasta SPI, galería de defectos, flujo de programación, seguridad radiológica y recorrido por la máquina. Cada lección cierra con un reto rápido.
 - **Taller de mantenimiento**: modelo 3D de cada máquina con piezas que se pueden seleccionar. Primero confirmas la lista de seguridad (LOTO, paro de emergencia) y luego haces clic en la pieza correcta y eliges la acción (inspeccionar, limpiar, lubricar, reemplazar, calibrar, accionar o medir). Al final se califica.
-- **Simulador de software**: interfaz genérica de inspección con árbol de programa, vista de la tarjeta, panel de parámetros, log y barra de estado.
+- **Simulador de software** con la apariencia de cada programa real: AOIGUI (Koh Young Zenith), Smart GUI (ViTrox V510), AXI System v810, BT-BASIC (ICT HP3070) y CEditor (SPI Koh Young). Cada uno tiene árbol de programa, vista de la tarjeta, panel de parámetros, log y barra de estado.
   - **Crea tu programa** en modo AOI, SPI, AXI o ICT con **archivos de manufactura reales** de la tarjeta PRACTICA-01: Gerber RS-274X, barrenos Excellon, centroides y netlist IPC-D-356. También acepta tus propios archivos. Los pasos son: importar, alinear con fiduciales, asignar la librería, ajustar umbrales y correr un lote de 50 tarjetas que trae defectos mezclados. El resultado muestra cuántos defectos se detectaron, cuántos falsos llamados hubo y cuántos escapes.
   - **Prácticas de creación y debug** por máquina, con decisiones paso a paso y ajuste de parámetros en vivo.
 - **Exámenes autocalificados**: 22 exámenes de módulo y un examen final. Las opciones se barajan, hay temporizador opcional y una revisión con la respuesta correcta, su explicación y la sección del curso. También hay un banco de repaso con las preguntas falladas.
 
 ## Cómo abrirla
 
+**Windows (nativo):** descarga `AcademiaInspeccion-Windows-x64.zip` de la sección *Releases* del repositorio, descomprímelo y abre `AcademiaInspeccion.exe`. No necesita instalación ni internet. F11 activa la pantalla completa. Para regenerarlo, entra a `desktop/`, copia la carpeta de la app en `desktop/app` y ejecuta `npm i` y luego `node pack.js`.
+
+**Navegador:**
 Sirve la carpeta con cualquier servidor estático (los módulos ES no cargan desde `file://`):
 
 ```bash
@@ -108,6 +116,23 @@ Acciones (`action`): inspect, clean, lubricate, replace, calibrate, toggle, meas
 ```
 
 `params` es opcional. Por debajo del rango objetivo el parámetro produce falsos llamados (`"lowEffect": "false"`, el valor por defecto) o escapes (`"lowEffect": "escape"`). Por encima produce el efecto contrario.
+
+### Agregar o modificar días del modo historia
+
+Todo vive en `content/game/career.json`:
+
+- `chapters`: los capítulos, con `id`, `title` y `summary`.
+- `cast`: los personajes. Usa `mentor`, `prod` y `quality`.
+- `days`: los días. Cada día tiene `chapter`, `title`, `intro`, `missions` y un `debrief` opcional.
+
+En `intro` y `debrief`, cada línea puede ser un texto (lo dice el mentor) o `{"who": "prod", "text": "..."}`.
+
+Cada misión tiene un tipo y una estación:
+
+- Tipos: `lesson` (clase con una lección del curso, por ejemplo `"lesson": "m16-l1"`), `notify` (coordinar con manufactura o calidad: `prompt`, `options` y `correct`), `tour`, `review`, `alarm`, `quiz`, `sequence`, `npi`, `maint`, `practice` y `talk`.
+- Estaciones: `aoi`, `aoi2`, `axi`, `ict`, `spi`, `prod`, `quality` y `mentor`.
+
+Las fallas del juego están en `content/game/incidents.json`. Después de cualquier cambio, ejecuta `python3 tools/build_content.py`.
 
 ### Agregar una tarjeta con Gerbers
 

@@ -2,6 +2,7 @@
 // que se muestran como subtítulo. Para agregar una animación nueva: añade una función aquí y su id en tools/build_content.py.
 import { THREE, box, cyl, at, mat, pcb } from './stage.js';
 import { buildMachine, animateMachine, PART_NAMES, highlight } from './machines.js';
+import { buildReal } from './models.js';
 
 const lerp = (a, b, k) => a + (b - a) * k;
 const cycle = (t, len) => (t % len) / len;
@@ -213,7 +214,7 @@ export const SCENES = {
 
   machine_tour(st, opts = {}) {
     const kind = opts.model || 'aoi';
-    const m = buildMachine(kind, opts.color || '#3d8bff'); st.scene.add(m.group);
+    const m = opts.model3d ? buildReal(opts.model3d, opts.color) : buildMachine(kind, opts.color || '#3d8bff'); st.scene.add(m.group);
     const list = Object.keys(m.parts).filter(k => PART_NAMES[k]);
     // Recorre las piezas una por una: resalta la pieza y muestra sólo su etiqueta
     const lbls = list.map(k => { const l = st.label(m.parts[k], PART_NAMES[k], [0, .15, 0]); l.d.style.display = 'none'; return l; });

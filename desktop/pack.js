@@ -1,0 +1,2 @@
+const { packager } = require('@electron/packager');
+packager({ dir: '.', name: 'AcademiaInspeccion', platform: 'win32', arch: 'x64', out: 'dist', overwrite: true, asar: true, ignore: [/^\/dist/, /^\/pack\.js/, /^\/node_modules\/@electron/], appCopyright: 'Curso de pruebas estructurales', win32metadata: { CompanyName: 'Curso', ProductName: 'Academia de Inspeccion' } }).then(p => console.log('OK', p)).catch(e => { console.error('ERR', e.message); process.exit(1); });

@@ -5,7 +5,120 @@
  "machine": null,
  "title": "Módulo 21. Defectos según IPC-A-610",
  "summary": "",
- "lessons": [],
+ "lessons": [
+  {
+   "id": "m21-l1",
+   "title": "Clases 1, 2 y 3 de IPC-A-610 y sus condiciones",
+   "animation": "defect_gallery",
+   "blocks": [
+    {
+     "kind": "bullets",
+     "items": [
+      "Clase 1: electrónica general, como juguetes y aparatos sencillos. Lo importante es que funcione.",
+      "Clase 2: servicio dedicado, como computadoras, electrodomésticos y telecomunicaciones. Es la clase más común.",
+      "Clase 3: alto desempeño, como automotriz de seguridad, médico, aeroespacial y militar. Tolerancias más cerradas; aquí el AXI es casi obligatorio."
+     ]
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Aceptable: cumple y no se retrabaja.",
+      "Indicador de proceso: no es defecto, pero avisa que el proceso se desvía. Se registra y se corrige el proceso; la tarjeta se usa.",
+      "Defecto: no cumple. Se retrabaja, se repara o se desecha según lo que acuerden planta y cliente."
+     ]
+    },
+    {
+     "kind": "text",
+     "text": "La norma habla en porcentajes del tamaño del componente y la máquina mide en micras. La conversión es una multiplicación. Chip 0603 en clase 3: el desplazamiento lateral máximo es 25 % del ancho de la terminal de 0.8 mm, es decir 0.25 × 0.8 mm = 200 µm."
+    },
+    {
+     "kind": "warning",
+     "text": "Los valores de este módulo resumen criterios comunes de las ediciones recientes de IPC-A-610. Antes de usarlos en un programa, confírmalos en la edición que tu planta tiene contratada y en el requisito del cliente, que puede ser más estricto."
+    }
+   ],
+   "keyPoints": [
+    "Clase 2 es la más común; clase 3 es la más estricta.",
+    "Aceptable, indicador de proceso y defecto son las tres condiciones.",
+    "Convierte el porcentaje de la norma en micras con la dimensión del componente.",
+    "Confirma siempre los límites con la edición y el cliente."
+   ]
+  },
+  {
+   "id": "m21-l2",
+   "title": "Chips y gullwing: límites que se capturan en el programa",
+   "animation": "defect_gallery",
+   "blocks": [
+    {
+     "kind": "text",
+     "text": "Para un chip (resistencia o capacitor), las letras de IPC son W (ancho de la terminal), P (ancho del pad), A (lo que se sale de lado) y C (ancho de la unión soldada)."
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Desplazamiento lateral (A): clases 1 y 2, máximo 50 % de W o de P, lo que sea menor; clase 3, 25 %. Lo ven el AOI y el AXI.",
+      "Ancho mínimo de la unión (C): 50 % en clases 1 y 2; 75 % en clase 3.",
+      "Altura máxima del filete: la soldadura puede subir a la terminal, pero no debe tocar el cuerpo del componente.",
+      "Tombstone: siempre es defecto en las tres clases."
+     ]
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "Desplazamiento lateral: clases 1 y 2, máximo 50 % del ancho de la patita o 0.5 mm, lo que sea menor; clase 3, 25 %.",
+      "Filete de talón mínimo (F): clase 2, G + 50 % de T; clase 3, G + T.",
+      "El talón queda medio tapado por la patita vista desde arriba: el AOI lo ve solo en parte y el AXI lo mide mejor."
+     ]
+    },
+    {
+     "kind": "warning",
+     "text": "Un programa copiado de un producto clase 2 a uno clase 3 sin revisar los límites deja pasar defectos. Un chip 0603 acepta 400 µm en clase 2, pero solo 200 µm en clase 3."
+    }
+   ],
+   "keyPoints": [
+    "Chip: desplazamiento lateral de 50 % en clase 2 y 25 % en clase 3.",
+    "Ancho mínimo de la unión: 50 % en clases 1 y 2, 75 % en clase 3.",
+    "En gullwing, el filete de talón mínimo es mayor en clase 3.",
+    "Los límites de clase 2 no sirven para un producto clase 3."
+   ]
+  },
+  {
+   "id": "m21-l3",
+   "title": "BGA, QFN, PTH y lo que ninguna máquina ve bien",
+   "animation": "xray_tomo",
+   "blocks": [
+    {
+     "kind": "bullets",
+     "items": [
+      "BGA: puente entre esferas, esfera faltante y unión abierta son defectos. Los detecta el AXI; el AOI no ve debajo del componente.",
+      "BGA: vacíos son defecto si pasan de 30 % del área de la esfera en la imagen de rayos X. Ediciones anteriores usaban 25 %, y muchos clientes piden menos.",
+      "QFN: IPC no fija un porcentaje de vacíos en el pad térmico; se acuerda con el cliente, y suele definirlo la hoja de datos."
+     ]
+    },
+    {
+     "kind": "bullets",
+     "items": [
+      "THT, llenado vertical del barril: 75 % en clases 2 y 3 (en clase 2 se permite 50 % solo en casos con planos térmicos). En clase 1 no hay mínimo.",
+      "THT, mojado del lado del componente: 180° en clase 2, 270° en clase 3.",
+      "THT, filete del lado de soldadura: 270° en clase 2, 330° en clase 3."
+     ]
+    },
+    {
+     "kind": "text",
+     "text": "Lo que ninguna de las dos máquinas ve bien: soldadura fría, grietas finas, residuos de flux, daño de la tarjeta, etiquetas y conformal coating. Se cubre con inspección visual con lupa o microscopio, con muestreo y con control del proceso."
+    },
+    {
+     "kind": "tip",
+     "text": "IPC juzga cómo se ve el ensamble; el ICT no mide eso. Una unión con poca soldadura que todavía conduce pasa el ICT aunque IPC la rechace. Por eso lo que el AOI o el AXI marcan se repara aunque el ICT diga que pasa."
+    }
+   ],
+   "keyPoints": [
+    "Los vacíos de BGA son defecto arriba de 30 % del área de la esfera.",
+    "El llenado vertical del barril en THT es de 75 % en clases 2 y 3.",
+    "Solo el AXI puede comprobar la mayoría de las uniones ocultas.",
+    "El ICT no juzga la calidad de la soldadura."
+   ]
+  }
+ ],
  "exam": [
   {
    "type": "mc",
