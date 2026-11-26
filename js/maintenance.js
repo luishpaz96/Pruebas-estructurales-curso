@@ -12,7 +12,7 @@ export function runMaintenance(root, proc, onExit, onResult) {
   const mach = course.machines.find(m => m.id === proc.machine) || { model: 'aoi', color: '#3d8bff', name: '' };
   root.innerHTML = `<div class="row"><button class="btn ghost" id="mxBack">← Taller</button><span class="tag" style="color:${mach.color}">${esc(mach.name)}</span><span class="tag">${esc(proc.frequency || '')}</span></div>
   <h1 style="margin-top:10px">${esc(proc.title)}</h1>
-  <div class="split"><div><div class="stage" id="mxStage"><div class="cap" id="mxCap"></div><div class="ctrl"><button class="btn" id="mxReset">Centrar vista</button><button class="btn" id="mxGhost" hidden>👁 Ver por dentro</button><button class="btn" id="mxExp" hidden>🔍 Explorar piezas</button></div><div class="mxinfo" id="mxInfo" hidden></div></div>
+  <div class="split"><div><div class="stage" id="mxStage"><div class="cap" id="mxCap"></div><div class="ctrl"><button class="btn" id="mxReset">Centrar vista</button><button class="btn" id="mxGhost" hidden>👁 Ver por dentro</button><button class="btn" id="mxExp" hidden>🔍 Explorar piezas</button><button class="btn" id="mxPedal" hidden>🦶 Pedal: girar cabeza</button></div><div class="mxinfo" id="mxInfo" hidden></div></div>
   <p class="mut" style="margin-top:8px">Gira con un dedo o el mouse, acerca con dos dedos o la rueda. Pasa el cursor para ver el nombre de cada pieza.</p></div>
   <div class="card" id="mxPanel"></div></div>`;
   root.querySelector('#mxBack').onclick = onExit;
@@ -32,10 +32,28 @@ export function runMaintenance(root, proc, onExit, onResult) {
     eB.onclick = () => { exploring = !exploring; eB.classList.toggle('pri', exploring); sfx('click'); if (exploring && !inner.isGhost()) setG(true);
       info.hidden = !exploring; info.innerHTML = exploring ? `<b>Modo exploración</b><p>Haz clic en cualquier pieza interna para ver qué es y qué se revisa en el mantenimiento.${inner.cards.length ? ' En el ICT, haz clic en una tarjeta del testhead para sacarla e inspeccionarla.' : ''}</p>` : ''; };
   }
+  // Pedal del ICT: gira la cabeza a posición de servicio para sacar tarjetas
+  const pB = root.querySelector('#mxPedal');
+  function pedal() {
+    if (!inner?.head) return;
+    const stt = inner.rotState(); if (stt === 'moving') return;
+    if (stt === 'service') {
+      if (inner.cards.some(c => c.userData.out)) { info.hidden = false; info.innerHTML = '<b>Faltan tarjetas</b><p>Mete todas las tarjetas en su ranura antes de regresar la cabeza a posición de prueba.</p>'; sfx('bad'); return; }
+      inner.rotate(0); sfx('step'); pB.textContent = '🦶 Pedal: girar cabeza'; info.hidden = false; info.innerHTML = '<b>Regresando la cabeza</b><p>Mantén el pedal hasta que la cabeza quede horizontal. Después instala el fixture, enciende la cabeza (testhead power on) y corre el diagnóstico si cambiaste alguna tarjeta.</p>'; return;
+    }
+    const items = ['Fixture retirado de la cabeza', 'Vacío apagado', 'Cabeza apagada (testhead power off)', 'Pulsera antiestática conectada', 'Nadie con las manos cerca de la cabeza'];
+    info.hidden = false; info.innerHTML = `<b>Antes de pisar el pedal</b>${items.map((t, k) => `<label class="check"><input type="checkbox" data-pc="${k}"> <span>${esc(t)}</span></label>`).join('')}<button class="btn pri" id="mxGo" disabled>Pisar el pedal</button>`;
+    const bx = [...info.querySelectorAll('[data-pc]')], go = info.querySelector('#mxGo'); bx.forEach(b => b.onchange = () => { go.disabled = !bx.every(x => x.checked); });
+    go.onclick = () => { if (!inner.isGhost()) gB.click(); if (!exploring) eB.click(); inner.rotate(1); sfx('step'); pB.textContent = '🦶 Pedal: regresar cabeza';
+      info.innerHTML = '<b>Girando la cabeza</b><p>La cabeza queda vertical con las tarjetas hacia ti. Haz clic en una tarjeta para sacarla. En cada módulo: ASRU en la ranura 1, control card en la 6 y pin cards en las demás.</p>'; };
+  }
+  if (inner?.head) { pB.hidden = false; pB.onclick = pedal; }
   function explore(h) {
+    if (h.part === 'pedal') return pedal();
     const id = h.part, card = h.obj?.userData?.card || (h.obj && (() => { let o = h.obj; while (o && !o.userData.card) o = o.parent; return o?.userData.card; })());
     const d = INNER[id] || { name: PART_NAMES[id] || id, desc: 'Pieza de mantenimiento: búscala en los pasos del procedimiento.', check: '' };
     let extra = '';
+    if (card && inner.head && inner.rotState() !== 'service') { sfx('bad'); info.hidden = false; info.innerHTML = `<b>${esc(card.userData.info.label)}</b><p>Para sacar tarjetas primero gira la cabeza a posición de servicio con el pedal (🦶).</p><p>${esc(d.desc)}</p>`; return; }
     if (card) { const out = inner.toggleCard(card); sfx(out ? 'open' : 'click'); const ci = card.userData.info;
       extra = out ? `<div class="mxcard"><img alt="${ci.label}" src="${ci.tex.userData.url()}"></div><p class="mut">Módulo ${ci.module}, ranura ${ci.slot}. Vuelve a hacer clic en la tarjeta para meterla.</p>` : '<p class="mut">Tarjeta instalada de nuevo en su ranura.</p>'; }
     else { sfx('click'); if (h.obj) { highlight(h.obj, true, 0xffb020); setTimeout(() => highlight(h.obj, false), 900); } }

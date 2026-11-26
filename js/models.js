@@ -253,8 +253,11 @@ function v810(P, color) {
 function hp3070(P, color) {
   const G = new THREE.Group(); const W = 2.9, D = 2.0, H = 2.3; // testhead HP3070 S3 (aprox.)
   // Base con ruedas
-  G.add(at(box(W, .12, D, M.charcoal()), 0, .2, 0));
-  [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([sx, sz]) => G.add(at(cyl(.07, .07, .1, M.black()), sx * (W / 2 - .15), .07, sz * (D / 2 - .15))));
+  const stay = o => { o.userData.stay = true; return o; };
+  G.add(stay(at(box(W, .12, D, M.charcoal()), 0, .2, 0)));
+  [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([sx, sz]) => G.add(stay(at(cyl(.07, .07, .1, M.black()), sx * (W / 2 - .15), .07, sz * (D / 2 - .15)))));
+  // Pedal de piso (el operador lo usa para mover la cabeza)
+  { const pd = new THREE.Group(); pd.add(box(.5, .08, .6, M.charcoal())); const tp = at(box(.42, .04, .45, mat(0xffd43b)), 0, .07, .03); tp.rotation.x = -.12; pd.add(tp); pd.add(at(cyl(.015, .015, 1.2, M.black(), 6).rotateX(Math.PI / 2), -.15, .02, -.9)); pd.position.set(.9, .04, D / 2 + .7); G.add(stay(tag(pd, 'pedal'))); P.pedal = pd; P.pedalTop = tp; }
   // Cuerpo azul marino con paneles laterales blancos inclinados
   G.add(at(box(W - .2, 1.6, D - .3, M.navy()), 0, 1.06, -.05));
   [-1, 1].forEach(s => { const p = at(box(.45, 1.65, D - .25, M.offwhite()), s * (W / 2 - .3), 1.08, 0); G.add(p); });
@@ -279,11 +282,11 @@ function hp3070(P, color) {
   const es = estop(); es.position.set(-.9, 1.7, D / 2 - .1); G.add(tag(es, 'emergency_stop')); P.emergency_stop = es; P.mush = es.userData.mush;
   const il = at(box(.1, .1, .06, mat(0xffd43b)), .9, 1.98, D / 2 - .05); G.add(tag(il, 'interlock')); P.interlock = il;
   // Impresora a la izquierda y brazo con monitor y teclado a la derecha
-  G.add(at(box(.6, .35, .55, M.offwhite()), -W / 2 - .15, 1.0, .35));
+  G.add(stay(at(box(.6, .35, .55, M.offwhite()), -W / 2 - .15, 1.0, .35)));
   const arm = new THREE.Group(); arm.add(at(box(.08, 1.2, .08, M.steel()), 0, .6, 0)); arm.add(at(box(1.0, .06, .08, M.steel()), .5, 1.2, 0));
   const mon = new THREE.Group(); mon.add(box(.7, .55, .45, M.offwhite())); mon.add(at(screen(.56, .42, 'ict'), 0, 0, .23)); mon.position.set(-.5, 1.6, 0); arm.add(mon);
   arm.add(at(box(.9, .04, .35, M.charcoal()), 1.1, 1.15, .3));
-  arm.position.set(W / 2 - .3, 1.95, -.3); G.add(arm);
+  arm.position.set(W / 2 - .3, 1.95, -.3); G.add(stay(arm));
   const pc = at(box(.5, .6, .5, M.black()), -W / 2 + .5, .6, -D / 2 + .4); G.add(tag(pc, 'pc_ups')); P.pc_ups = pc;
   const tl = towerLight(.5); tl.g.position.set(-W / 2 + .3, 1.98, -D / 2 + .3); G.add(tag(tl.g, 'tower_light')); P.tower_light = tl.g; P.lamps = tl.lamps;
   const cal = at(box(.35, .04, .25, M.steel()), W / 2 - .5, 1.98, .7); G.add(tag(cal, 'calibration_target')); P.calibration_target = cal;

@@ -18,9 +18,11 @@ export const INNER = {
   shield: { name: 'Blindaje de plomo', desc: 'Láminas de plomo en el gabinete que contienen la radiación. Las mirillas y compuertas también están blindadas.', check: 'Sin golpes, tornillos faltantes ni huecos. Prueba de fugas con el medidor cada periodo.' },
   chiller: { name: 'Enfriamiento del tubo', desc: 'Retira el calor del tubo y del detector para mantener estable la imagen.', check: 'Nivel de refrigerante y flujo de aire correctos; filtros limpios.' },
   stage: { name: 'Mesa de movimiento (stage)', desc: 'Mueve la tarjeta entre el tubo y el detector para formar las rebanadas de la tomografía.', check: 'Recorrido libre, sin obstrucciones; calibración de posición según el plan.' },
-  ict_control: { name: 'Tarjeta de control del módulo', desc: 'Coordina el módulo: recibe órdenes del controlador del sistema y sincroniza las tarjetas de pines y la ASRU.', check: 'Sin daño en conectores. Tras reemplazarla, correr el diagnóstico del testhead.' },
-  ict_asru: { name: 'Tarjeta ASRU', desc: 'Analog Stimulus and Response Unit: genera las fuentes de voltaje y corriente y mide la respuesta en pruebas analógicas (resistores, capacitores, diodos).', check: 'Si fallan muchas pruebas analógicas en un mismo módulo, sospecha de la ASRU y corre el diagnóstico.' },
-  ict_pin: { name: 'Tarjeta de pines', desc: 'Tiene los drivers, receptores y relevadores que conectan cada clavo del fixture con los recursos de medición. Cada tarjeta atiende un grupo de canales.', check: 'Relevadores sin daño, conector sin pines doblados. Usa pulsera ESD y el sistema apagado para sacarla.' },
+  ict_control: { name: 'Tarjeta de control del módulo', desc: 'Va en la ranura 6 de cada módulo. Coordina el módulo en la red privada (LAN1) y sincroniza las tarjetas de pines y la ASRU. Versiones XT, XTP y XTPA.', check: 'Sin daño en conectores. Tras reemplazarla, correr el diagnóstico del testhead.' },
+  ict_asru: { name: 'Tarjeta ASRU', desc: 'Va en la ranura 1 de cada módulo. Analog Stimulus and Response Unit: hace las mediciones analógicas, la fuente para Testjet, las referencias del autoajuste y el monitoreo de temperatura.', check: 'Si fallan muchas pruebas analógicas en un mismo módulo, sospecha de la ASRU y corre el diagnóstico.' },
+  ict_pin: { name: 'Tarjeta de pines', desc: 'Hasta 9 por módulo. Las híbridas tienen drivers y receivers digitales; una de doble densidad da 144 puntas, así que un módulo lleno da 144 × 9 = 1,296. AnalogPlus y AccessPlus sólo multiplexan.', check: 'Relevadores sin daño, conector sin pines doblados. Usa pulsera ESD y el sistema apagado para sacarla.' },
+  ict_system: { name: 'System card', desc: 'Comunica al controlador con los módulos, habilita la PDU y las MPU, baja y sube el fixture y maneja el paro de emergencia, los relevadores de vacío (24 V) y el pedal. Tiene su propia dirección MAC.', check: 'Si se cambia, pasa su IDROM y su ROM de MAC a la nueva o registra la nueva dirección en bootptab. Revisa sus LED al arrancar: LED7 parpadeando a 1 Hz indica que la red funciona.' },
+  pedal: { name: 'Pedal', desc: 'Lo maneja la system card. Con él se mueve la cabeza (testhead) a la posición de servicio para llegar a las tarjetas.', check: 'Antes de usarlo: fixture retirado, vacío apagado, cabeza apagada y nadie con las manos cerca de la cabeza.' },
   ict_psu: { name: 'Fuentes del testhead', desc: 'Alimentan los módulos y las fuentes DUT que energizan la tarjeta en las pruebas con poder.', check: 'Voltajes en rango y ventiladores funcionando.' },
   ict_valve: { name: 'Válvulas de vacío', desc: 'Abren y cierran el vacío que jala la tarjeta contra las agujas del fixture.', check: 'Sin fugas (escuchar silbido); sellos del fixture en buen estado.' },
   ict_interface: { name: 'Interfaz con el fixture (pines del testhead)', desc: 'Los resortes que conectan las tarjetas de pines con la parte baja del fixture.', check: 'Limpios y sin pines hundidos; una mala conexión aquí causa fallas de contacto en muchos nodos.' },
@@ -29,7 +31,7 @@ export const INNER = {
 const tagI = (o, id) => { o.traverse(c => { c.userData.part = id; c.userData.inner = true; }); return o; };
 
 // Textura de tarjeta electrónica (pin card, ASRU, control)
-function cardTex(kind, n) {
+function cardTex(kind, n, txt) {
   const c = document.createElement('canvas'); c.width = 512; c.height = 384; const x = c.getContext('2d');
   x.fillStyle = kind === 'ict_control' ? '#1d3f7a' : kind === 'ict_asru' ? '#6b1f2a' : '#1f6b3a'; x.fillRect(0, 0, 512, 384);
   x.fillStyle = '#c9a74a'; x.fillRect(0, 352, 512, 32); for (let i = 0; i < 64; i++) { x.fillStyle = i % 2 ? '#e6c35a' : '#b18c32'; x.fillRect(4 + i * 8, 354, 5, 28); } // conector de borde
@@ -37,7 +39,7 @@ function cardTex(kind, n) {
   if (kind === 'ict_pin') { for (let i = 0; i < 48; i++) { const cx = 20 + (i % 12) * 40, cy = 30 + Math.floor(i / 12) * 60; x.fillStyle = '#e8e8e8'; x.fillRect(cx, cy, 28, 40); x.fillStyle = '#9aa'; x.fillRect(cx + 4, cy + 4, 20, 6); } x.fillStyle = '#111'; for (let i = 0; i < 6; i++) x.fillRect(30 + i * 78, 280, 54, 40); }
   else { for (let i = 0; i < 10; i++) { x.fillStyle = '#111'; x.fillRect(30 + r() * 400, 30 + r() * 260, 40 + r() * 60, 30 + r() * 40); } for (let i = 0; i < 30; i++) { x.fillStyle = ['#d0d0d0', '#2a2a2a', '#c27a2c'][i % 3]; x.fillRect(r() * 480, r() * 320, 14, 8); } }
   if (kind === 'ict_asru') { x.fillStyle = '#c0c4c8'; x.fillRect(300, 40, 170, 120); x.fillStyle = '#444'; x.font = '700 22px sans-serif'; x.fillText('SHIELD', 340, 108); }
-  x.fillStyle = '#fff'; x.font = '700 26px Rajdhani, sans-serif'; x.fillText(kind === 'ict_pin' ? `PIN ${n}` : kind === 'ict_asru' ? 'ASRU' : 'CONTROL', 14, 340);
+  x.fillStyle = '#fff'; x.font = '700 26px Rajdhani, sans-serif'; x.fillText(txt || (kind === 'ict_asru' ? 'ASRU' : 'CONTROL'), 14, 340);
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.userData = { url: () => c.toDataURL() }; return t;
 }
 
@@ -86,16 +88,18 @@ function ictInterior(G, dims, cards) {
     const mx = -1.2 + m * .6 + .03;
     cage.add(at(box(.02, .95, 1.3, mat(0x777f87, { metalness: .6 })), mx - .03, 1.2, 0));
     for (let k = 0; k < 11; k++) {
-      const kind = k === 0 ? 'ict_control' : k === 1 ? 'ict_asru' : 'ict_pin';
-      const tex = cardTex(kind, m * 11 + k);
+      const slot = k + 1, kind = slot === 1 ? 'ict_asru' : slot === 6 ? 'ict_control' : 'ict_pin'; const pinN = slot < 6 ? slot - 1 : slot - 2;
+      const tex = cardTex(kind, m * 11 + k + 1, kind === 'ict_pin' ? `PIN CARD ${pinN} · M${m}` : kind === 'ict_asru' ? `ASRU · M${m}` : `CONTROL XTP · M${m}`);
       const card = new THREE.Mesh(new THREE.BoxGeometry(.018, .85, 1.2), [mat(0x1f6b3a), mat(0x1f6b3a), mat(0x222), mat(0x222), new THREE.MeshStandardMaterial({ map: tex }), new THREE.MeshStandardMaterial({ map: tex })]);
       card.material[0] = card.material[1] = new THREE.MeshStandardMaterial({ map: tex }); card.material[4] = card.material[5] = mat(0x111);
       const g = new THREE.Group(); g.add(card); g.add(at(box(.03, .08, .12, mat(0xd62828)), 0, .46, .5)); // jaladera
       g.position.set(mx + .02 + k * .05, 1.2, 0); g.userData.home = 1.2; g.userData.out = false;
-      g.userData.info = { kind, module: m, slot: k, tex, label: kind === 'ict_control' ? `Control · módulo ${m}` : kind === 'ict_asru' ? `ASRU · módulo ${m}` : `Tarjeta de pines ${k - 1} · módulo ${m}` };
+      g.userData.info = { kind, module: m, slot, tex, label: kind === 'ict_control' ? `Control card · módulo ${m}` : kind === 'ict_asru' ? `ASRU · módulo ${m}` : `Pin card ${pinN} · módulo ${m}` };
       tagI(g, kind); g.traverse(c => { c.userData.card = g; }); cage.add(g); cards.push(g);
     }
   }
+  // System card a un lado de la jaula
+  { const t = cardTex('ict_control', 0, 'SYSTEM CARD'); const sc = new THREE.Mesh(new THREE.BoxGeometry(.018, .7, 1.0), [new THREE.MeshStandardMaterial({ map: t }), new THREE.MeshStandardMaterial({ map: t }), mat(0x222), mat(0x222), mat(0x111), mat(0x111)]); sc.position.set(1.28, 1.15, 0); cage.add(tagI(sc, 'ict_system')); }
   G.add(cage);
 }
 
@@ -105,6 +109,10 @@ export function addInterior(kind, m) {
   if (kind === 'zenith' || kind === 'v510' || kind === 'ky8030') aoiInterior(m.group, m.dims);
   else if (kind === 'v810') axiInterior(m.group, m.dims);
   else if (kind === 'hp3070') ictInterior(m.group, m.dims, cards);
+  // ICT: la cabeza gira sobre un eje horizontal para quedar en posición de servicio
+  let head = null;
+  if (kind === 'hp3070') { head = new THREE.Group(); head.position.set(0, 1.1, -.2); m.group.add(head);
+    for (const o of [...m.group.children]) { if (o === head || o.userData.stay) continue; head.attach(o); } }
   m.group.traverse(o => { if (o.isMesh) { o.castShadow = true; } });
   // Cubiertas: todo lo que no es pieza interna ni pieza de mantenimiento (y las puertas/paneles)
   const shells = []; m.group.traverse(o => { if (!o.isMesh || o.userData.inner) return; const p = o.userData.part; if (!p || p === 'door' || p === 'pc_ups') shells.push(o); });
@@ -119,6 +127,11 @@ export function addInterior(kind, m) {
   // Sacar / meter una tarjeta del ICT (animado)
   const moving = [];
   const toggleCard = g => { g.userData.out = !g.userData.out; moving.push(g); highlight(g, g.userData.out, 0xffb020); return g.userData.out; };
-  const update = dt => { for (let i = moving.length - 1; i >= 0; i--) { const g = moving[i]; const to = g.userData.home + (g.userData.out ? 1.15 : 0); g.position.y += (to - g.position.y) * Math.min(1, dt * 6); if (Math.abs(to - g.position.y) < .002) { g.position.y = to; moving.splice(i, 1); } } };
-  return { setGhost, isGhost: () => ghost, cards, toggleCard, update, hasInterior: shells.length > 0 };
+  // Giro de la cabeza con el pedal: 0 = posición de prueba, 1 = servicio (tarjetas hacia el operador)
+  const H = { pos: 0, to: 0 };
+  const rotate = to => { H.to = to; };
+  const update = dt => {
+    if (head) { H.pos += Math.sign(H.to - H.pos) * Math.min(Math.abs(H.to - H.pos), dt * .35); head.rotation.x = H.pos * Math.PI / 2;
+      if (m.parts.pedalTop) m.parts.pedalTop.rotation.x = H.pos !== H.to ? -.02 : -.12; } for (let i = moving.length - 1; i >= 0; i--) { const g = moving[i]; const to = g.userData.home + (g.userData.out ? 1.15 : 0); g.position.y += (to - g.position.y) * Math.min(1, dt * 6); if (Math.abs(to - g.position.y) < .002) { g.position.y = to; moving.splice(i, 1); } } };
+  return { head: !!head, rotate, rotState: () => H.pos >= .999 ? 'service' : H.pos <= .001 ? 'test' : 'moving', setGhost, isGhost: () => ghost, cards, toggleCard, update, hasInterior: shells.length > 0 };
 }
