@@ -29,7 +29,7 @@ function signSprite(text, color = '#3d8bff', w = 3) {
 }
 
 // Personaje estilizado: bata ESD, lentes, gafete. Devuelve grupo y función de animación de caminata.
-export function character({ coat = 0x2f6fd6, skin = 0xd9a77c, hair = 0x2b1d14, glasses = false, helmet = false } = {}) {
+export function character({ coat = 0x2f6fd6, skin = 0xd9a77c, hair = 0x2b1d14, glasses = false, helmet = false, vest = 0, cap = 0 } = {}) {
   const g = new THREE.Group(); const M = c => mat(c, { roughness: .7 });
   const legL = new THREE.Group(), legR = new THREE.Group(), armL = new THREE.Group(), armR = new THREE.Group();
   legL.add(at(box(.28, 1.2, .3, M(0x1d2733)), 0, -.6, 0)); legL.add(at(box(.3, .14, .45, M(0x111111)), 0, -1.2, .07));
@@ -46,6 +46,10 @@ export function character({ coat = 0x2f6fd6, skin = 0xd9a77c, hair = 0x2b1d14, g
   head.add(at(box(.08, .08, .02, M(0x111111)), -.12, .04, .26), at(box(.08, .08, .02, M(0x111111)), .12, .04, .26));
   if (glasses) { const gm = mat(0x222222); head.add(at(box(.18, .12, .02, gm), -.12, .04, .27), at(box(.18, .12, .02, gm), .12, .04, .27), at(box(.08, .03, .02, gm), 0, .06, .27)); }
   if (helmet) head.add(at(cyl(.32, .34, .2, mat(0xffd43b), 16), 0, .32, 0));
+  if (vest) { g.add(at(box(.84, .7, .5, M(vest)), 0, 2.0, 0)); g.add(at(box(.86, .06, .52, M(0xdfe6ec)), 0, 1.86, 0)); }
+  if (cap) head.add(at(box(.54, .14, .54, M(cap)), 0, .3, 0), at(box(.4, .04, .22, M(cap)), 0, .24, .34));
+  // Lo que carga en las manos (tarjeta, magazín, caja de herramientas)
+  const hold = new THREE.Group(); hold.position.set(0, 1.75, .55); g.add(hold);
   g.traverse(o => { if (o.isMesh) o.castShadow = true; });
   let ph = 0;
   const walk = (dt, moving) => {
@@ -54,8 +58,11 @@ export function character({ coat = 0x2f6fd6, skin = 0xd9a77c, hair = 0x2b1d14, g
     legL.rotation.x = a; legR.rotation.x = -a; armL.rotation.x = -a * .8; armR.rotation.x = a * .8;
     torso.position.y = 1.85 + (moving ? Math.abs(Math.sin(ph)) * .05 : 0);
     if (!moving) { armL.rotation.x *= .8; }
+    if (hold.children.length) { armL.rotation.x = armR.rotation.x = -1.1; }
+    else if (work) { const w = Math.sin(ph2 += dt * 7); armL.rotation.x = -1 + w * .15; armR.rotation.x = -1 - w * .15; }
   };
-  return { g, walk, head };
+  let ph2 = 0, work = false;
+  return { g, walk, head, hold, armL, armR, setWork: v => { work = v; } };
 }
 
 export function buildWorld(st) {

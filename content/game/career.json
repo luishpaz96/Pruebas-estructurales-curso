@@ -1,5 +1,5 @@
 {
- "_info": "Modo historia. 'chapters' agrupa los días. Cada día tiene misiones en una estación (aoi, aoi2, axi, ict, spi, prod, quality, mentor). Tipos: talk, lesson, notify, tour, review, alarm, npi, maint, practice, quiz, sequence. En 'intro' y 'debrief' cada línea puede ser texto (habla el mentor) o {\"who\": \"prod|quality|mentor\", \"text\": \"...\"}.",
+ "_info": "Modo historia. 'chapters' agrupa los días. Cada día tiene misiones en una estación (aoi, aoi2, axi, ict, spi, prod, quality, mentor). Tipos: talk, lesson, notify, tour, review, alarm, npi, maint, practice, quiz, sequence. En 'intro' y 'debrief' cada línea puede ser texto (habla el mentor) o {\"who\": \"prod|quality|mentor\", \"text\": \"...\"}. 'extras' agrega personajes al día: trainees, maintcrew, customer, auditor.",
  "mentor": {
   "name": "Ing. Marco Salinas",
   "role": "Ingeniero de pruebas · tu mentor",
@@ -63,6 +63,9 @@
      "count": 5,
      "xp": 80
     }
+   ],
+   "extras": [
+    "trainees"
    ]
   },
   {
@@ -104,6 +107,9 @@
      "count": 4,
      "xp": 80
     }
+   ],
+   "extras": [
+    "trainees"
    ]
   },
   {
@@ -153,6 +159,9 @@
       "Yo estoy a tu lado. Decide: defecto real o falso llamado. Si dudas, compara contra el pad y la serigrafía."
      ]
     }
+   ],
+   "extras": [
+    "trainees"
    ]
   },
   {
@@ -211,6 +220,9 @@
      "count": 4,
      "xp": 80
     }
+   ],
+   "extras": [
+    "trainees"
    ]
   },
   {
@@ -266,6 +278,9 @@
    ],
    "debrief": [
     "Pasaste la capacitación. Desde mañana estás en la línea, conmigo de respaldo."
+   ],
+   "extras": [
+    "trainees"
    ]
   },
   {
@@ -327,7 +342,10 @@
      "xp": 80
     }
    ],
-   "chapter": "c2"
+   "chapter": "c2",
+   "extras": [
+    "maintcrew"
+   ]
   },
   {
    "id": "d3",
@@ -498,7 +516,10 @@
      "xp": 120
     }
    ],
-   "chapter": "c2"
+   "chapter": "c2",
+   "extras": [
+    "maintcrew"
+   ]
   },
   {
    "id": "d6",
@@ -612,7 +633,10 @@
      "xp": 180
     }
    ],
-   "chapter": "c3"
+   "chapter": "c3",
+   "extras": [
+    "customer"
+   ]
   },
   {
    "id": "d8",
@@ -652,7 +676,11 @@
      "xp": 400
     }
    ],
-   "chapter": "c3"
+   "chapter": "c3",
+   "extras": [
+    "auditor",
+    "customer"
+   ]
   }
  ],
  "cast": {

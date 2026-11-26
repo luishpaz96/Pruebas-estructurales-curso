@@ -2,7 +2,8 @@
 import { createStage, THREE } from '../stage.js';
 import { esc, confetti } from '../fx.js';
 import { state, save, addXP, course } from '../store.js';
-import { buildWorld, boardFlow, character } from './world.js';
+import { buildWorld, boardFlow, character, LAYOUT } from './world.js';
+import { buildLife } from './life.js';
 import { initAudio, startMusic, stopMusic, setMusic, setSfx, setIntensity, sfx, audioState } from './audio.js';
 import * as MG from './minigames.js';
 import { createProgram, playPractice } from '../simui.js';
@@ -34,6 +35,7 @@ export function gameScreen(view) {
   const st = createStage($('#gStage'), { cam: [0, 14, 16], target: [0, 0, 0], fov: 50 });
   st.controls.enabled = false; st.renderer.shadowMap.enabled = true;
   const W = buildWorld(st); W.updaters.forEach(f => st.onFrame(f));
+  const life = buildLife(st, W, LAYOUT);
   const player = character({ coat: 0x2f6fd6, hair: 0x2b1d14 }); player.g.position.set(-12, 0, 9); st.scene.add(player.g);
   const flow = boardFlow(st.scene);
   // Balizas de misión / incidente sobre las estaciones
@@ -93,6 +95,7 @@ export function gameScreen(view) {
       stepT += dt; if (stepT > .32) { stepT = 0; sfx('step'); }
     }
     player.walk(dt, moving);
+    life.update(t, dt, { player: p, andon: R.kpi && { state: R.lineStop ? 'stop' : 'run', reason: R.stopReason, goal: Math.round(R.t / 4.5), produced: R.kpi.produced, fpy: fpy(), aoi: R.queue.aoi, axi: R.queue.axi, clock: fmtClock() } });
     // Cámara en tercera persona
     const want = p.clone().add(camOff.clone().multiplyScalar(camDist)); st.camera.position.lerp(want, .08); st.camera.lookAt(p.x, p.y + 1.5, p.z);
     // Balizas animadas
@@ -257,6 +260,7 @@ export function gameScreen(view) {
     R.freeplay = free; R.day = free ? { title: 'Turno libre', missions: [], shift: 420, ngRate: .1, incidents: 4 } : G.career.days[idx]; R.dayIdx = idx;
     R.mi = 0; R.mission = R.day.missions[0] || null; R.t = 0; R.shift = R.day.shift || 360; R.kpi = freshKPI(); R.incidents = []; R.queue = { aoi: 0, axi: 0 }; R.xpDay = 0; R.toured = new Set();
     const n = R.day.incidents || 0; R.incTimes = Array.from({ length: n }, (_, i) => R.shift * (.2 + .7 * (i + Math.random() * .6) / Math.max(1, n))).sort((a, b) => a - b);
+    life.setExtras(free ? ['maintcrew'] : (R.day.extras || (R.day.chapter === 'c1' ? ['trainees'] : [])));
     player.g.position.set(-12, 0, 9); R.running = true; $('#gTitle').hidden = true;
     say(free ? ['Turno libre: hoy la línea es tuya. Atiende alarmas y no dejes que se llenen las colas de NG.'] : (idx === 0 ? [MENTOR.greeting] : []).concat(R.day.intro || []));
   }
