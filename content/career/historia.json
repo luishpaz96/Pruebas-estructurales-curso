@@ -1,0 +1,1106 @@
+{
+ "_info": "Modo historia del juego de Unreal: técnico de pruebas de nuevo ingreso. Cada misión requiere la anterior. Tipos de tarea (tasks.kind): talk, goto, lesson, practice, maintenance, exam, program, quiz. En quiz, la opción 'correct' es el índice correcto (el juego baraja). rewardTitle agrupa las misiones por capítulo.",
+ "mentor": {
+  "name": "Ing. Andrea Ramírez",
+  "role": "Ingeniera de pruebas"
+ },
+ "missions": [
+  {
+   "id": "h01-bienvenida",
+   "order": 1,
+   "rewardTitle": "Capítulo 1 · Primer día",
+   "type": "induccion",
+   "machine": "general",
+   "title": "Bienvenida al área de pruebas",
+   "brief": "Conoce a tu mentora, las reglas de seguridad y para qué sirve cada equipo de pruebas.",
+   "mentorIntro": [
+    "¡Bienvenido! Soy Andrea Ramírez, ingeniera de pruebas. Desde hoy eres técnico de pruebas de esta línea.",
+    "Tu trabajo es que ninguna tarjeta mala salga de aquí y que las buenas no se detengan por falsos llamados.",
+    "Antes de tocar cualquier equipo vamos con lo básico: seguridad y fundamentos."
+   ],
+   "tasks": [
+    {
+     "kind": "talk",
+     "text": "En esta área todo es zona ESD. Pulsera antiestática conectada, bata y zapatos ESD siempre.\nNunca se puentea un interlock ni se mete la mano con una máquina en movimiento.\nSi algo no se ve seguro, detienes y me avisas. Nadie te va a regañar por eso."
+    },
+    {
+     "kind": "quiz",
+     "type": "mc",
+     "q": "Vas a tomar una tarjeta de la banda. ¿Qué haces primero?",
+     "options": [
+      "Me aseguro de tener la pulsera ESD conectada y la tomo por los bordes.",
+      "La tomo rápido para no detener la línea.",
+      "Le pido al operador que la tome sin pulsera.",
+      "Espero a que la tarjeta se enfríe y la tomo del centro."
+     ],
+     "correct": 0,
+     "explain": "La descarga electrostática daña componentes sin que se vea. Pulsera conectada y tarjeta por los bordes."
+    },
+    {
+     "kind": "exam",
+     "ref": "m0"
+    }
+   ],
+   "mentorOutro": [
+    "Muy bien. Ya tienes las bases. Mañana te doy el recorrido por la línea."
+   ],
+   "xp": 150,
+   "requires": []
+  },
+  {
+   "id": "h02-recorrido",
+   "order": 2,
+   "rewardTitle": "Capítulo 1 · Primer día",
+   "type": "induccion",
+   "machine": "general",
+   "title": "Recorrido por la línea SMT",
+   "brief": "Camina la línea con tu mentora y ubica dónde va cada equipo de inspección y por qué.",
+   "mentorIntro": [
+    "Hoy caminamos la línea. Fíjate en el orden: cada inspección está donde el defecto es más barato de corregir."
+   ],
+   "tasks": [
+    {
+     "kind": "goto",
+     "machine": "spi",
+     "text": "Ve al SPI, junto a la impresora"
+    },
+    {
+     "kind": "talk",
+     "text": "Este es el SPI. Mide la pasta en 3D justo después de la impresora.\nSi la pasta está mal, se lava la tarjeta y se reimprime: el defecto más barato de corregir."
+    },
+    {
+     "kind": "goto",
+     "machine": "aoi_ky",
+     "text": "Ve al AOI Koh Young, después del horno"
+    },
+    {
+     "kind": "talk",
+     "text": "Después del horno están los AOI. Revisan componentes y soldadura con luz y medición 3D.\nTenemos dos marcas: Koh Young Zenith y ViTrox V510. Vas a aprender las dos."
+    },
+    {
+     "kind": "goto",
+     "machine": "axi_v810",
+     "text": "Ve al AXI V810"
+    },
+    {
+     "kind": "talk",
+     "text": "El V810 usa rayos X para ver juntas ocultas, como las bolas de un BGA.\nAquí la seguridad radiológica es obligatoria: dosímetro, interlocks y nunca puentear nada."
+    },
+    {
+     "kind": "goto",
+     "machine": "ict",
+     "text": "Cruza el pasillo hasta el ICT"
+    },
+    {
+     "kind": "talk",
+     "text": "Y este es el ICT, fuera de línea. Con una cama de agujas mide eléctricamente cada componente."
+    },
+    {
+     "kind": "quiz",
+     "type": "mc",
+     "q": "¿Por qué el SPI va justo después de la impresora?",
+     "options": [
+      "Porque ahí un defecto de pasta se corrige lavando y reimprimiendo, antes de colocar componentes.",
+      "Porque necesita la tarjeta caliente.",
+      "Porque así no estorba al horno.",
+      "Porque mide los componentes ya soldados."
+     ],
+     "correct": 0,
+     "explain": "Mientras más adelante en la línea aparece un defecto, más caro es repararlo."
+    }
+   ],
+   "mentorOutro": [
+    "Ya conoces la línea. Ahora empieza tu capacitación formal en cada equipo."
+   ],
+   "xp": 150,
+   "requires": [
+    "h01-bienvenida"
+   ]
+  },
+  {
+   "id": "h03-cap-ky",
+   "order": 3,
+   "rewardTitle": "Capítulo 2 · Capacitación",
+   "type": "capacitacion",
+   "machine": "aoi_ky",
+   "title": "Capacitación: AOI Koh Young",
+   "brief": "Aprende de qué se compone el Zenith y cómo convierte franjas de luz en altura.",
+   "mentorIntro": [
+    "Empezamos con el Koh Young. Primero entiende la máquina por dentro; después la operas."
+   ],
+   "tasks": [
+    {
+     "kind": "goto",
+     "machine": "aoi_ky"
+    },
+    {
+     "kind": "lesson",
+     "ref": "m1-l1"
+    },
+    {
+     "kind": "lesson",
+     "ref": "m1-l2"
+    },
+    {
+     "kind": "lesson",
+     "ref": "m2-l1"
+    },
+    {
+     "kind": "exam",
+     "ref": "m1"
+    }
+   ],
+   "mentorOutro": [
+    "Bien. Ya sabes de qué está hecho y cómo se opera una corrida."
+   ],
+   "xp": 200,
+   "requires": [
+    "h02-recorrido"
+   ]
+  },
+  {
+   "id": "h04-cap-v510",
+   "order": 4,
+   "rewardTitle": "Capítulo 2 · Capacitación",
+   "type": "capacitacion",
+   "machine": "aoi_v510",
+   "title": "Capacitación: AOI ViTrox V510",
+   "brief": "El V510 también mide en 3D, pero con otro principio. Conoce sus partes y su software.",
+   "mentorIntro": [
+    "El V510 se parece al Koh Young por fuera, pero mide distinto. Pon atención a las diferencias."
+   ],
+   "tasks": [
+    {
+     "kind": "goto",
+     "machine": "aoi_v510"
+    },
+    {
+     "kind": "lesson",
+     "ref": "m5-l1"
+    },
+    {
+     "kind": "lesson",
+     "ref": "m5-l2"
+    },
+    {
+     "kind": "lesson",
+     "ref": "m5-l3"
+    },
+    {
+     "kind": "exam",
+     "ref": "m5"
+    }
+   ],
+   "mentorOutro": [
+    "Excelente. Ya distingues los dos AOI."
+   ],
+   "xp": 200,
+   "requires": [
+    "h03-cap-ky"
+   ]
+  },
+  {
+   "id": "h05-cap-axi",
+   "order": 5,
+   "rewardTitle": "Capítulo 2 · Capacitación",
+   "type": "capacitacion",
+   "machine": "axi_v810",
+   "title": "Capacitación: AXI V810 y seguridad radiológica",
+   "brief": "Cómo los rayos X forman una imagen y las reglas de seguridad radiológica.",
+   "mentorIntro": [
+    "Antes de operar el V810 tienes que dominar la seguridad radiológica. Sin eso no se toca."
+   ],
+   "tasks": [
+    {
+     "kind": "goto",
+     "machine": "axi_v810"
+    },
+    {
+     "kind": "lesson",
+     "ref": "m8-l1"
+    },
+    {
+     "kind": "lesson",
+     "ref": "m8-l4"
+    },
+    {
+     "kind": "lesson",
+     "ref": "m10-l1"
+    },
+    {
+     "kind": "quiz",
+     "type": "mc",
+     "q": "Con los rayos X encendidos abres una puerta del V810 y la lámpara X-RAY sigue encendida. ¿Qué haces?",
+     "options": [
+      "Cierro, detengo la máquina, no la uso y aviso de inmediato al responsable de seguridad radiológica.",
+      "Sigo trabajando porque la puerta ya está cerrada otra vez.",
+      "Puenteo el interlock para que no vuelva a fallar.",
+      "Reinicio la PC y continúo."
+     ],
+     "correct": 0,
+     "explain": "Un interlock que no corta los rayos X es una falla de seguridad: la máquina se detiene y se reporta."
+    },
+    {
+     "kind": "exam",
+     "ref": "m8"
+    }
+   ],
+   "mentorOutro": [
+    "Ahora sí puedes operar el V810 con seguridad."
+   ],
+   "xp": 220,
+   "requires": [
+    "h04-cap-v510"
+   ]
+  },
+  {
+   "id": "h06-cap-ict",
+   "order": 6,
+   "rewardTitle": "Capítulo 2 · Capacitación",
+   "type": "capacitacion",
+   "machine": "ict",
+   "title": "Capacitación: ICT HP3070",
+   "brief": "Las cuatro pruebas estructurales, las partes del equipo y el orden de las pruebas.",
+   "mentorIntro": [
+    "El ICT es otro mundo: aquí medimos eléctricamente. Vamos a ver cómo se arma un programa."
+   ],
+   "tasks": [
+    {
+     "kind": "goto",
+     "machine": "ict"
+    },
+    {
+     "kind": "lesson",
+     "ref": "m12-l1"
+    },
+    {
+     "kind": "lesson",
+     "ref": "m12-l2"
+    },
+    {
+     "kind": "lesson",
+     "ref": "m13-l1"
+    },
+    {
+     "kind": "lesson",
+     "ref": "m13-l2"
+    },
+    {
+     "kind": "exam",
+     "ref": "m12"
+    }
+   ],
+   "mentorOutro": [
+    "Ya sabes qué prueba el ICT y en qué orden."
+   ],
+   "xp": 220,
+   "requires": [
+    "h05-cap-axi"
+   ]
+  },
+  {
+   "id": "h07-cap-spi",
+   "order": 7,
+   "rewardTitle": "Capítulo 2 · Capacitación",
+   "type": "capacitacion",
+   "machine": "spi",
+   "title": "Capacitación: SPI Koh Young",
+   "brief": "Volumen, área y altura de la pasta: lo que mide el SPI y por qué importa.",
+   "mentorIntro": [
+    "Último equipo de la capacitación: el SPI. Corto pero importante."
+   ],
+   "tasks": [
+    {
+     "kind": "goto",
+     "machine": "spi"
+    },
+    {
+     "kind": "exam",
+     "ref": "m16"
+    }
+   ],
+   "mentorOutro": [
+    "Terminaste la capacitación de los cinco equipos. Ahora vas a la línea conmigo."
+   ],
+   "xp": 180,
+   "requires": [
+    "h06-cap-ict"
+   ]
+  },
+  {
+   "id": "h08-cert-proceso",
+   "order": 8,
+   "rewardTitle": "Capítulo 2 · Capacitación",
+   "type": "certificacion",
+   "machine": "general",
+   "title": "Certificación de capacitación",
+   "brief": "Demuestra que entiendes de dónde vienen los defectos antes de entrar al turno.",
+   "mentorIntro": [
+    "Para darte de alta en el turno necesito que apruebes el examen de proceso SMT."
+   ],
+   "tasks": [
+    {
+     "kind": "exam",
+     "ref": "m20"
+    }
+   ],
+   "mentorOutro": [
+    "¡Aprobado! Desde mañana trabajas en el turno. Empiezo a darte tareas reales."
+   ],
+   "xp": 300,
+   "requires": [
+    "h07-cap-spi"
+   ]
+  },
+  {
+   "id": "h09-mtto-spi",
+   "order": 9,
+   "rewardTitle": "Capítulo 3 · El día a día",
+   "type": "mantenimiento",
+   "machine": "spi",
+   "title": "Tu primer mantenimiento: diario del SPI",
+   "brief": "Toca el mantenimiento diario del SPI. Avisa a manufactura, hazlo y libera la máquina.",
+   "mentorIntro": [
+    "Hoy toca el mantenimiento diario del SPI. Es tu primera vez, yo te acompaño."
+   ],
+   "tasks": [
+    {
+     "kind": "quiz",
+     "type": "mc",
+     "q": "Antes de detener el SPI para su mantenimiento, ¿qué haces primero?",
+     "options": [
+      "Aviso a manufactura y al supervisor para que planeen el paro de la línea.",
+      "Lo apago sin avisar, es sólo un momento.",
+      "Espero a que termine el turno sin decirle a nadie.",
+      "Le pido al operador que siga mandando tarjetas."
+     ],
+     "correct": 0,
+     "explain": "Un paro sin aviso detiene a toda la línea y genera tarjetas sin inspeccionar."
+    },
+    {
+     "kind": "goto",
+     "machine": "spi"
+    },
+    {
+     "kind": "maintenance",
+     "ref": "mt-spi-diario"
+    },
+    {
+     "kind": "talk",
+     "text": "Al terminar, avisa a manufactura que el SPI está liberado y registra el mantenimiento en la bitácora."
+    }
+   ],
+   "mentorOutro": [
+    "Así se hace: avisar, hacerlo con seguridad, liberar y registrar."
+   ],
+   "xp": 200,
+   "requires": [
+    "h08-cert-proceso"
+   ]
+  },
+  {
+   "id": "h10-mtto-ict",
+   "order": 10,
+   "rewardTitle": "Capítulo 3 · El día a día",
+   "type": "mantenimiento",
+   "machine": "ict",
+   "title": "Diario del ICT: fixture y vacío",
+   "brief": "Revisa el fixture, las agujas y el vacío antes del primer lote del día.",
+   "mentorIntro": [
+    "El ICT necesita su revisión diaria del fixture. Un probe sucio da fallas de contacto todo el día."
+   ],
+   "tasks": [
+    {
+     "kind": "goto",
+     "machine": "ict"
+    },
+    {
+     "kind": "maintenance",
+     "ref": "mt-ict-diario"
+    }
+   ],
+   "mentorOutro": [
+    "Bien. Fixture limpio, vacío correcto: el ICT está listo."
+   ],
+   "xp": 200,
+   "requires": [
+    "h09-mtto-spi"
+   ]
+  },
+  {
+   "id": "h11-falso-tomb",
+   "order": 11,
+   "rewardTitle": "Capítulo 3 · El día a día",
+   "type": "debug",
+   "machine": "aoi_ky",
+   "title": "Primer falso llamado: tombstone en el Koh Young",
+   "brief": "El AOI marca tombstone en tarjetas buenas. Clasifica el problema y ajusta con criterio.",
+   "mentorIntro": [
+    "El operador dice que el Koh Young marca tombstone en tarjetas que se ven bien. Vamos a investigar."
+   ],
+   "tasks": [
+    {
+     "kind": "goto",
+     "machine": "aoi_ky"
+    },
+    {
+     "kind": "lesson",
+     "ref": "m4-l1"
+    },
+    {
+     "kind": "lesson",
+     "ref": "m4-l4"
+    },
+    {
+     "kind": "practice",
+     "ref": "pr-ky-debug-tomb"
+    }
+   ],
+   "mentorOutro": [
+    "Bien hecho: ajustaste sin abrir de más. Un umbral muy abierto deja pasar defectos reales."
+   ],
+   "xp": 220,
+   "requires": [
+    "h10-mtto-ict"
+   ]
+  },
+  {
+   "id": "h12-mtto-v510",
+   "order": 12,
+   "rewardTitle": "Capítulo 3 · El día a día",
+   "type": "mantenimiento",
+   "machine": "aoi_v510",
+   "title": "Rutina semanal del V510",
+   "brief": "Treinta minutos de rutina semanal en el V510.",
+   "mentorIntro": [
+    "Es lunes: toca la semanal del V510. Avisa a manufactura antes de detenerlo."
+   ],
+   "tasks": [
+    {
+     "kind": "goto",
+     "machine": "aoi_v510"
+    },
+    {
+     "kind": "lesson",
+     "ref": "m7-l1"
+    },
+    {
+     "kind": "maintenance",
+     "ref": "mt-v5-semanal"
+    }
+   ],
+   "mentorOutro": [
+    "Semanal completa. Ya puedes hacerla solo."
+   ],
+   "xp": 220,
+   "requires": [
+    "h11-falso-tomb"
+   ]
+  },
+  {
+   "id": "h13-escape-offset",
+   "order": 13,
+   "rewardTitle": "Capítulo 4 · Producción",
+   "type": "debug",
+   "machine": "aoi_ky",
+   "title": "Escape de desplazamiento en la zona derecha",
+   "brief": "Calidad encontró componentes desplazados que el AOI no marcó. Hay que cerrar el escape.",
+   "mentorIntro": [
+    "Un escape es más grave que un falso llamado: una tarjeta mala salió. Vamos a cerrarlo."
+   ],
+   "tasks": [
+    {
+     "kind": "goto",
+     "machine": "aoi_ky"
+    },
+    {
+     "kind": "lesson",
+     "ref": "m4-l5"
+    },
+    {
+     "kind": "practice",
+     "ref": "pr-ky-debug-offset"
+    }
+   ],
+   "mentorOutro": [
+    "Escape cerrado. Documenta la causa y el ajuste para el reporte semanal."
+   ],
+   "xp": 260,
+   "requires": [
+    "h12-mtto-v510"
+   ]
+  },
+  {
+   "id": "h14-spi-insuficiente",
+   "order": 14,
+   "rewardTitle": "Capítulo 4 · Producción",
+   "type": "debug",
+   "machine": "spi",
+   "title": "Pasta insuficiente en el SPI",
+   "brief": "El SPI marca insuficiente en varias zonas. ¿Es la impresora o el programa?",
+   "mentorIntro": [
+    "El SPI empezó a marcar pasta insuficiente. Antes de mover umbrales, entiende la causa."
+   ],
+   "tasks": [
+    {
+     "kind": "goto",
+     "machine": "spi"
+    },
+    {
+     "kind": "practice",
+     "ref": "pr-spi-debug-low"
+    },
+    {
+     "kind": "practice",
+     "ref": "pr-spi-debug-zone"
+    }
+   ],
+   "mentorOutro": [
+    "Bien: primero la causa en el proceso, luego el programa."
+   ],
+   "xp": 260,
+   "requires": [
+    "h13-escape-offset"
+   ]
+  },
+  {
+   "id": "h15-mtto-axi",
+   "order": 15,
+   "rewardTitle": "Capítulo 4 · Producción",
+   "type": "mantenimiento",
+   "machine": "axi_v810",
+   "title": "Semanal del AXI: interlocks",
+   "brief": "Prueba los interlocks y los paros de emergencia del V810.",
+   "mentorIntro": [
+    "Hoy pruebas los interlocks del V810. Trae tu dosímetro."
+   ],
+   "tasks": [
+    {
+     "kind": "goto",
+     "machine": "axi_v810"
+    },
+    {
+     "kind": "lesson",
+     "ref": "m10-l2"
+    },
+    {
+     "kind": "maintenance",
+     "ref": "mt-v8-semanal"
+    }
+   ],
+   "mentorOutro": [
+    "Interlocks verificados. Esta prueba protege a todos en el área."
+   ],
+   "xp": 280,
+   "requires": [
+    "h14-spi-insuficiente"
+   ]
+  },
+  {
+   "id": "h16-ict-contacto",
+   "order": 16,
+   "rewardTitle": "Capítulo 4 · Producción",
+   "type": "debug",
+   "machine": "ict",
+   "title": "Fallas de contacto en el ICT",
+   "brief": "El ICT reporta fallas de contacto en tarjetas que pasan en reprueba.",
+   "mentorIntro": [
+    "Muchas fallas de contacto que pasan al reprobar: casi nunca es la tarjeta."
+   ],
+   "tasks": [
+    {
+     "kind": "goto",
+     "machine": "ict"
+    },
+    {
+     "kind": "practice",
+     "ref": "pr-ict-debug-contact"
+    }
+   ],
+   "mentorOutro": [
+    "Correcto. Probe, vacío y limpieza antes de culpar a la tarjeta."
+   ],
+   "xp": 260,
+   "requires": [
+    "h15-mtto-axi"
+   ]
+  },
+  {
+   "id": "h17-smema",
+   "order": 17,
+   "rewardTitle": "Capítulo 4 · Producción",
+   "type": "falla",
+   "machine": "aoi_v510",
+   "title": "El V510 no recibe tarjetas",
+   "brief": "La línea se detuvo: el V510 no acepta tarjetas del horno. Revisa SMEMA y sensores.",
+   "mentorIntro": [
+    "¡Paro de línea! El V510 no recibe tarjetas. Calma: revisamos señales y sensores en orden."
+   ],
+   "tasks": [
+    {
+     "kind": "goto",
+     "machine": "aoi_v510"
+    },
+    {
+     "kind": "lesson",
+     "ref": "m7-l5"
+    },
+    {
+     "kind": "practice",
+     "ref": "pr-v5-debug-smema"
+    }
+   ],
+   "mentorOutro": [
+    "Línea corriendo otra vez. Registra el tiempo caído y la causa."
+   ],
+   "xp": 280,
+   "requires": [
+    "h16-ict-contacto"
+   ]
+  },
+  {
+   "id": "h18-luz-v510",
+   "order": 18,
+   "rewardTitle": "Capítulo 4 · Producción",
+   "type": "falla",
+   "machine": "aoi_v510",
+   "title": "Iluminación del V510 fuera de calibración",
+   "brief": "Aumentaron los falsos llamados en todo el V510 al mismo tiempo. Sospecha de la luz.",
+   "mentorIntro": [
+    "Si todos los componentes empiezan a fallar a la vez, sospecha de la máquina, no del programa."
+   ],
+   "tasks": [
+    {
+     "kind": "goto",
+     "machine": "aoi_v510"
+    },
+    {
+     "kind": "lesson",
+     "ref": "m7-l3"
+    },
+    {
+     "kind": "practice",
+     "ref": "pr-v5-debug-light"
+    }
+   ],
+   "mentorOutro": [
+    "Calibración hecha. Nunca compenses una luz descalibrada abriendo tolerancias."
+   ],
+   "xp": 280,
+   "requires": [
+    "h17-smema"
+   ]
+  },
+  {
+   "id": "h19-npi-ky",
+   "order": 19,
+   "rewardTitle": "Capítulo 5 · NPI y cambios de modelo",
+   "type": "npi",
+   "machine": "aoi_ky",
+   "title": "NPI: programa nuevo en el Koh Young",
+   "brief": "Llegó un modelo nuevo (PRACTICA-01). Crea el programa del AOI y libéralo sin escapes.",
+   "mentorIntro": [
+    "Producto nuevo. Te toca tu primer programa completo. Usa los Gerber y el centroide de PRACTICA-01."
+   ],
+   "tasks": [
+    {
+     "kind": "goto",
+     "machine": "aoi_ky"
+    },
+    {
+     "kind": "lesson",
+     "ref": "m2-l2"
+    },
+    {
+     "kind": "lesson",
+     "ref": "m2-l3"
+    },
+    {
+     "kind": "lesson",
+     "ref": "m2-l4"
+    },
+    {
+     "kind": "practice",
+     "ref": "pr-ky-create-prog"
+    },
+    {
+     "kind": "program",
+     "mode": "aoi",
+     "machine": "aoi_ky"
+    },
+    {
+     "kind": "lesson",
+     "ref": "m2-l5"
+    }
+   ],
+   "mentorOutro": [
+    "Tu programa está liberado. Recuerda: no se libera hasta que detecta defectos sembrados."
+   ],
+   "xp": 350,
+   "requires": [
+    "h18-luz-v510"
+   ]
+  },
+  {
+   "id": "h20-npi-spi",
+   "order": 20,
+   "rewardTitle": "Capítulo 5 · NPI y cambios de modelo",
+   "type": "npi",
+   "machine": "spi",
+   "title": "NPI: programa del SPI",
+   "brief": "Del Gerber de pasta al programa del SPI.",
+   "mentorIntro": [
+    "Ahora el SPI del mismo modelo. Aquí manda la capa de pasta."
+   ],
+   "tasks": [
+    {
+     "kind": "goto",
+     "machine": "spi"
+    },
+    {
+     "kind": "practice",
+     "ref": "pr-spi-create"
+    },
+    {
+     "kind": "program",
+     "mode": "spi",
+     "machine": "spi"
+    }
+   ],
+   "mentorOutro": [
+    "Programa del SPI liberado."
+   ],
+   "xp": 320,
+   "requires": [
+    "h19-npi-ky"
+   ]
+  },
+  {
+   "id": "h21-cambio-v510",
+   "order": 21,
+   "rewardTitle": "Capítulo 5 · NPI y cambios de modelo",
+   "type": "cambio_modelo",
+   "machine": "aoi_v510",
+   "title": "Cambio de modelo en el V510",
+   "brief": "Producción cambia de modelo. Convierte el CAD, enseña fiduciales y valida el programa.",
+   "mentorIntro": [
+    "Cambio de modelo en el V510. Hazlo ordenado: CAD, fiduciales, algoritmos y validación."
+   ],
+   "tasks": [
+    {
+     "kind": "goto",
+     "machine": "aoi_v510"
+    },
+    {
+     "kind": "lesson",
+     "ref": "m6-l1"
+    },
+    {
+     "kind": "lesson",
+     "ref": "m6-l2"
+    },
+    {
+     "kind": "lesson",
+     "ref": "m6-l3"
+    },
+    {
+     "kind": "practice",
+     "ref": "pr-v5-create"
+    }
+   ],
+   "mentorOutro": [
+    "Cambio de modelo hecho a tiempo."
+   ],
+   "xp": 320,
+   "requires": [
+    "h20-npi-spi"
+   ]
+  },
+  {
+   "id": "h22-fixture-ict",
+   "order": 22,
+   "rewardTitle": "Capítulo 5 · NPI y cambios de modelo",
+   "type": "fixture_ict",
+   "machine": "ict",
+   "title": "Cambio de fixture en el ICT",
+   "brief": "Cambia el fixture para el modelo nuevo y ajusta su programa.",
+   "mentorIntro": [
+    "Cambio de fixture en el ICT. Es pesado y delicado: sigue el orden."
+   ],
+   "tasks": [
+    {
+     "kind": "goto",
+     "machine": "ict"
+    },
+    {
+     "kind": "talk",
+     "text": "Primero se baja el vacío y se confirma que no hay tarjeta en el fixture.\nSe retira el fixture anterior con cuidado, sin golpear las agujas, y se guarda protegido.\nSe coloca el fixture nuevo alineado con los pines guía y se asegura antes de dar vacío."
+    },
+    {
+     "kind": "quiz",
+     "type": "mc",
+     "q": "Acabas de montar el fixture nuevo. ¿Qué haces antes de correr producción?",
+     "options": [
+      "Cargo el programa del modelo nuevo, corro la prueba de contacto y una tarjeta buena conocida.",
+      "Corro producción directo; si falla algo lo veo después.",
+      "Abro todas las tolerancias para que no falle.",
+      "Uso el programa del modelo anterior."
+     ],
+     "correct": 0,
+     "explain": "Programa correcto, contacto verificado y una tarjeta buena conocida confirman que el cambio quedó bien."
+    },
+    {
+     "kind": "practice",
+     "ref": "pr-ict-create"
+    },
+    {
+     "kind": "program",
+     "mode": "ict",
+     "machine": "ict"
+    }
+   ],
+   "mentorOutro": [
+    "Fixture cambiado y programa liberado. Buen trabajo."
+   ],
+   "xp": 350,
+   "requires": [
+    "h21-cambio-v510"
+   ]
+  },
+  {
+   "id": "h23-npi-axi",
+   "order": 23,
+   "rewardTitle": "Capítulo 5 · NPI y cambios de modelo",
+   "type": "npi",
+   "machine": "axi_v810",
+   "title": "NPI: receta de BGA en el V810",
+   "brief": "Crea la receta del AXI para el BGA de PRACTICA-01.",
+   "mentorIntro": [
+    "El BGA de este modelo no se puede ver con AOI. Te toca la receta del V810."
+   ],
+   "tasks": [
+    {
+     "kind": "goto",
+     "machine": "axi_v810"
+    },
+    {
+     "kind": "lesson",
+     "ref": "m9-l1"
+    },
+    {
+     "kind": "lesson",
+     "ref": "m9-l2"
+    },
+    {
+     "kind": "lesson",
+     "ref": "m9-l4"
+    },
+    {
+     "kind": "practice",
+     "ref": "pr-v8-create-bga"
+    },
+    {
+     "kind": "program",
+     "mode": "axi",
+     "machine": "axi_v810"
+    }
+   ],
+   "mentorOutro": [
+    "Receta liberada. Ya programas los cuatro tipos de equipo."
+   ],
+   "xp": 380,
+   "requires": [
+    "h22-fixture-ict"
+   ]
+  },
+  {
+   "id": "h24-cortos-ict",
+   "order": 24,
+   "rewardTitle": "Capítulo 6 · Técnico de debug",
+   "type": "debug",
+   "machine": "ict",
+   "title": "Cortos fantasma en el ICT",
+   "brief": "El ICT marca cortos que no existen. Encuentra la causa sin dejar pasar cortos reales.",
+   "mentorIntro": [
+    "Cortos que no existen: típico de un umbral mal puesto con resistencias bajas en paralelo."
+   ],
+   "tasks": [
+    {
+     "kind": "goto",
+     "machine": "ict"
+    },
+    {
+     "kind": "lesson",
+     "ref": "m13-l3"
+    },
+    {
+     "kind": "practice",
+     "ref": "pr-ict-debug-short"
+    }
+   ],
+   "mentorOutro": [
+    "Bien razonado. Un umbral muy bajo también puede dejar pasar cortos reales."
+   ],
+   "xp": 380,
+   "requires": [
+    "h23-npi-axi"
+   ]
+  },
+  {
+   "id": "h25-open-bga",
+   "order": 25,
+   "rewardTitle": "Capítulo 6 · Técnico de debug",
+   "type": "debug",
+   "machine": "axi_v810",
+   "title": "Open en BGA y problemas de imagen",
+   "brief": "El V810 reporta opens en el BGA y la imagen se ve rara. ¿Defecto o máquina?",
+   "mentorIntro": [
+    "Antes de mandar la tarjeta a retrabajo, confirma si es un defecto real o la máquina."
+   ],
+   "tasks": [
+    {
+     "kind": "goto",
+     "machine": "axi_v810"
+    },
+    {
+     "kind": "lesson",
+     "ref": "m11-l1"
+    },
+    {
+     "kind": "lesson",
+     "ref": "m11-l4"
+    },
+    {
+     "kind": "practice",
+     "ref": "pr-v8-debug-open"
+    },
+    {
+     "kind": "practice",
+     "ref": "pr-v8-debug-image"
+    }
+   ],
+   "mentorOutro": [
+    "Excelente diagnóstico. Así se evita retrabajar tarjetas buenas."
+   ],
+   "xp": 400,
+   "requires": [
+    "h24-cortos-ict"
+   ]
+  },
+  {
+   "id": "h26-mensuales",
+   "order": 26,
+   "rewardTitle": "Capítulo 6 · Técnico de debug",
+   "type": "mantenimiento",
+   "machine": "general",
+   "title": "Semana de mantenimientos mensuales",
+   "brief": "Esta semana tocan los mensuales del Koh Young, del V510 y del ICT.",
+   "mentorIntro": [
+    "Semana pesada: tres mensuales. Coordina con manufactura para no detener la línea de más."
+   ],
+   "tasks": [
+    {
+     "kind": "goto",
+     "machine": "aoi_ky"
+    },
+    {
+     "kind": "maintenance",
+     "ref": "mt-ky-mensual"
+    },
+    {
+     "kind": "goto",
+     "machine": "aoi_v510"
+    },
+    {
+     "kind": "maintenance",
+     "ref": "mt-v5-mensual"
+    },
+    {
+     "kind": "goto",
+     "machine": "ict"
+    },
+    {
+     "kind": "maintenance",
+     "ref": "mt-ict-mensual"
+    }
+   ],
+   "mentorOutro": [
+    "Tres mensuales sin faltas de seguridad. Ya eres confiable en mantenimiento."
+   ],
+   "xp": 420,
+   "requires": [
+    "h25-open-bga"
+   ]
+  },
+  {
+   "id": "h27-semestrales",
+   "order": 27,
+   "rewardTitle": "Capítulo 6 · Técnico de debug",
+   "type": "mantenimiento",
+   "machine": "general",
+   "title": "Semestrales y medición de fuga",
+   "brief": "Los mantenimientos más largos del año: Koh Young, V810 con medición de fuga y SPI.",
+   "mentorIntro": [
+    "Los semestrales son los más largos. En el V810 incluye la medición de fuga de radiación."
+   ],
+   "tasks": [
+    {
+     "kind": "goto",
+     "machine": "aoi_ky"
+    },
+    {
+     "kind": "maintenance",
+     "ref": "mt-ky-semestral"
+    },
+    {
+     "kind": "goto",
+     "machine": "axi_v810"
+    },
+    {
+     "kind": "maintenance",
+     "ref": "mt-v8-semestral"
+    },
+    {
+     "kind": "goto",
+     "machine": "spi"
+    },
+    {
+     "kind": "maintenance",
+     "ref": "mt-spi-semestral"
+    }
+   ],
+   "mentorOutro": [
+    "Semestrales completos. Muy pocos técnicos los dominan."
+   ],
+   "xp": 450,
+   "requires": [
+    "h26-mensuales"
+   ]
+  },
+  {
+   "id": "h28-certificacion",
+   "order": 28,
+   "rewardTitle": "Capítulo 6 · Técnico de debug",
+   "type": "certificacion",
+   "machine": "general",
+   "title": "Certificación final",
+   "brief": "El examen integrador de todo el curso. Apruébalo para certificarte como técnico de pruebas.",
+   "mentorIntro": [
+    "Llegó el día. Si apruebas, te recomiendo para técnico líder."
+   ],
+   "tasks": [
+    {
+     "kind": "exam",
+     "ref": "final"
+    }
+   ],
+   "mentorOutro": [
+    "¡Felicidades! Estás certificado. La línea ahora depende de ti."
+   ],
+   "xp": 800,
+   "requires": [
+    "h27-semestrales"
+   ]
+  }
+ ]
+}
