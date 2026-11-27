@@ -15,16 +15,17 @@ export function createStage(el, { cam = [6, 5, 8], target = [0, 0.6, 0], fov = 4
   el.prepend(renderer.domElement);
   const scene = new THREE.Scene();
   if (bg) scene.background = new THREE.Color(bg);
-  try { scene.environment = envMap(renderer); scene.environmentIntensity = .6; } catch (e) { /* sin reflejos */ }
+  try { scene.environment = envMap(renderer); scene.environmentIntensity = .95; } catch (e) { /* sin reflejos */ }
   const camera = new THREE.PerspectiveCamera(fov, 1, 0.05, 200);
   camera.position.set(...cam);
   const controls = new OrbitControls(camera, renderer.domElement);
   controls.target.set(...target); controls.enableDamping = true; controls.maxPolarAngle = Math.PI * 0.49; controls.minDistance = 1.5; controls.maxDistance = 30;
-  scene.add(new THREE.HemisphereLight(0xcfe3ff, 0x1a2028, .8));
-  const sun = new THREE.DirectionalLight(0xffffff, 1.6); sun.position.set(5, 10, 6); sun.castShadow = true;
-  sun.shadow.mapSize.set(1024, 1024); Object.assign(sun.shadow.camera, { left: -10, right: 10, top: 10, bottom: -10 });
+  scene.add(new THREE.HemisphereLight(0xdfe9f5, 0x20262c, .55));
+  const sun = new THREE.DirectionalLight(0xfff3e4, 2.1); sun.position.set(5, 10, 6); sun.castShadow = true;
+  sun.shadow.mapSize.set(2048, 2048); sun.shadow.radius = 3; sun.shadow.bias = -.0004; sun.shadow.normalBias = .02;
+  const fill = new THREE.DirectionalLight(0xcfe0ff, .55); fill.position.set(-6, 4, 3); scene.add(fill); Object.assign(sun.shadow.camera, { left: -10, right: 10, top: 10, bottom: -10 });
   scene.add(sun);
-  const floor = new THREE.Mesh(new THREE.CircleGeometry(16, 48), new THREE.MeshStandardMaterial({ color: 0x1a2129, roughness: .95 }));
+  const floor = new THREE.Mesh(new THREE.CircleGeometry(16, 48), new THREE.MeshStandardMaterial({ color: 0x262d34, roughness: .7, metalness: .05 }));
   floor.rotation.x = -Math.PI / 2; floor.receiveShadow = true; scene.add(floor);
   const grid = new THREE.GridHelper(32, 32, 0x2c3742, 0x222a33); grid.position.y = 0.002; scene.add(grid);
 
@@ -87,10 +88,15 @@ export function rbox(w, h, d, color, r = .05, o) { const m = new THREE.Mesh(rgeo
 let ENV = null;
 export function envMap(renderer) {
   if (ENV) return ENV;
-  const sc = new THREE.Scene(); const room = new THREE.Mesh(new THREE.BoxGeometry(30, 12, 30), new THREE.MeshBasicMaterial({ color: 0x3a434c, side: THREE.BackSide })); sc.add(room);
-  const lamp = new THREE.MeshBasicMaterial({ color: 0xffffff }); for (let x = -10; x <= 10; x += 5) for (const z of [-6, 0, 6]) { const l = new THREE.Mesh(new THREE.BoxGeometry(3, .1, .6), lamp); l.position.set(x, 5.9, z); sc.add(l); }
-  const fl = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), new THREE.MeshBasicMaterial({ color: 0x55605a })); fl.rotation.x = -Math.PI / 2; fl.position.y = -5.9; sc.add(fl);
-  const win = new THREE.Mesh(new THREE.PlaneGeometry(10, 3), new THREE.MeshBasicMaterial({ color: 0xbcd4ff })); win.position.set(0, 2, -14.9); sc.add(win);
+  // Estudio de fotografía: paredes gris medio, cajas de luz arriba y a los lados, piso gris
+  const sc = new THREE.Scene(); const room = new THREE.Mesh(new THREE.BoxGeometry(30, 14, 30), new THREE.MeshBasicMaterial({ color: 0x5a636c, side: THREE.BackSide })); sc.add(room);
+  const lamp = c => new THREE.MeshBasicMaterial({ color: c });
+  for (let x = -9; x <= 9; x += 6) for (const z of [-6, 0, 6]) { const l = new THREE.Mesh(new THREE.BoxGeometry(3.5, .1, 1.2), lamp(0xffffff)); l.position.set(x, 6.9, z); sc.add(l); }
+  const sb = new THREE.Mesh(new THREE.PlaneGeometry(9, 6), lamp(0xf4f6ff)); sb.position.set(0, 3, 14.9); sb.rotation.y = Math.PI; sc.add(sb);
+  const sb2 = new THREE.Mesh(new THREE.PlaneGeometry(8, 5), lamp(0xc9d6e6)); sb2.position.set(-14.9, 2, 0); sb2.rotation.y = Math.PI / 2; sc.add(sb2);
+  const sb3 = new THREE.Mesh(new THREE.PlaneGeometry(6, 4), lamp(0x8a96a2)); sb3.position.set(14.9, 2, 0); sb3.rotation.y = -Math.PI / 2; sc.add(sb3);
+  const fl = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), lamp(0x3d4349)); fl.rotation.x = -Math.PI / 2; fl.position.y = -6.9; sc.add(fl);
+  const win = new THREE.Mesh(new THREE.PlaneGeometry(12, 3), lamp(0xbcd4ff)); win.position.set(0, 2, -14.9); sc.add(win);
   const pm = new THREE.PMREMGenerator(renderer); ENV = pm.fromScene(sc, .02).texture; pm.dispose(); return ENV;
 }
 export function cyl(rt, rb, h, color, seg = 24, o) { const m = new THREE.Mesh(new THREE.CylinderGeometry(rt, rb, h, seg), color?.isMaterial ? color : mat(color, o)); m.castShadow = true; return m; }

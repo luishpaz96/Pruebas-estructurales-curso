@@ -1,0 +1,11 @@
+<!doctype html><html><head><meta charset="utf-8"><style>html,body{margin:0;background:#20262c}#v{width:100vw;height:100vh;position:relative}</style>
+<script type="importmap">{ "imports": { "three": "/app/vendor/three.module.min.js", "three/addons/": "/app/vendor/addons/" } }</script></head>
+<body><div id="v"></div><script type="module">
+import { createStage, THREE } from '/app/js/stage.js';
+import { buildReal } from '/app/js/models.js';
+const q = new URLSearchParams(location.search); const kind = q.get('m') || 'zenith';
+const st = createStage(document.getElementById('v'), { cam: (q.get('cam') || '7,4.5,8').split(',').map(Number), target: [0, 1.6, 0] });
+const m = buildReal(kind, '#3d8bff'); st.scene.add(m.group);
+if (q.get('rot')) m.group.rotation.y = +q.get('rot');
+window.__ready = true;
+</script></body></html>

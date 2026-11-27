@@ -73,7 +73,7 @@ function axiInterior(G, dims) {
   electronics(G, W / 2 - .7, ped + .45, D / 2 - .9, .5, .6, .5, 'chiller', 0x5d6a74);
   electronics(G, -W / 2 + .7, ped + .3, D / 2 - .9, .5, .4, .5, 'psu', 0x8d949b);
   const sh = new THREE.Group(); const lead = new THREE.MeshStandardMaterial({ color: 0x6a7a8c, roughness: .6, metalness: .6, transparent: true, opacity: .28, depthWrite: false });
-  [[-1, 0], [1, 0]].forEach(([s]) => sh.add(at(box(.03, 2.3, D - .3, lead), s * (W / 2 - .12), ped + 1.3, 0))); sh.add(at(box(W - .3, 2.3, .03, lead), 0, ped + 1.3, -D / 2 + .12));
+  [[-1, 0], [1, 0]].forEach(([s]) => sh.add(at(box(.03, 1.95, D - .3, lead), s * (W / 2 - .12), ped + 1.1, 0))); sh.add(at(box(W - .3, 1.95, .03, lead), 0, ped + 1.1, -D / 2 + .12));
   G.add(tagI(sh, 'shield'));
   const stg = new THREE.Group(); stg.add(box(1.6, .06, 1.2, mat(0x8d949b, { metalness: .6 }))); stg.add(at(box(1.6, .05, .05, mat(0xaab1b8, { metalness: .9 })), 0, .05, -.5), at(box(1.6, .05, .05, mat(0xaab1b8, { metalness: .9 })), 0, .05, .5)); stg.position.set(0, 1.45, 0); G.add(tagI(stg, 'stage'));
 }
