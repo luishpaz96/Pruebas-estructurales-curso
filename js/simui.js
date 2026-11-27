@@ -214,7 +214,7 @@ export function createProgram(root, mode = 'aoi', opts = {}) {
     const comps = P.b.comps.filter(c => !/^(FID|TP)/.test(c.ref));
     const tnorm = p => { const v = P.params[p.k]; const k = (v - p.min) / (p.max - p.min), lo = (p.tmin - p.min) / (p.max - p.min), hi = (p.tmax - p.min) / (p.max - p.min); return { k: p.inv ? 1 - k : k, lo: p.inv ? 1 - hi : lo, hi: p.inv ? 1 - lo : hi }; };
     for (let i = 0; i < n; i++) {
-      const defective = r() < .3; const dc = defective ? comps[Math.floor(r() * comps.length)] : null;
+      const defective = r() < .3; const dcs = comps.filter(c => M.defects.some(d => !d[2] || d[2] === ALGO_OF(c.pkg))); const dc = defective && dcs.length ? dcs[Math.floor(r() * dcs.length)] : null;
       const algoOK = c => !!P.lib[c.pkg] && (P.lib[c.pkg] === ALGO_OF(c.pkg) || (mode === 'spi' && M.algos[P.lib[c.pkg]] === M.algos[ALGO_OF(c.pkg)]));
       let defect = null;
       if (dc) { const opts = M.defects.filter(d => !d[2] || d[2] === ALGO_OF(dc.pkg)); defect = opts[Math.floor(r() * opts.length)]; }

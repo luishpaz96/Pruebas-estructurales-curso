@@ -27,7 +27,7 @@ function gstate() { const S = state(); S.game = S.game || { day: 0, done: {}, gr
 export function gameScreen(view) {
   view.innerHTML = `<div class="game" id="game"><div class="stage gstage" id="gStage"><div class="cap" style="display:none"></div></div>
     <div class="ghud" id="gHud"></div><div class="gtasks" id="gTasks"></div><canvas class="gmap" id="gMap" width="220" height="120"></canvas>
-    <div class="gprompt" id="gPrompt" hidden></div><div class="gdlg" id="gDlg" hidden></div>
+    <div class="gind" id="gInd"></div><div class="galerts" id="gAlerts"></div><div class="gvig" id="gVig"></div><div class="gprompt" id="gPrompt" hidden></div><div class="gdlg" id="gDlg" hidden></div>
     <div class="gmob" id="gMob"><button class="btn" id="gAct">Acción</button></div>
     <div class="gov" id="gOv" hidden><div class="gov-in"><div class="row gov-h"><span id="gOvT"></span><span class="sp"></span><button class="btn ghost" id="gOvX">Salir de la tarea</button></div><div id="gOvB"></div></div></div>
     <div class="gtitle" id="gTitle"></div></div>`;
@@ -155,7 +155,7 @@ export function gameScreen(view) {
     if (!R.running || R.paused) return;
     tickShift(dt);
     proximity();
-    drawMap();
+    drawMap(); indicators();
   });
 
   // ---------------- Simulación del turno ----------------
@@ -195,7 +195,35 @@ export function gameScreen(view) {
   function spawnIncident() {
     const pool = G.incidents.filter(i => !R.incidents.some(x => x.station === i.station) && W.stations[i.station]);
     if (!pool.length) return; const inc = pool[Math.floor(Math.random() * pool.length)];
-    R.incidents.push({ ...inc, at: R.t }); sfx('alarm'); radio(`Alarma: ${inc.title}. Ve a la estación.`);
+    R.incidents.push({ ...inc, at: R.t }); sfx('alarm'); radio(`Alarma: ${inc.title}. Ve a la estación.`); flashVig(); renderAlerts();
+  }
+  // ---------------- Avisos de falla visibles a distancia ----------------
+  function flashVig() { const v = $('#gVig'); if (!v) return; v.classList.remove('on'); void v.offsetWidth; v.classList.add('on'); }
+  function goTo(id) { const s = W.stations[id]; if (!s) return; target = s.pos.clone(); sfx('click'); }
+  function lookAt(id) { const s = W.stations[id]; if (!s) return; CAM.peek = 3.2; CAM.peekPos = s.pos.clone(); }
+  function renderAlerts() {
+    const box = $('#gAlerts'); if (!box) return;
+    box.innerHTML = R.incidents.map(i => `<div class="galert"><span class="ga-ic">⚠</span><div><b>${esc(STN_NAMES[i.station] || i.station)}</b><span>${esc(i.title)}</span><small data-dist="${esc(i.station)}"></small></div><button class="btn" data-go="${esc(i.station)}">Ir</button><button class="btn ghost" data-look="${esc(i.station)}" title="Ver desde aquí">👁</button></div>`).join('');
+    box.querySelectorAll('[data-go]').forEach(b => b.onclick = () => goTo(b.dataset.go)); box.querySelectorAll('[data-look]').forEach(b => b.onclick = () => lookAt(b.dataset.look));
+  }
+  // Marcadores en pantalla: encima de la estación si se ve, o flecha en el borde si está fuera de cuadro
+  const indV = new THREE.Vector3();
+  function indicators() {
+    const box = $('#gInd'); if (!box) return; const r = st.renderer.domElement.getBoundingClientRect(); const Wd = r.width, Hd = r.height; const p = player.g.position;
+    const list = R.incidents.map(i => ({ id: i.station, kind: 'inc', label: '⚠' })).concat(missionStations().filter(id => !R.incidents.some(i => i.station === id)).map(id => ({ id, kind: 'mis', label: '!' })));
+    while (box.children.length < list.length) box.appendChild(document.createElement('div'));
+    [...box.children].forEach((d, k) => {
+      const it = list[k]; if (!it || !W.stations[it.id]) { d.style.display = 'none'; return; }
+      const s = W.stations[it.id]; indV.set(s.pos.x, 4.5, s.pos.z).project(st.camera); const behind = indV.z > 1;
+      let x = (indV.x * .5 + .5) * Wd, y = (-indV.y * .5 + .5) * Hd; if (behind) { x = Wd - x; y = Hd - y; }
+      const m = 34, on = !behind && x > m && x < Wd - m && y > 130 && y < Hd - m;
+      const dist = Math.round(Math.hypot(p.x - s.pos.x, p.z - s.pos.z) * .5);
+      d.className = `gi gi-${it.kind}${on ? '' : ' edge'}`; d.style.display = dist < 2 ? 'none' : '';
+      if (!on) { const cx = Wd / 2, cy = Hd / 2, dx = x - cx, dy = y - cy; const k2 = Math.min((Wd / 2 - m) / Math.abs(dx || 1e-3), (Hd / 2 - 80) / Math.abs(dy || 1e-3)); x = cx + dx * k2; y = cy + 25 + dy * k2; d.style.setProperty('--a', Math.atan2(dy, dx) + 'rad'); }
+      d.style.transform = `translate(${x}px,${y}px)`; d.innerHTML = `<i>${it.label}</i><span>${dist} m</span>`;
+    });
+    $('#gAlerts')?.querySelectorAll('[data-dist]').forEach(e => { const s = W.stations[e.dataset.dist]; if (s) e.textContent = ` · a ${Math.round(Math.hypot(p.x - s.pos.x, p.z - s.pos.z) * .5)} m`; });
+    $('#gVig')?.classList.toggle('stop', !!R.lineStop);
   }
   const missionStations = () => { const m = R.mission; if (!m) return []; if (m.type === 'tour') return m.stations.filter(s => !R.toured.has(s)); return [m.station]; };
 
@@ -205,20 +233,40 @@ export function gameScreen(view) {
     const p = player.g.position; near = null; let best = 3.2;
     for (const s of Object.values(W.stations)) { const d = Math.hypot(p.x - s.pos.x, p.z - s.pos.z); if (d < best) { best = d; near = s; } }
     const pr = $('#gPrompt');
-    if (near) { const acts = actionsAt(near.id); pr.hidden = false; pr.innerHTML = `<b>${esc(STN_NAMES[near.id] || near.name)}</b> · ${acts.length ? esc(acts[0].label) : 'Sin tareas aquí'} <kbd>E</kbd>`; }
-    else pr.hidden = true;
+    if (near) { const acts = actionsAt(near.id); const key = near.id + '|' + acts.map(x => x.label).join('|'); pr.hidden = false;
+      if (pr.dataset.k !== key) { pr.dataset.k = key; pr.innerHTML = `<b>${esc(STN_NAMES[near.id] || near.name)}</b>${acts.length ? acts.slice(0, 3).map((x, i) => `<button class="gpa${i ? '' : ' first'}" data-ai="${i}">${i ? '' : '<kbd>E</kbd> '}${esc(x.label)}</button>`).join('') : ' · Sin tareas aquí'}`;
+        pr.querySelectorAll('[data-ai]').forEach(b => b.onclick = () => { const x = actionsAt(near.id)[+b.dataset.ai]; if (x && !R.paused) { sfx('open'); x.run(); } }); } }
+    else { pr.hidden = true; pr.dataset.k = ''; }
   }
   function actionsAt(id) {
     const a = [];
-    const inc = R.incidents.find(i => i.station === id); if (inc) a.push({ label: 'Atender alarma', run: () => runIncident(inc) });
+    const inc = R.incidents.find(i => i.station === id); if (inc) a.push({ label: 'Atender alarma', main: true, run: () => runIncident(inc) });
     const m = R.mission;
     if (m && m.type === 'tour' && m.stations.includes(id) && !R.toured.has(id)) a.push({ label: 'Escuchar al ingeniero', run: () => tourStop(id) });
     else if (m && m.station === id && m.type !== 'tour') a.push({ label: 'Misión: ' + m.title, run: () => runMission(m) });
     if (m && m.type === 'tour' && id === 'mentor' && m.stations.every(s => R.toured.has(s))) a.push({ label: 'Terminar recorrido', run: () => completeMission(100) });
     if ((id === 'aoi' || id === 'axi') && R.queue[id] > 0) a.push({ label: `Revisar NG (${R.queue[id]} en cola)`, run: () => runQueue(id) });
     if ((id === 'prod' || id === 'quality') && !a.length) a.push({ label: 'Saludar', run: () => say([{ who: id, text: id === 'prod' ? 'Aquí ando con el plan de producción. Avísame antes de parar cualquier máquina.' : 'Si ves algo raro en la calidad, avísame. Prefiero un paro que un escape.' }]) });
+    if (STN_MACH[id]) a.push({ label: 'Ver el equipo', run: () => machineInfo(id) });
     if (id === 'mentor' && !a.length) a.push({ label: 'Hablar con el ingeniero', run: () => talkMentor() });
     return a;
+  }
+  // Ficha del equipo: estado en vivo y acceso al modelo 3D por dentro
+  const STN_MACH = { spi: 'spi', aoi: 'aoi_ky', aoi2: 'aoi_v510', axi: 'axi_v810', ict: 'ict' };
+  function machineInfo(id) {
+    const mc = course.machines.find(m => m.id === STN_MACH[id]); if (!mc) return;
+    const inc = R.incidents.find(i => i.station === id); const q = R.queue[id] ?? null;
+    const procs = course.maintenance.filter(p => p.machine === mc.id); const gs = gstate();
+    overlay(mc.name, (b, close) => {
+      b.innerHTML = `<div class="split"><div><div class="mstat ${inc ? 'bad' : R.lineStop && W.stations[id]?.inline ? 'warn' : 'ok'}"><b>${inc ? '⚠ En alarma' : R.lineStop && W.stations[id]?.inline ? '⏸ Esperando (línea parada)' : '● Operando'}</b><span>${esc(inc ? inc.title : 'Sin alarmas activas')}</span></div>
+        <div class="kpis" style="grid-template-columns:repeat(auto-fit,minmax(110px,1fr));margin-top:10px">${q !== null ? `<div class="kpi"><b>${q}/10</b><span>NG en cola</span></div>` : ''}<div class="kpi"><b>${R.kpi?.produced ?? 0}</b><span>tarjetas hoy</span></div><div class="kpi"><b>${procs.length}</b><span>mantenimientos</span></div></div>
+        <p class="mut" style="margin-top:10px">${esc(mc.summary || mc.description || '')}</p></div>
+        <div><h3 style="margin-top:0">Mantenimientos de este equipo</h3>${procs.map(p => `<button class="btn" data-mp="${esc(p.id)}" style="display:block;width:100%;text-align:left;margin-bottom:6px">${esc(p.title)} <span class="mut">· ${esc(p.frequency || '')}${course.maintenance && state().maint?.[p.id] ? ` · mejor ${state().maint[p.id].best}` : ''}</span></button>`).join('') || '<p class="mut">Sin procedimientos.</p>'}
+        <p class="mut">Abre un procedimiento para ver el equipo en 3D, quitarle las cubiertas (👁) y explorar sus piezas internas (🔍).</p>
+        ${inc ? '<button class="btn pri" id="miInc">Atender la alarma</button>' : ''}</div></div>`;
+      b.querySelectorAll('[data-mp]').forEach(x => x.onclick = () => { const pr = course.maintenance.find(p => p.id === x.dataset.mp); b.innerHTML = ''; runMaintenance(b, pr, () => close(), () => {}); });
+      b.querySelector('#miInc')?.addEventListener('click', () => { close(); runIncident(inc); });
+    });
   }
   function interact() { if (!near || R.paused) return; const a = actionsAt(near.id)[0]; if (a) { sfx('open'); a.run(); } }
 
@@ -247,7 +295,7 @@ export function gameScreen(view) {
     build(body, close);
   }
   function runIncident(inc) {
-    overlay(inc.title, (body, close) => MG.alarm(body, inc, r => { close(); R.incidents = R.incidents.filter(x => x !== inc); gain(Math.round(40 * r.score / 100) + 20, 'alarma resuelta'); sfx('great'); radio('Máquina restablecida. Buen trabajo.'); }));
+    overlay(inc.title, (body, close) => MG.alarm(body, inc, r => { close(); R.incidents = R.incidents.filter(x => x !== inc); renderAlerts(); gain(Math.round(40 * r.score / 100) + 20, 'alarma resuelta'); sfx('great'); radio('Máquina restablecida. Buen trabajo.'); }));
   }
   function runQueue(id) {
     const n = Math.min(R.queue[id], 5);
@@ -303,6 +351,7 @@ export function gameScreen(view) {
     x.fillStyle = 'rgba(10,14,18,.85)'; x.fillRect(0, 0, c.width, c.height);
     x.fillStyle = '#3a4652'; W.colliders.forEach(r => x.fillRect(sx(r.x0), sz(r.z0), Math.max(2, sx(r.x1) - sx(r.x0)), Math.max(2, sz(r.z1) - sz(r.z0))));
     for (const [id, s] of Object.entries(W.stations)) { const b = beacons[id]; if (b?.g.visible) { x.fillStyle = '#' + b.ring.material.color.getHexString(); x.beginPath(); x.arc(sx(s.pos.x), sz(s.pos.z), 5 + Math.sin(R.t * 6) * 1.5, 0, 7); x.fill(); } }
+    for (const i of R.incidents) { const s = W.stations[i.station]; if (!s) continue; const ph = (R.t * 1.5) % 1; x.strokeStyle = `rgba(255,59,48,${1 - ph})`; x.lineWidth = 2; x.beginPath(); x.arc(sx(s.pos.x), sz(s.pos.z), 6 + ph * 14, 0, 7); x.stroke(); x.fillStyle = '#ff3b30'; x.beginPath(); x.arc(sx(s.pos.x), sz(s.pos.z), 6, 0, 7); x.fill(); }
     const p = player.g.position; x.fillStyle = '#fff'; x.beginPath(); x.arc(sx(p.x), sz(p.z), 4, 0, 7); x.fill();
   }
 
@@ -310,14 +359,14 @@ export function gameScreen(view) {
   function startDay(idx, free = false) {
     initAudio(); startMusic();
     R.freeplay = free; R.day = free ? { title: 'Turno libre', missions: [], shift: 420, ngRate: .1, incidents: 4 } : G.career.days[idx]; R.dayIdx = idx;
-    R.mi = 0; R.mission = R.day.missions[0] || null; R.t = 0; R.shift = R.day.shift || 360; R.kpi = freshKPI(); R.incidents = []; R.queue = { aoi: 0, axi: 0 }; R.xpDay = 0; R.toured = new Set();
+    R.mi = 0; R.mission = R.day.missions[0] || null; R.t = 0; R.shift = R.day.shift || 360; R.kpi = freshKPI(); R.incidents = []; R.queue = { aoi: 0, axi: 0 }; R.xpDay = 0; R.toured = new Set(); renderAlerts();
     const n = R.day.incidents || 0; R.incTimes = Array.from({ length: n }, (_, i) => R.shift * (.2 + .7 * (i + Math.random() * .6) / Math.max(1, n))).sort((a, b) => a - b);
     life.setExtras(free ? ['maintcrew'] : (R.day.extras || (R.day.chapter === 'c1' ? ['trainees'] : [])));
     player.g.position.set(-12, 0, 9); R.running = true; $('#gTitle').hidden = true;
     say(free ? ['Turno libre: hoy la línea es tuya. Atiende alarmas y no dejes que se llenen las colas de NG.'] : (idx === 0 ? [MENTOR.greeting] : []).concat(R.day.intro || []));
   }
   function endDay() {
-    R.running = false; R.paused = true; $('#gDlg').hidden = true; stopMusic(); sfx('levelup');
+    R.running = false; R.paused = true; $('#gDlg').hidden = true; stopMusic(); sfx('levelup'); $('#gInd').innerHTML = ''; $('#gAlerts').innerHTML = ''; $('#gVig').classList.remove('stop');
     const k = R.kpi, f = fpy(), avg = k.missions.length ? k.missions.reduce((a, m) => a + m.score, 0) / k.missions.length : 80;
     const rev = k.reviewTotal ? k.reviewOK / k.reviewTotal * 100 : 100;
     const score = Math.round(avg * .5 + rev * .25 + Math.max(0, 100 - k.escapes * 15 - k.downtime / 3) * .25);
@@ -357,7 +406,7 @@ export function gameScreen(view) {
   window.__tp = id => { const s = W.stations[id]; if (s) { player.g.position.set(s.pos.x, 0, s.pos.z); target = null; proximity(); } };
   window.__inc = () => spawnIncident();
   window.__end = () => endDay();
-  window.__m = () => R.mission && { id: R.mission.id, station: R.mission.station, type: R.mission.type, stations: R.mission.stations, toured: [...R.toured], mi: R.mi };
+  window.__m = () => R.mission && { proc: R.mission.proc, id: R.mission.id, station: R.mission.station, type: R.mission.type, stations: R.mission.stations, toured: [...R.toured], mi: R.mi };
   titleScreen();
   return st;
 }

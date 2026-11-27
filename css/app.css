@@ -266,3 +266,31 @@ main:has(.game){max-width:none;padding-bottom:0}
 .mxinfo p{margin:6px 0}.mxcard img{width:100%;border-radius:6px;border:1px solid #3a4652;image-rendering:auto}
 #mxStage .ctrl{flex-wrap:wrap}
 #mxStage{min-height:min(560px,70vh)}.mxinfo{max-width:min(300px,calc(100% - 20px))}
+/* Avisos de falla a distancia */
+.galerts{position:absolute;left:50%;transform:translateX(-50%);top:120px;z-index:6;display:grid;gap:6px;width:min(520px,92vw);pointer-events:none}
+.galert{pointer-events:auto;display:flex;gap:10px;align-items:center;background:rgba(60,8,8,.92);border:2px solid #ff3b30;border-radius:12px;padding:6px 10px;box-shadow:0 0 24px rgba(255,59,48,.45);animation:gpulse 1.2s infinite}
+.galert div{flex:1;display:grid;line-height:1.2}.galert span{font-size:14px}.galert small{color:#ffb3ae}
+.galert .btn{min-height:36px;padding:4px 12px}.ga-ic{font-size:26px;color:#ff3b30}
+@keyframes gpulse{50%{box-shadow:0 0 6px rgba(255,59,48,.2);border-color:#ff8a80}}
+.gind{position:absolute;inset:0;pointer-events:none;z-index:5;overflow:hidden}
+.gi{position:absolute;left:0;top:0;margin:-22px 0 0 -22px;width:44px;display:grid;justify-items:center;font-family:Rajdhani;font-weight:700}
+.gi i{font-style:normal;width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:20px;color:#111;box-shadow:0 0 0 4px rgba(0,0,0,.35)}
+.gi span{font-size:13px;color:#fff;text-shadow:0 1px 3px #000;margin-top:2px;white-space:nowrap}
+.gi-inc i{background:#ff3b30;color:#fff;animation:gbeat .8s infinite}.gi-mis i{background:#ffb020}
+.gi.edge i::after{content:'';position:absolute;width:0;height:0;border:9px solid transparent;border-left:14px solid currentColor;transform:rotate(var(--a)) translateX(30px);color:inherit}
+.gi-inc.edge i::after{color:#ff3b30}.gi-mis.edge i::after{color:#ffb020}
+@keyframes gbeat{50%{transform:scale(1.18)}}
+.gvig{position:absolute;inset:0;pointer-events:none;z-index:4;box-shadow:inset 0 0 0 0 rgba(255,59,48,0)}
+.gvig.on{animation:gvig 1.6s 2}.gvig.stop{box-shadow:inset 0 0 60px 10px rgba(255,59,48,.35);animation:gvigs 1.4s infinite}
+@keyframes gvig{30%{box-shadow:inset 0 0 120px 30px rgba(255,59,48,.6)}}
+@keyframes gvigs{50%{box-shadow:inset 0 0 30px 4px rgba(255,59,48,.2)}}
+@media (max-width:700px){.galerts{top:150px}.galert span{font-size:13px}}
+.gi i{position:relative}.gi.edge i::after{left:50%;top:50%;margin:-9px 0 0 -7px}
+.galerts{left:auto;right:10px;transform:none;top:150px;width:min(360px,60vw)}
+@media (max-width:700px){.galerts{top:auto;bottom:calc(108px + 28vh);right:8px;width:min(250px,64vw)}.galert{padding:4px 6px;gap:6px}.galert span{display:none}.galert .btn{min-height:32px;padding:2px 8px}.ga-ic{font-size:20px}}
+.mstat{display:grid;gap:2px;padding:10px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg2)}
+.mstat.ok b{color:var(--ok)}.mstat.bad{border-color:var(--bad);background:rgba(255,59,48,.12)}.mstat.bad b{color:var(--bad)}.mstat.warn b{color:var(--warn)}
+.gprompt{pointer-events:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:center}
+.gpa{background:rgba(255,255,255,.06);border:1px solid var(--line);color:var(--ink);border-radius:8px;padding:4px 10px;min-height:34px;font:inherit;cursor:pointer}
+.gpa.first{border-color:var(--warn);color:var(--warn)}.gpa:hover{background:rgba(255,176,32,.15)}
+.gprompt{white-space:normal;border-radius:16px}
