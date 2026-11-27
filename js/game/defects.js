@@ -33,7 +33,7 @@ function roi(x, px, py, w, h, col = '#ff3b30') { x.save(); x.strokeStyle = col; 
 function aoiChip(x, W, H, kind, golden) {
   const cx = W / 2, cy = H / 2 + 8; const pw = 64, ph = 78, gap = 170;
   trace(x, 0, cy, cx - gap / 2 - pw, cy, 12); trace(x, cx + gap / 2 + pw, cy, W, cy, 12);
-  x.strokeStyle = '#f0f0e8'; x.lineWidth = 3; x.strokeRect(cx - 130, cy - 62, 260, 124); silkText(x, 'C12', cx - 18, cy - 74, 20);
+  x.strokeStyle = '#f0f0e8'; x.lineWidth = 3; x.strokeRect(cx - 130, cy - 62, 260, 124); silkText(x, 'C4', cx - 12, cy - 74, 20);
   const L = [cx - gap / 2 - pw + 20, cy - ph / 2], R = [cx + gap / 2 - 20, cy - ph / 2];
   pad(x, L[0], L[1], pw, ph); pad(x, R[0], R[1], pw, ph);
   const k = golden ? 'ok' : kind;
@@ -74,7 +74,7 @@ function aoiQFP(x, W, H, kind, golden) {
 function aoiDiode(x, W, H, kind, golden) {
   const cx = W / 2, cy = H / 2 + 6; trace(x, 0, cy, cx - 120, cy, 12); trace(x, cx + 120, cy, W, cy, 12);
   pad(x, cx - 150, cy - 34, 62, 68); pad(x, cx + 88, cy - 34, 62, 68);
-  x.strokeStyle = '#f0f0e8'; x.lineWidth = 3; x.strokeRect(cx - 170, cy - 56, 340, 112); x.fillStyle = '#f0f0e8'; x.fillRect(cx - 186, cy - 56, 10, 112); silkText(x, 'D3', cx - 14, cy - 66, 20); silkText(x, 'K', cx - 205, cy + 6, 18);
+  x.strokeStyle = '#f0f0e8'; x.lineWidth = 3; x.strokeRect(cx - 170, cy - 56, 340, 112); x.fillStyle = '#f0f0e8'; x.fillRect(cx - 186, cy - 56, 10, 112); silkText(x, 'D1', cx - 14, cy - 66, 20); silkText(x, 'K', cx - 205, cy + 6, 18);
   fillet(x, cx - 150, cy - 34, 46, 68, 1); fillet(x, cx + 104, cy - 34, 46, 68, -1);
   x.fillStyle = 'rgba(0,0,0,.4)'; x.fillRect(cx - 104 + 6, cy - 34 + 6, 208, 68);
   const g = x.createLinearGradient(0, cy - 34, 0, cy + 34); g.addColorStop(0, '#2c2f33'); g.addColorStop(1, '#141618'); x.fillStyle = g; x.fillRect(cx - 104, cy - 34, 208, 68);

@@ -37,12 +37,22 @@ export function review(el, { machine = 'aoi', count = 6 }, done) {
   function show() {
     if (i >= items.length) return end();
     const c = items[i];
-    el.innerHTML = `<div class="mg-review"><div class="row"><span class="tag">${c.draw.startsWith('x') ? 'AXI · corte de bolas' : 'AOI · imagen 2D/3D'}</span><span class="mut">Tarjeta ${i + 1} de ${items.length}</span><span class="sp"></span><b>${ok} ✓</b></div>
-      <h3 style="margin:10px 0">Llamado de la máquina: <span style="color:var(--warn)">${esc(c.call)}</span></h3>
-      <canvas id="rv" width="780" height="400" style="width:100%;max-width:900px;border-radius:10px;display:block;margin:0 auto;image-rendering:auto"></canvas>
-      <div class="bar" style="margin:10px 0"><i id="tbar" style="width:100%;background:var(--warn)"></i></div>
-      <div class="row" style="justify-content:center"><button class="btn" id="bOK" style="border-color:var(--ok);min-width:150px">✓ Falso llamado (pasa)</button><button class="btn" id="bNG" style="border-color:var(--bad);min-width:150px">✕ Defecto real (NG)</button></div>
-      <p class="mut" style="text-align:center;margin-top:6px">Teclas: A = falso llamado · D = defecto real</p><div id="rfb"></div></div>`;
+    const ax = c.draw.startsWith('x'); const ref = ax ? 'U2' : ['bridge', 'silk'].includes(c.draw) ? 'U1' : ['polbad', 'polok'].includes(c.draw) ? 'D1' : 'C4';
+    const pkg = { U1: 'QFP-32', U2: 'BGA-64', U3: 'SOIC-8', J1: 'HDR-1x6', D1: 'SOD-123', C4: '0603', R2: '0603', C6: '0805' }[ref];
+    const sn = 'PR01-' + String(240000 + (i + 1) * 137 + c.call.length).padStart(7, '0');
+    el.innerHTML = `<div class="mg-review sw ${ax ? 'sk-v810' : 'sk-aoigui'}" style="--acc:${ax ? '#ffb020' : '#2f7bd6'}">
+      <div class="sktitle"><span class="skico"></span><span class="skt">${ax ? 'AXI System v810 — Defect Review (Virtual Live)' : 'Koh Young Zenith — Repair & Review Station'}</span><span class="sp"></span><span class="skwin"><i>&#x2014;</i><i>&#x2610;</i><i class="x">&#x2715;</i></span></div>
+      <div class="mb">${(ax ? ['File', 'Review', 'View', 'Help'] : ['File', 'Review', 'Defect', 'View', 'Help']).map(m => `<span>${m}</span>`).join('')}</div>
+      <div class="skinfo"><table class="skstat"><tr><th>Board SN</th><th>Panel</th><th>Ref</th><th>Package</th><th>Tarjeta</th><th>Correctas</th></tr><tr><td>${sn}</td><td>1/1</td><td>${ref}</td><td>${pkg}</td><td>${i + 1} / ${items.length}</td><td>${ok}</td></tr></table></div>
+      <div class="rvbody"><div class="rvimg"><div class="vhead" style="position:static"><span>${ax ? 'X-ray · Slice: ball plane' : '2D Color · Top light + side light'}</span><span class="sp"></span><span>Llamado: <b style="color:#ffb020">${esc(c.call)}</b></span></div>
+        <canvas id="rv" width="780" height="400" style="width:100%;display:block;background:#000"></canvas></div>
+        <div class="pane rvside"><div class="ph">Decisión del operador</div><div class="props">
+          <p><b>Item:</b> ${esc(c.call)}<br><b>Componente:</b> ${ref} · ${pkg}<br><b>Algoritmo:</b> ${ax ? 'Grid array / ball slice' : pkg === '0603' || pkg === '0805' ? 'Chip (R/C)' : 'Gullwing / body'}</p>
+          <div class="bar" style="margin:2px 0"><i id="tbar" style="width:100%;background:var(--warn)"></i></div>
+          <button class="rvb ok" id="bOK"><b>PASS</b><small>Falso llamado · tecla A</small></button>
+          <button class="rvb ng" id="bNG"><b>FAIL</b><small>Defecto real · tecla D</small></button>
+          <div id="rfb"></div></div></div></div>
+      <div class="status"><span>Repair queue: ${items.length - i}</span><span>Operador: TEC</span><span>Línea 1</span></div></div>`;
     drawCase(el.querySelector('#rv'), c.draw);
     t0 = performance.now();
     const tick = () => { const k = 1 - (performance.now() - t0) / (LIM * 1000); const b = el.querySelector('#tbar'); if (b) b.style.width = Math.max(0, k * 100) + '%'; if (k <= 0) decide(null); else raf = requestAnimationFrame(tick); };

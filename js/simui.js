@@ -1,4 +1,5 @@
 // Software de inspección simulado + práctica "Crea tu programa" con archivos Gerber reales + reproductor de prácticas.
+import { boardSVG as BV, enhanceView } from './boardview.js';
 import { parseGerber, parseExcellon, parseCentroid, parseIPC356, gerberSVG, padsByComponent } from './gerber.js';
 import { esc, sfx, toast, shuffle, dialog, confetti } from './fx.js';
 import { state, save, addXP, answer, course } from './store.js';
@@ -26,23 +27,6 @@ const ALGO_OF = pkg => (course.boards[0]?.packages?.[pkg]?.algo) || 'CR';
 // Generador pseudoaleatorio con semilla
 const rng = s => () => (s = (s * 16807) % 2147483647) / 2147483647;
 const gauss = r => Math.sqrt(-2 * Math.log(r() + 1e-9)) * Math.cos(2 * Math.PI * r());
-
-function boardSVG(b, layers, ex = '') {
-  const vb = `${-2} ${-2} ${b.width + 4} ${b.height + 4}`;
-  const L = [];
-  L.push(`<rect x="0" y="0" width="${b.width}" height="${b.height}" fill="#14532d" stroke="#d9c07a" stroke-width=".25"/>`);
-  if (layers.copper && b.cu) L.push(gerberSVG(b.cu, '#c9a74a', .9));
-  if (layers.mask && b.mask) L.push(gerberSVG(b.mask, '#7ad67a', .25));
-  if (layers.paste && b.paste) L.push(gerberSVG(b.paste, '#c0c6cc', .95));
-  if (layers.silk && b.silk) L.push(gerberSVG(b.silk, '#f2f2f2', .9));
-  if (layers.drill && b.holes) L.push(b.holes.map(h => `<circle cx="${h.x}" cy="${h.y}" r="${h.d / 2}" fill="#0b0f13" stroke="#888" stroke-width=".1"/>`).join(''));
-  if (layers.comps && b.comps) L.push(b.comps.filter(c => !/^FID|^TP/.test(c.ref)).map(c => { const p = b.packages?.[c.pkg]; if (!p || !p.body[0]) return ''; let [w, h] = p.body; if (c.rot % 180 === 90) [w, h] = [h, w];
-    return `<rect data-ref="${esc(c.ref)}" x="${c.x - w / 2}" y="${c.y - h / 2}" width="${w}" height="${h}" rx=".2" fill="${p.algo === 'BGA' || p.algo === 'GW' ? '#23272c' : '#7a6a55'}" opacity=".9"/>`; }).join(''));
-  if (layers.tp && b.ipc) L.push(b.ipc.filter(t => /^TP/.test(t.ref)).map(t => `<circle cx="${t.x}" cy="${t.y}" r=".9" fill="none" stroke="#ff5a5f" stroke-width=".25"/>`).join(''));
-  // Etiquetas (no invertidas)
-  const labels = layers.ref && b.comps ? b.comps.map(c => `<text x="${c.x}" y="${-c.y - 1.6}" font-size="1.5" fill="#e8eef4" text-anchor="middle" font-family="Barlow">${esc(c.ref)}</text>`).join('') : '';
-  return `<svg viewBox="${vb}" preserveAspectRatio="xMidYMid meet"><g transform="translate(0 ${b.height}) scale(1 -1)">${L.join('')}${ex}</g><g transform="translate(0 ${b.height})">${labels}</g></svg>`;
-}
 
 export function loadBoard(src) {
   const d = src.data || {};
@@ -78,15 +62,35 @@ export const SKINS = {
     foot: j => `<span>Job: ${esc(j)}</span><span>Lane 1</span><span class="sp"></span><span class="skidle">Idle</span>` }
 };
 export const skinFor = (mode, machine) => machine === 'aoi_v510' ? 'smartgui' : ({ aoi: 'aoigui', axi: 'v810', ict: 'btbasic', spi: 'kyspi' })[mode] || 'aoigui';
+const ICO = {
+  open: 'M2 4h4l1.5 1.5H14v7.5H2z', save: 'M3 2h8l2 2v10H3zM5 2v4h6V2M5 9h6v4H5z', undo: 'M6 4L2 7.5 6 11M2.5 7.5H10a3.5 3.5 0 010 7H8', redo: 'M10 4l4 3.5-4 3.5M13.5 7.5H6a3.5 3.5 0 000 7h2',
+  zin: 'M7 2.5a4.5 4.5 0 110 9 4.5 4.5 0 010-9zM10.3 10.3L14 14M5 7h4M7 5v4', zout: 'M7 2.5a4.5 4.5 0 110 9 4.5 4.5 0 010-9zM10.3 10.3L14 14M5 7h4', fit: 'M2 6V2h4M10 2h4v4M14 10v4h-4M6 14H2v-4',
+  ruler: 'M1.5 10.5l9-9 4 4-9 9zM4 8l1.5 1.5M6 6l1.5 1.5M8 4l1.5 1.5', teach: 'M8 1v4M8 11v4M1 8h4M11 8h4M8 5.5a2.5 2.5 0 110 5 2.5 2.5 0 010-5z', run: 'M4 2.5l9 5.5-9 5.5z', stop: 'M3.5 3.5h9v9h-9z',
+  light: 'M8 4.5a3.5 3.5 0 110 7 3.5 3.5 0 010-7zM8 1v2M8 13v2M1 8h2M13 8h2M3 3l1.4 1.4M11.6 11.6L13 13M13 3l-1.4 1.4M4.4 11.6L3 13', layers: 'M8 2l6 3-6 3-6-3zM2 8l6 3 6-3M2 11l6 3 6-3',
+  lib: 'M2.5 2.5h3v11h-3zM6.5 2.5h3v11h-3zM10.5 3l2.8-.6 2 10.8-2.8.6z', xray: 'M8 1.5l5.5 3v7L8 14.5 2.5 11.5v-7zM8 1.5v13M2.5 4.5l11 7M13.5 4.5l-11 7', probe: 'M8 1v8M5.5 9h5l-1 5h-3z', grid: 'M2 2h12v12H2zM6 2v12M10 2v12M2 6h12M2 10h12'
+};
+const ico = k => `<svg viewBox="0 0 16 16" width="16" height="16" aria-hidden="true"><path d="${ICO[k]}" fill="none" stroke="currentColor" stroke-width="1.3" stroke-linejoin="round" stroke-linecap="round"/></svg>`;
+const TOOLS = {
+  aoi: [['open', 'Open Job'], ['save', 'Save Job'], 0, ['undo', 'Undo'], ['redo', 'Redo'], 0, ['zin', 'Zoom In'], ['zout', 'Zoom Out'], ['fit', 'Fit Board'], 0, ['teach', 'Teach Fiducial'], ['lib', 'Package Library'], ['light', 'Lighting (RGB + Moiré)'], ['ruler', 'Measure'], 0, ['run', 'Inspect'], ['stop', 'Stop']],
+  spi: [['open', 'Open'], ['save', 'Save'], 0, ['zin', 'Zoom In'], ['zout', 'Zoom Out'], ['fit', 'Fit'], 0, ['teach', 'Fiducial Teach'], ['layers', 'Pad Group'], ['grid', 'Stencil Data'], ['ruler', 'Measure'], 0, ['run', 'Start'], ['stop', 'Stop']],
+  axi: [['open', 'Open Recipe'], ['save', 'Save Recipe'], 0, ['zin', 'Zoom In'], ['zout', 'Zoom Out'], ['fit', 'Fit Panel'], 0, ['teach', 'Alignment'], ['lib', 'Subtype Library'], ['xray', 'Slice Setup'], ['ruler', 'Measure'], 0, ['run', 'Run Test'], ['stop', 'Abort']],
+  ict: [['open', 'Load Board'], ['save', 'Save'], 0, ['zin', 'Zoom In'], ['zout', 'Zoom Out'], ['fit', 'Fit'], 0, ['probe', 'Probe Placement'], ['lib', 'Device Library'], ['grid', 'Fixture Grid'], 0, ['run', 'Run testplan'], ['stop', 'Stop']]
+};
+const VIEWN = { aoi: '2D Camera · RGB + 3D Moiré', spi: '3D Height Map · Paste', axi: 'X-ray · Slice: Top-side joints', ict: 'Fixture CAD · Top view · Nodes' };
 function swShell(title, mode, tbButtons, skin = skinFor(mode)) {
   const K = SKINS[skin];
-  return `<div class="sw sk-${skin}" style="--acc:${MODES[mode].color}">
-  <div class="sktitle"><span class="skico"></span><span>${esc(K.title)} — ${esc(title)}</span><span class="sp"></span><span class="skwin">▁ ▢ ✕</span></div>
+  return `<div class="sw sk-${skin}" data-mode="${mode}" style="--acc:${MODES[mode].color}">
+  <div class="sktitle"><span class="skico"></span><span class="skt">${esc(K.title)} — ${esc(title)}</span><span class="sp"></span><span class="skwin"><i>&#x2014;</i><i>&#x2610;</i><i class="x">&#x2715;</i></span></div>
   <div class="mb">${K.menu.map(m => `<span>${m}</span>`).join('')}</div>
   ${K.tabs ? `<div class="sktabs">${K.tabs.map((t, i) => `<span class="${i === K.on ? 'on' : ''}">${t}</span>`).join('')}</div>` : ''}
+  <div class="sktb">${TOOLS[mode].map(t => t ? `<button ${({ zin: 'data-z="in"', zout: 'data-z="out"', fit: 'data-z="fit"' })[t[0]] || `data-skt="${t[1]}"`} title="${t[1]}">${ico(t[0])}</button>` : '<span class="sep"></span>').join('')}<span class="sp"></span><span class="skled"><i></i>${skin === 'btbasic' ? 'Testhead' : 'Machine'} online</span></div>
   <div class="skinfo">${K.info()}</div>
   <div class="tb">${tbButtons}</div>
-  <div class="body${K.side ? ' hasside' : ''}">${K.side ? `<div class="skside">${K.side.map((t, i) => `<span class="${i === K.sideOn ? 'on' : ''}">${t}</span>`).join('')}</div>` : ''}<div class="tree" id="swTree"></div><div class="view" id="swView"></div><div class="props" id="swProps"></div></div>
+  <div class="body${K.side ? ' hasside' : ''}">${K.side ? `<div class="skside">${K.side.map((t, i) => `<span class="${i === K.sideOn ? 'on' : ''}">${t}</span>`).join('')}</div>` : ''}
+    <div class="pane"><div class="ph">${skin === 'btbasic' ? 'Board / Devices' : skin === 'v810' ? 'Recipe tree' : 'Job tree'}</div><div class="tree" id="swTree"></div></div>
+    <div class="view"><div class="vhead"><span>${VIEWN[mode]}</span><span class="sp"></span><button data-z="out" title="Zoom out">−</button><span class="vzoom">100 %</span><button data-z="in" title="Zoom in">+</button><button data-z="fit" title="Ajustar">⤢</button></div><div class="vc" id="swView"></div><div class="vcoord">X —  Y — mm</div><div class="vhint">Rueda: zoom · Shift + arrastrar: mover</div></div>
+    <div class="pane"><div class="ph">Properties</div><div class="props" id="swProps"></div></div></div>
+  <div class="logh"><span class="on">Output</span><span>Messages</span><span>Errors</span></div>
   <div class="log${K.term ? ' term' : ''}" id="swLog" aria-live="polite">${K.term ? '<div>BT-BASIC Rev 09.xx  (c) — simulador del curso</div>' : ''}</div>
   <div class="status" id="swStatus"><span>Listo</span></div><div class="skfoot">${K.foot(title)}</div></div>`;
 }
@@ -107,7 +111,7 @@ export function createProgram(root, mode = 'aoi', opts = {}) {
   const log = logger(root.querySelector('#swLog'));
   root.querySelectorAll('[data-skt]').forEach(b => b.onclick = () => log(`${b.dataset.skt}: usa los pasos numerados de abajo para esta práctica.`, 'w'));
   const P = { b: null, fids: [], lib: {}, params: Object.fromEntries(M.params.map(p => [p.k, p.v])), tab: 0, done: new Set(), layers: Object.fromEntries(M.layers.map(l => [l, true])) };
-  P.layers.ref = false;
+  P.layers.ref = false; P.layers.mask = true; P.layers.drill = true; if (mode === 'ict') P.layers.comps = true;
 
   const setTab = i => { P.tab = i; root.querySelectorAll('[data-tab]').forEach(b => b.classList.toggle('on', +b.dataset.tab === i)); render(); };
   root.querySelectorAll('[data-tab]').forEach(b => b.onclick = () => {
@@ -116,17 +120,18 @@ export function createProgram(root, mode = 'aoi', opts = {}) {
     if (i > 1 && P.fids.length < 2) return log('Registra al menos 2 fiduciales en Alinear.', 'e');
     setTab(i);
   });
-  const draw = (ex = '') => { if (P.b) view.innerHTML = boardSVG(P.b, P.layers, ex); else view.innerHTML = '<div class="empty" style="margin:30px">Sin tarjeta cargada</div>'; };
+  const draw = (ex = '') => { if (P.b) view.innerHTML = BV(P.b, P.layers, ex, mode); else view.innerHTML = '<div class="empty" style="margin:30px">Sin tarjeta cargada · usa 1. Importar</div>'; };
+  enhanceView(root.querySelector('.view'), () => P.b?.height);
   const pkgs = () => [...new Set((P.b?.comps || []).map(c => c.pkg))];
   const treeRender = (ng = {}) => {
     if (!P.b) { tree.innerHTML = '<div class="mut">Programa vacío</div>'; return; }
-    tree.innerHTML = `<div>▾ Board ${esc(P.b.name || '')}</div><div>&nbsp;▾ Fiduciales (${P.fids.length})</div>${P.fids.map(f => `<div class="okc">&nbsp;&nbsp;◎ ${esc(f)}</div>`).join('')}
-      <div>&nbsp;▾ Componentes (${P.b.comps.length})</div>${P.b.comps.filter(c => !/^FID/.test(c.ref)).map(c => `<div data-ref="${esc(c.ref)}" class="${ng[c.ref] ? 'ng' : P.lib[c.pkg] ? 'okc' : ''}">&nbsp;&nbsp;${esc(c.ref)} · ${esc(c.pkg)}${ng[c.ref] ? ' ✕' + ng[c.ref] : ''}</div>`).join('')}`;
+    tree.innerHTML = `<div class="t0"><i class="ti tb"></i>${esc(P.b.name || '')}</div><div class="t1"><i class="ti tf"></i>Fiducials (${P.fids.length})</div>${P.fids.map(f => `<div class="t2 okc"><i class="ti tfi"></i>${esc(f)}</div>`).join('')}
+      <div class="t1"><i class="ti tf"></i>Components (${P.b.comps.length})</div>${P.b.comps.filter(c => !/^FID/.test(c.ref)).map(c => `<div data-ref="${esc(c.ref)}" class="t2 ${ng[c.ref] ? 'ng' : P.lib[c.pkg] ? 'okc' : ''}"><i class="ti ${ng[c.ref] ? 'tng' : P.lib[c.pkg] ? 'tok' : 'tc'}"></i>${esc(c.ref)}<small>${esc(c.pkg)}${ng[c.ref] ? ' · ' + ng[c.ref] : ''}</small></div>`).join('')}`;
     tree.querySelectorAll('[data-ref]').forEach(d => d.onclick = () => { const c = P.b.comps.find(x => x.ref === d.dataset.ref); if (!c) return;
       draw(`<circle cx="${c.x}" cy="${c.y}" r="3.2" fill="none" stroke="${M.color}" stroke-width=".4"/>`);
       log(`${c.ref}: ${c.value} · ${c.pkg} · X ${c.x} Y ${c.y} · rot ${c.rot}° · algoritmo ${P.lib[c.pkg] ? M.algos[P.lib[c.pkg]] : 'sin asignar'}`); });
   };
-  const layerToggles = () => `<div><b>Capas</b>${['copper', 'mask', 'paste', 'silk', 'drill', 'comps', 'tp', 'ref'].map(l => `<label class="toggle" style="min-height:30px"><input type="checkbox" data-l="${l}" ${P.layers[l] ? 'checked' : ''}> ${({ copper: 'Cobre', mask: 'Máscara', paste: 'Pasta', silk: 'Serigrafía', drill: 'Barrenos', comps: 'Componentes', tp: 'Test points', ref: 'Referencias' })[l]}</label>`).join('')}</div>`;
+  const layerToggles = () => `<div class="lyrs"><b>Capas</b>${['copper', 'mask', 'paste', 'silk', 'drill', 'comps', 'tp', 'ref'].map(l => `<label class="lyr"><input type="checkbox" data-l="${l}" ${P.layers[l] ? 'checked' : ''}><i class="sw-${l}"></i>${({ copper: 'Cobre', mask: 'Máscara', paste: 'Pasta', silk: 'Serigrafía', drill: 'Barrenos', comps: 'Componentes', tp: 'Test points', ref: 'Referencias' })[l]}</label>`).join('')}</div>`;
   const bindLayers = () => props.querySelectorAll('[data-l]').forEach(i => i.onchange = () => { P.layers[i.dataset.l] = i.checked; draw(); });
 
   function render() {
@@ -278,13 +283,14 @@ export function playPractice(root, pr, onDone, backLabel = 'Volver al simulador'
   root.querySelector('.sw').style.setProperty('--acc', machine.color);
   const tree = root.querySelector('#swTree'), view = root.querySelector('#swView'), props = root.querySelector('#swProps'), log = logger(root.querySelector('#swLog'));
   const b = course.boards[0] ? loadBoard(course.boards[0]) : null;
-  const layers = { copper: true, silk: true, comps: mode !== 'spi', paste: mode === 'spi', tp: mode === 'ict' };
+  const layers = { copper: true, silk: true, mask: true, drill: true, comps: mode !== 'spi', paste: mode === 'spi', tp: mode === 'ict' };
   const steps = pr.steps || []; let i = 0, score = 0, mistakes = 0;
   const params = (pr.params || []).map(p => ({ ...p, v: p.start ?? p.min }));
   const hotRef = b?.comps?.[(pr.id || '').length % b.comps.length]?.ref;
   const mark = hotRef && b ? (() => { const c = b.comps.find(x => x.ref === hotRef); return `<circle cx="${c.x}" cy="${c.y}" r="3" fill="none" stroke="#ff5a5f" stroke-width=".45"/>`; })() : '';
-  if (b) view.innerHTML = boardSVG(b, layers, pr.kind === 'debug' ? mark : '');
-  tree.innerHTML = b ? `<div>▾ ${esc(b.name)}</div>${b.comps.filter(c => !/^FID/.test(c.ref)).slice(0, 26).map(c => `<div class="${pr.kind === 'debug' && c.ref === hotRef ? 'ng' : ''}">&nbsp;${esc(c.ref)} · ${esc(c.pkg)}</div>`).join('')}` : '';
+  enhanceView(root.querySelector('.view'), () => b?.height);
+  if (b) view.innerHTML = BV(b, layers, pr.kind === 'debug' ? mark : '', mode);
+  tree.innerHTML = b ? `<div class="t0"><i class="ti tb"></i>${esc(b.name)}</div><div class="t1"><i class="ti tf"></i>Components</div>${b.comps.filter(c => !/^FID/.test(c.ref)).slice(0, 26).map(c => `<div class="t2 ${pr.kind === 'debug' && c.ref === hotRef ? 'ng' : ''}"><i class="ti ${pr.kind === 'debug' && c.ref === hotRef ? 'tng' : 'tc'}"></i>${esc(c.ref)}<small>${esc(c.pkg)}</small></div>`).join('')}` : '';
   log(pr.kind === 'debug' ? `Alarma: ${pr.scenario}` : 'Programa nuevo abierto.', pr.kind === 'debug' ? 'e' : '');
 
   function paramsHTML() {
